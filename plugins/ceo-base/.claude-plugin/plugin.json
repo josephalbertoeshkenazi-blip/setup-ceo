@@ -1,0 +1,8 @@
+{
+  "name": "ceo-base",
+  "version": "1.0.0",
+  "description": "La forma de trabajar del CEO: entender antes de hacer, delegar a cabezas, memoria, nada sale a terceros sin envíalo, Shabbat opcional.",
+  "author": { "name": "Joseph Eshkenazi" },
+  "license": "UNLICENSED",
+  "keywords": ["setup-ceo"]
+}

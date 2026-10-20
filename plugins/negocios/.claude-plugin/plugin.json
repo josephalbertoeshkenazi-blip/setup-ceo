@@ -1,0 +1,8 @@
+{
+  "name": "negocios",
+  "version": "1.0.0",
+  "description": "Asesor de negocios genérico. Lee tu perfil en ~/.claude/mi-perfil/asesor-negocios.md si existe.",
+  "author": { "name": "Joseph Eshkenazi" },
+  "license": "UNLICENSED",
+  "keywords": ["setup-ceo"]
+}

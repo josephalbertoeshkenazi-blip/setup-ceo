@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muestra del estilo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="componentes.css">
+<style>
+  /* Solo de la muestra */
+  .cab{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  .cab-der{display:flex;align-items:center;gap:8px}
+  .nota-muestra{margin-top:40px;font-size:13px;color:var(--texto-apagado)}
+  .vacio-ilustracion{background-image:
+    radial-gradient(60% 70% at 30% 70%, color-mix(in oklch, var(--estado-hecho) 22%, var(--hundido)), transparent 70%),
+    radial-gradient(50% 60% at 75% 35%, color-mix(in oklch, var(--acento) 16%, var(--hundido)), transparent 70%)}
+  .sigue .acc,.t-acciones{display:flex;gap:8px;flex-wrap:wrap}
+  .msjs{display:grid;gap:8px}
+  @media (max-width:760px){ .cab-der .conexion span{display:none} }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-tarea" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-correo" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-flecha" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-buscar" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-chispa" viewBox="0 0 24 24"><path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/></symbol>
+  <symbol id="i-maletin" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
+</svg>
+
+<div class="pagina">
+  <header class="portada">
+    <div class="portada-izq">
+      <div class="cab">
+        <div>
+          <h1>Buenos días</h1>
+          <ul class="pulso" aria-label="Resumen">
+            <li><button class="c-toca"><span class="punto"></span><span><b>3</b> te tocan</span></button></li>
+            <li><button class="c-curso"><span class="punto"></span><span><b>2</b> en curso</span></button></li>
+            <li><button class="c-vencido vencido"><span class="punto"></span><span><b>1</b> vencida</span></button></li>
+            <li data-cero="true"><button><span class="punto"></span><span><b>0</b> esperando</span></button></li>
+          </ul>
+        </div>
+        <div class="cab-der">
+          <span class="conexion" data-estado="ok"><i></i><span>Conectado</span></span>
+          <button class="btn redondo" id="tema" aria-label="Cambiar a oscuro"><svg class="i"><use href="#i-sol"/></svg></button>
+        </div>
+      </div>
+      <form class="asistente" onsubmit="event.preventDefault()">
+        <div class="campo">
+          <span class="avatar-asistente" aria-hidden="true"><svg class="i"><use href="#i-chispa"/></svg></span>
+          <textarea rows="1" placeholder="Pregúntale a tu asistente" aria-label="Mensaje para el asistente"></textarea>
+          <button class="enviar" type="submit">Enviar</button>
+        </div>
+      </form>
+      <div class="atajos">
+        <button class="atajo">¿Qué venció esta semana?</button>
+        <button class="atajo">Resume lo de ayer</button>
+        <button class="atajo">¿Qué falta para cerrar el mes?</button>
+        <button class="atajo">Prepara la reunión de mañana</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="principal">
+    <div class="barra">
+      <div class="alcance" role="toolbar" aria-label="Ver">
+        <button aria-pressed="true">Todo <span class="cuenta">12</span></button>
+        <button aria-pressed="false">Tareas <span class="cuenta">5</span></button>
+        <button aria-pressed="false">Borradores <span class="cuenta">4</span></button>
+        <button aria-pressed="false">Respuestas <span class="cuenta">3</span></button>
+      </div>
+      <label class="buscar"><svg class="i"><use href="#i-buscar"/></svg><input type="search" placeholder="Buscar" aria-label="Buscar"></label>
+    </div>
+
+    <section aria-labelledby="h-toca">
+      <h2 class="s-cab" id="h-toca"><span class="punto c-toca"></span>Te toca <span class="cuenta">3</span></h2>
+      <div class="tarjetas">
+        <article class="tarjeta" data-abre="tarea">
+          <button class="abrir" aria-label="Abrir: Aprobar compra de equipos"></button>
+          <div class="t-cuerpo">
+            <div class="t-tipo"><svg class="i"><use href="#i-tarea"/></svg>Tarea · Operaciones<span class="area"><svg class="i"><use href="#i-maletin"/></svg>Trabajo</span><svg class="i flecha"><use href="#i-flecha"/></svg></div>
+            <h3 class="t-titulo">Aprobar compra de equipos para la oficina</h3>
+            <p class="t-detalle">4 laptops y 2 monitores, según la cotización que llegó el lunes.</p>
+            <p class="t-dato">Vence el 24 oct · en 3 días</p>
+            <p class="t-meta">La lleva Compras · pedida ayer</p>
+          </div>
+          <div class="t-pie">
+            <p class="t-sigue"><b>Qué sigue:</b> con tu OK, se envía la orden.</p>
+            <div class="t-acciones"><button class="btn aprobar" data-aprobar><svg class="i"><use href="#i-check"/></svg>Aprobar</button><button class="btn">Preguntar</button></div>
+          </div>
+        </article>
+        <article class="tarjeta" data-abre="correo">
+          <button class="abrir" aria-label="Abrir: Seguimiento de propuesta"></button>
+          <div class="t-cuerpo">
+            <div class="t-tipo"><svg class="i"><use href="#i-correo"/></svg>Correo · Ventas<svg class="i flecha"><use href="#i-flecha"/></svg></div>
+            <h3 class="t-titulo">Seguimiento de la propuesta trimestral</h3>
+            <p class="t-dato">Para el cliente de ejemplo</p>
+            <p class="t-meta">2 mensajes · el asistente te contestó</p>
+          </div>
+          <div class="t-pie">
+            <p class="t-sigue"><b>Qué sigue:</b> léelo y apruébalo para que salga.</p>
+            <div class="t-acciones"><button class="btn leer">Leer y aprobar</button><button class="btn">Pedir un cambio</button></div>
+          </div>
+        </article>
+        <article class="tarjeta" data-abre="tarea">
+          <button class="abrir" aria-label="Abrir: Cambio de horario"></button>
+          <div class="t-cuerpo">
+            <div class="t-tipo"><svg class="i"><use href="#i-chat"/></svg>Pide tu OK · 9:40<svg class="i flecha"><use href="#i-flecha"/></svg></div>
+            <h3 class="t-titulo">¿Movemos la reunión del jueves a las 3?</h3>
+            <p class="t-detalle">Dos de los cinco no pueden a las 10.</p>
+            <p class="t-meta">Respuesta del asistente</p>
+          </div>
+          <div class="t-pie">
+            <div class="t-acciones"><button class="btn aprobar" data-aprobar><svg class="i"><use href="#i-check"/></svg>Aprobar</button><button class="btn">Seguir la conversación</button></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="abajo">
+      <section aria-labelledby="h-demas">
+        <h2 class="s-cab" id="h-demas">Lo demás</h2>
+        <div class="lista">
+          <div class="g-cab c-curso abierto"><span class="punto"></span>En curso <span class="cuenta">2</span><span class="g-vencidas">1 vencida</span><svg class="i chevron"><use href="#i-flecha"/></svg><button class="g-toggle" aria-expanded="true" aria-label="Cerrar En curso" data-grupo="curso"></button></div>
+          <div class="fila crece" data-g="curso">
+            <button class="abrir" aria-label="Abrir: Informe mensual"></button>
+            <svg class="i tipo"><use href="#i-tarea"/></svg>
+            <div class="f-prin"><span class="f-titulo">Informe mensual de gastos</span><span class="f-meta">Finanzas</span></div>
+            <span class="f-der">Vence 25 oct</span>
+            <svg class="i flecha"><use href="#i-flecha"/></svg>
+            <div class="f-linea curso"><span class="punto"></span><span>En preparación · actualizado hoy 8:15</span></div>
+          </div>
+          <div class="fila crece" data-g="curso">
+            <button class="abrir" aria-label="Abrir: Renovación de contrato"></button>
+            <svg class="i tipo"><use href="#i-tarea"/></svg>
+            <div class="f-prin"><span class="f-titulo">Renovación de contrato de limpieza</span><span class="f-meta">Operaciones</span></div>
+            <span class="f-der"><button class="btn">Preguntar</button></span>
+            <svg class="i flecha"><use href="#i-flecha"/></svg>
+            <div class="f-linea vencido"><span>Venció el 15 oct, hace 6 días · Sigue: llamar al proveedor</span></div>
+          </div>
+          <div class="g-cab c-espera"><span class="punto"></span>Esperando a otros <span class="cuenta">3</span><svg class="i chevron"><use href="#i-flecha"/></svg><button class="g-toggle" aria-expanded="false" aria-label="Abrir Esperando a otros" data-grupo="espera"></button></div>
+          <div class="fila" data-g="espera" hidden><button class="abrir" aria-label="Abrir"></button><svg class="i tipo"><use href="#i-correo"/></svg><div class="f-prin"><span class="f-titulo">Respuesta del banco</span><span class="f-meta">Finanzas</span></div><span class="f-der">Desde el 18 oct</span><svg class="i flecha"><use href="#i-flecha"/></svg></div>
+          <div class="g-cab c-hecho"><span class="punto"></span>Listo <span class="cuenta">4</span><svg class="i chevron"><use href="#i-flecha"/></svg><button class="g-toggle" aria-expanded="false" aria-label="Abrir Listo" data-grupo="hecho"></button></div>
+          <div class="fila baja" data-g="hecho" hidden><button class="abrir" aria-label="Abrir"></button><svg class="i tipo"><use href="#i-tarea"/></svg><div class="f-prin"><span class="f-titulo">Pago de nómina</span></div><span class="f-der">Ayer</span><svg class="i flecha"><use href="#i-flecha"/></svg></div>
+        </div>
+      </section>
+
+      <section aria-labelledby="h-areas">
+        <h2 class="s-cab" id="h-areas">Cómo va cada área</h2>
+        <div class="resumen-lista">
+          <div class="renglon">
+            <span class="av est-toca"><svg class="aro" viewBox="0 0 44 44"><circle class="pista" cx="22" cy="22" r="19.5"/><circle class="trazo" cx="22" cy="22" r="19.5" pathLength="100"/></svg><span class="disco">TR</span></span>
+            <span class="renglon-nombre">Trabajo</span>
+            <span class="renglon-dato toca"><b>2</b> te tocan</span>
+            <svg class="i flecha"><use href="#i-flecha"/></svg>
+          </div>
+          <div class="renglon">
+            <span class="av est-vencido"><svg class="aro" viewBox="0 0 44 44"><circle class="pista" cx="22" cy="22" r="19.5"/><circle class="trazo" cx="22" cy="22" r="19.5" pathLength="100"/></svg><span class="disco">OP</span></span>
+            <span class="renglon-nombre">Operaciones</span>
+            <span class="renglon-dato vencido"><b>1</b> vencida</span>
+            <svg class="i flecha"><use href="#i-flecha"/></svg>
+          </div>
+          <div class="renglon">
+            <span class="av est-curso"><svg class="aro" viewBox="0 0 44 44"><circle class="pista" cx="22" cy="22" r="19.5"/><circle class="trazo" cx="22" cy="22" r="19.5" pathLength="100"/></svg><span class="disco">FI</span></span>
+            <span class="renglon-nombre">Finanzas</span>
+            <span class="renglon-dato"><b>1</b> en curso</span>
+            <svg class="i flecha"><use href="#i-flecha"/></svg>
+          </div>
+          <div class="renglon">
+            <span class="av est-hecho"><svg class="aro" viewBox="0 0 44 44"><circle class="pista" cx="22" cy="22" r="19.5"/><circle class="trazo" cx="22" cy="22" r="19.5" pathLength="100"/></svg><span class="disco">PE</span></span>
+            <span class="renglon-nombre">Personal</span>
+            <span class="renglon-dato">al día</span>
+            <svg class="i flecha"><use href="#i-flecha"/></svg>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section aria-label="Ejemplo de vacío">
+      <div class="vacio">
+        <div class="vacio-txt">
+          <p class="vacio-t">Borradores al día</p>
+          <p class="vacio-l">No hay correos esperando tu OK. Cuando el asistente prepare uno, aparece aquí arriba.</p>
+        </div>
+        <span class="vacio-ilustracion" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <p class="nota-muestra">Muestra con datos inventados. Toca una tarjeta para ver la capa, o Aprobar para ver la confirmación.</p>
+  </main>
+</div>
+
+<dialog class="capa capa1" id="capa1" aria-labelledby="capa-titulo">
+  <div class="velo" data-cerrar></div>
+  <div class="hoja">
+    <span class="agarre" aria-hidden="true"></span>
+    <div class="hoja-barra">
+      <button class="btn texto">Anterior</button><span class="cuenta-b"><b>1</b> de 3</span><button class="btn texto">Siguiente</button>
+      <span class="esc">Esc</span>
+      <button class="cerrar" data-cerrar aria-label="Cerrar"><svg class="i"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="hoja-cuerpo">
+      <div class="hoja-in">
+        <div class="h-cab">
+          <h2 id="capa-titulo">Aprobar compra de equipos para la oficina</h2>
+          <div class="chipline"><span class="c-toca" style="display:inline-flex;align-items:center;gap:6px;color:var(--acento-texto);font-weight:500"><span class="punto"></span>Te toca</span><span>Vence el 24 oct · en 3 días</span></div>
+        </div>
+        <div class="sigue tu-turno"><h3>Qué sigue</h3><p>Con tu OK, Compras envía la orden hoy.</p></div>
+        <dl class="datos"><dt>Lleva</dt><dd>Compras</dd><dt>Pedida</dt><dd>Ayer, 4:10 p. m.</dd><dt>Detalle</dt><dd>4 laptops y 2 monitores</dd></dl>
+        <div class="cifras"><div class="cifra"><b>6</b><span>equipos</span></div><div class="cifra"><b>2</b><span>cotizaciones</span></div></div>
+        <div class="msjs">
+          <div class="msj de-usuario"><div class="quien">Tú <time>9:02</time></div>¿Es la más barata?</div>
+          <div class="msj de-asistente"><div class="quien">Asistente <time>9:03</time></div>Sí, y con la garantía más larga de las dos.</div>
+        </div>
+      </div>
+    </div>
+    <div class="hoja-pie">
+      <button class="btn aprobar" data-aprobar><svg class="i"><use href="#i-check"/></svg>Aprobar</button>
+      <button class="btn">Preguntar</button>
+      <span class="sep"></span>
+    </div>
+  </div>
+</dialog>
+
+<div class="aviso" role="status" aria-live="polite" id="aviso"><span>Aprobado</span><button type="button" id="deshacer">Deshacer</button></div>
+
+<script>
+(() => {
+  const raiz = document.documentElement
+  try { const t = localStorage.getItem('tema'); if (t === 'dark' || t === 'light') raiz.dataset.theme = t } catch (e) {}
+  document.getElementById('tema').addEventListener('click', e => {
+    const oscuro = raiz.dataset.theme !== 'dark'
+    raiz.dataset.theme = oscuro ? 'dark' : 'light'
+    e.currentTarget.setAttribute('aria-label', oscuro ? 'Cambiar a claro' : 'Cambiar a oscuro')
+    try { localStorage.setItem('tema', raiz.dataset.theme) } catch (err) {}
+  })
+
+  const quieto = matchMedia('(prefers-reduced-motion: reduce)')
+  const capa = document.getElementById('capa1')
+  const hoja = capa.querySelector('.hoja')
+  let origen = null
+  document.querySelectorAll('.tarjeta .abrir').forEach(b => b.addEventListener('click', () => {
+    origen = b
+    const caja = b.closest('.tarjeta').getBoundingClientRect()
+    capa.showModal(); raiz.classList.add('capa-abierta')
+    if (quieto.matches || innerWidth <= 760) return
+    const h = hoja.getBoundingClientRect()
+    const dx = caja.left - h.left, dy = caja.top - h.top
+    hoja.animate([
+      { translate: `${dx}px ${dy}px`, clipPath: `inset(0 ${h.width - caja.width}px ${h.height - caja.height}px 0 round 14px)` },
+      { translate: '0 0', clipPath: 'inset(0 0 0 0 round 18px)' }
+    ], { duration: 280, easing: 'cubic-bezier(.22,1,.36,1)' })
+    capa.querySelector('.velo').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, easing: 'cubic-bezier(.23,1,.32,1)' })
+  }))
+  const cerrar = () => {
+    const fin = () => { capa.close(); raiz.classList.remove('capa-abierta'); origen?.focus() }
+    if (quieto.matches) return fin()
+    capa.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, easing: 'ease-out' }).finished.then(fin)
+  }
+  capa.addEventListener('cancel', e => { e.preventDefault(); cerrar() })
+  capa.querySelectorAll('[data-cerrar]').forEach(el => el.addEventListener('click', cerrar))
+
+  document.querySelectorAll('.g-toggle').forEach(t => t.addEventListener('click', () => {
+    const cab = t.closest('.g-cab'), abierto = !cab.classList.contains('abierto')
+    cab.classList.toggle('abierto', abierto); t.setAttribute('aria-expanded', abierto)
+    document.querySelectorAll(`.fila[data-g="${t.dataset.grupo}"]`).forEach(f => f.hidden = !abierto)
+  }))
+
+  const aviso = document.getElementById('aviso')
+  let reloj, ultimo
+  const restaurar = b => { b.disabled = false; b.className = 'btn aprobar'; b.lastChild.textContent = 'Aprobar'; b.closest('.tarjeta')?.classList.remove('aprobada') }
+  document.querySelectorAll('[data-aprobar]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation()
+    b.disabled = true; b.className = 'btn hecho-ok recien'; b.lastChild.textContent = 'Aprobado'
+    const t = b.closest('.tarjeta'); if (t) { t.classList.add('aprobada', 'celebra'); setTimeout(() => t.classList.remove('celebra'), 300) }
+    ultimo = b
+    aviso.classList.add('ver'); clearTimeout(reloj); reloj = setTimeout(() => aviso.classList.remove('ver'), 6000)
+  }))
+  document.getElementById('deshacer').addEventListener('click', () => { if (ultimo) restaurar(ultimo); aviso.classList.remove('ver') })
+})()
+</script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+/* =====================================================================
+   Estilo "panel de dueño" · tokens
+   Valores finales del panel que se entregó (base blanca, un acento azul,
+   4 colores de estado). Pega este archivo primero; componentes.css lo usa.
+
+   Reglas del sistema
+   - Abre en claro. El oscuro entra con <html data-theme="dark"> (botón sol/luna).
+     Si prefieres seguir al sistema, pon data-theme con matchMedia al cargar.
+   - Neutros tibios (nunca negro puro, nunca azul marino).
+   - UN acento: azul. Va SOLO en la acción principal (Aprobar, Enviar), la
+     selección actual y lo que te toca a ti. Un color = "tu turno".
+   - 4 colores de estado en pantalla como máximo:
+       azul = te toca · ámbar = en curso · rojo = vencido
+       verde = hecho, SOLO en el conteo de hechos (no en cada fila)
+     Esperando, idea y apagado van en gris: no hay nada que hacer ahí.
+   - Cada estado trae 4 piezas:
+       --estado-X        punto, barra, ícono (>= 3:1 sobre lienzo y tarjeta)
+       --estado-X-texto  texto en color (>= 4.5:1 sobre lienzo, tarjeta y su suave)
+       --estado-X-suave  fondo muy suave (fila seleccionada, chip activo)
+       --estado-X-linea  borde decorativo
+   - Nunca solo color: cada estado lleva su palabra.
+   ===================================================================== */
+
+:root{
+  color-scheme: light;
+
+  /* Superficies: base blanca, apoyo gris tibio */
+  --fondo:        #ffffff;
+  --tarjeta:      #ffffff;
+  --papel:        #ffffff;   /* hoja de lectura (un correo, un documento) */
+  --hundido:      #f6f5f2;   /* hover, grupo abierto, fondo dentro de una capa */
+  --linea:        #e2e0da;
+  --linea-suave:  #eeece8;   /* divisor entre filas */
+  --linea-fuerte: #cdcac2;   /* borde al pasar el mouse */
+
+  /* Sombras exactas, con tinte cálido del texto */
+  --sombra:        0 1px 1px rgb(20 19 15 / .04), 0 1px 3px rgb(20 19 15 / .07);
+  --sombra-alzada: 0 1px 2px rgb(20 19 15 / .06), 0 12px 28px -14px rgb(20 19 15 / .22);
+  --sombra-hoja:   0 2px 6px rgb(20 19 15 / .08), 0 32px 80px -24px rgb(20 19 15 / .30);
+
+  /* Velos de las capas */
+  --velo:         rgb(255 255 255 / .55);   /* capa 1, con blur de 6px */
+  --velo-solido:  rgb(255 255 255 / .72);   /* sin soporte de blur */
+  --velo-quieto:  rgb(255 255 255 / .82);   /* prefers-reduced-transparency */
+  --velo-2:       rgb(29 28 25 / .16);      /* capa 2: velo cálido SIN blur */
+
+  /* Texto */
+  --texto:         #14130f;
+  --texto-2:       #3d3b35;
+  --texto-apagado: #64615a;
+  --sobre-color:   #ffffff;   /* texto encima del acento lleno */
+
+  /* El acento azul */
+  --acento:        #2b5cc8;
+  --acento-hover:  #234ea9;
+  --acento-texto:  #2451b5;
+  --acento-suave:  #edf1fa;
+  --acento-linea:  #c9d6f0;
+
+  /* Botón principal (Aprobar). Texto blanco 6.2:1 */
+  --aprobar:        #2b5cc8;
+  --aprobar-hover:  #234ea9;
+  --aprobar-texto:  #ffffff;
+  --aprobar-suave:  #edf1fa;
+
+  /* Panel de tinta: la única superficie fuerte (la caja para hablarle al asistente) */
+  --panel-tinta:        #1d1c19;
+  --panel-tinta-texto:  #f4f2ec;
+  --panel-tinta-2:      #bcb8ad;   /* placeholder sobre tinta */
+  --disco:              #efede8;   /* disco claro detrás de un avatar o ícono */
+  --disco-texto:        #3d3b35;   /* iniciales sobre el disco (el disco es claro también en oscuro) */
+
+  /* Estados */
+  --estado-toca:          #2b5cc8;   /* te toca = el acento */
+  --estado-toca-texto:    #2451b5;
+  --estado-toca-suave:    #edf1fa;
+  --estado-toca-linea:    #c9d6f0;
+
+  --estado-curso:         #b07418;   /* en curso: el asistente o alguien lo está haciendo */
+  --estado-curso-texto:   #87570f;
+  --estado-curso-suave:   #f8f0e1;
+  --estado-curso-linea:   #ead6ae;
+
+  --estado-hecho:         #368458;   /* hecho, aprobado, enviado, activo */
+  --estado-hecho-texto:   #2a6e47;
+  --estado-hecho-suave:   #eaf3ed;
+  --estado-hecho-linea:   #c6dfcf;
+
+  --estado-vencido:       #c4463c;   /* plazo pasado o falla; siempre con palabra y fecha */
+  --estado-vencido-texto: #a93a31;
+  --estado-vencido-suave: #fbeeec;
+  --estado-vencido-linea: #efcdc8;
+
+  --estado-espera:        #8a877f;   /* esperando a otros, idea, apagado: gris */
+  --estado-espera-texto:  #5c5a53;
+  --estado-espera-suave:  #f0efeb;
+  --estado-espera-linea:  #dfddd6;
+
+  --estado-off:           #8a877f;
+  --estado-off-texto:     #6a675f;
+  --estado-off-suave:     #f0efeb;
+  --estado-off-linea:     #dfddd6;
+
+  /* Navegador */
+  --foco:      #2b5cc8;
+  --cursor:    #2b5cc8;
+  --seleccion: #d9e3f7;
+  --scroll:    #d4d1ca;
+
+  /* Tipografía (Google Fonts, licencia OFL) */
+  --f-ui:   "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-disp: "Bricolage Grotesque", var(--f-ui);
+  --f-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Radios */
+  --r-chico:  9px;    /* buscador, select */
+  --r-boton:  10px;
+  --r-caja:   12px;   /* cajas dentro de una capa */
+  --r-tarjeta:14px;   /* tarjetas, listas */
+  --r-hoja:   18px;   /* capa 1 */
+  --r-hoja2:  16px;   /* capa 2 */
+  --r-pildora:999px;  /* solo chips */
+
+  /* Movimiento */
+  --ease-out:     cubic-bezier(.23,1,.32,1);    /* entradas y respuestas */
+  --ease-enfoque: cubic-bezier(.22,1,.36,1);    /* capa que crece desde su tarjeta */
+  --ease-hoja:    cubic-bezier(.32,.72,0,1);    /* hoja que sube en el teléfono */
+  --t-micro:  100ms;   /* botón apretado */
+  --t-ui:     140ms;   /* hover (solo con mouse), foco, cambio de tema */
+  --t-borde:  180ms;   /* bordes y sombras de botones y tarjetas */
+  --t-dato:   260ms;   /* números y barras que cambian (40 ms entre una y otra) */
+  --t-capa-abre:   280ms;
+  --t-capa-cierra: 150ms;
+  --t-hoja-movil:  320ms;
+  --t-quieto: 120ms;   /* con reduced-motion: solo un fundido */
+}
+
+:root[data-theme="dark"]{
+  color-scheme: dark;
+
+  --fondo:        #121210;
+  --tarjeta:      #1b1b18;
+  --papel:        #1b1b18;
+  --hundido:      #242420;
+  --linea:        #33322d;
+  --linea-suave:  #2a2925;
+  --linea-fuerte: #46443e;
+
+  --sombra:        0 1px 2px rgb(0 0 0 / .5);
+  --sombra-alzada: 0 0 0 1px var(--linea), 0 14px 30px -14px rgb(0 0 0 / .7);
+  --sombra-hoja:   0 0 0 1px var(--linea), 0 24px 80px rgb(0 0 0 / .5);
+
+  --velo:         rgb(10 10 9 / .55);
+  --velo-solido:  rgb(10 10 9 / .7);
+  --velo-quieto:  rgb(10 10 9 / .8);
+  --velo-2:       rgb(0 0 0 / .4);
+
+  --texto:         #f1f0eb;
+  --texto-2:       #cac8c0;
+  --texto-apagado: #9d9a92;
+  --sobre-color:   #10131c;   /* texto oscuro sobre el acento claro */
+
+  --acento:        #7099f0;
+  --acento-hover:  #8aadf4;
+  --acento-texto:  #8eb0f5;
+  --acento-suave:  #1c2436;
+  --acento-linea:  #2f3d5c;
+
+  --aprobar:        #7099f0;
+  --aprobar-hover:  #8aadf4;
+  --aprobar-texto:  #10131c;
+  --aprobar-suave:  #1c2436;
+
+  --panel-tinta:        #2a2925;
+  --panel-tinta-texto:  #f4f2ec;
+  --panel-tinta-2:      #bcb8ad;
+  --disco:              #e6e2d7;
+  --disco-texto:        #3d3b35;
+
+  --estado-toca:          #7099f0;
+  --estado-toca-texto:    #8eb0f5;
+  --estado-toca-suave:    #1c2436;
+  --estado-toca-linea:    #2f3d5c;
+
+  --estado-curso:         #dca13c;
+  --estado-curso-texto:   #e8b660;
+  --estado-curso-suave:   #2b2417;
+  --estado-curso-linea:   #574424;
+
+  --estado-hecho:         #5cbd86;
+  --estado-hecho-texto:   #7dcfa0;
+  --estado-hecho-suave:   #172a1f;
+  --estado-hecho-linea:   #2b5039;
+
+  --estado-vencido:       #ec6a5f;
+  --estado-vencido-texto: #f28b82;
+  --estado-vencido-suave: #331b19;
+  --estado-vencido-linea: #5f2e2a;
+
+  --estado-espera:        #7a776f;
+  --estado-espera-texto:  #b3b0a8;
+  --estado-espera-suave:  #24241f;
+  --estado-espera-linea:  #38372f;
+
+  --estado-off:           #7a776f;
+  --estado-off-texto:     #a3a098;
+  --estado-off-suave:     #24241f;
+  --estado-off-linea:     #38372f;
+
+  --foco:      #8eb0f5;
+  --cursor:    #8eb0f5;
+  --seleccion: #2f3d5c;
+  --scroll:    #45443e;
+}
+
+/* Atajo para pintar por estado: class="c-toca" (o c-curso, c-hecho, c-vencido,
+   c-espera, c-off) y luego var(--c), var(--c-texto), var(--c-suave), var(--c-linea). */
+.c-toca    {--c:var(--estado-toca);    --c-texto:var(--estado-toca-texto);    --c-suave:var(--estado-toca-suave);    --c-linea:var(--estado-toca-linea)}
+.c-curso   {--c:var(--estado-curso);   --c-texto:var(--estado-curso-texto);   --c-suave:var(--estado-curso-suave);   --c-linea:var(--estado-curso-linea)}
+.c-hecho   {--c:var(--estado-hecho);   --c-texto:var(--estado-hecho-texto);   --c-suave:var(--estado-hecho-suave);   --c-linea:var(--estado-hecho-linea)}
+.c-vencido {--c:var(--estado-vencido); --c-texto:var(--estado-vencido-texto); --c-suave:var(--estado-vencido-suave); --c-linea:var(--estado-vencido-linea)}
+.c-espera  {--c:var(--estado-espera);  --c-texto:var(--estado-espera-texto);  --c-suave:var(--estado-espera-suave);  --c-linea:var(--estado-espera-linea)}
+.c-off     {--c:var(--estado-off);     --c-texto:var(--estado-off-texto);     --c-suave:var(--estado-off-suave);     --c-linea:var(--estado-off-linea)}

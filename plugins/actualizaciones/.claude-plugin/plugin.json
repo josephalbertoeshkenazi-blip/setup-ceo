@@ -1,0 +1,8 @@
+{
+  "name": "actualizaciones",
+  "version": "1.0.0",
+  "description": "Comando novedades: explica qué cambió en el setup y solo instala con tu sí.",
+  "author": { "name": "Joseph Eshkenazi" },
+  "license": "UNLICENSED",
+  "keywords": ["setup-ceo"]
+}
