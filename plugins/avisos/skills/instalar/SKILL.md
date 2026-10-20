@@ -4,6 +4,8 @@ description: Instala Avisos en esta Mac (la app de la barra de menú con tarjeta
 ---
 # Instalar Avisos
 
+Licencia: estas skills y los ganchos son código MIT; solo el arte dentro del zip de la app va con `ART-LICENSE.md`.
+
 Este archivo es para ti, Claude. Sigue los pasos en orden y usa los comandos tal cual.
 
 ## Qué es Avisos (explícaselo al dueño en estas palabras si pregunta)

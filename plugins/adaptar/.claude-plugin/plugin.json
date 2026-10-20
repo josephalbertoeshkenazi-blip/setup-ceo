@@ -1,8 +1,8 @@
 {
   "name": "adaptar",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Comando adaptar-a-mi: escribe y actualiza tu perfil personal en ~/.claude/mi-perfil/ sin perder nada.",
   "author": { "name": "Joseph Eshkenazi" },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "keywords": ["setup-ceo"]
 }

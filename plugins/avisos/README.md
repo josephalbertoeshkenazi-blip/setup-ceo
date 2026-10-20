@@ -38,3 +38,7 @@ Claude hace casi todo. Tú solo haces tres clics cuando te lo pida: abrir la app
 ```
 
 Quita los ganchos de Claude Code sin tocar nada más, y te pregunta si quieres borrar también la app y tus datos.
+
+## Licencia
+
+Las skills y los ganchos de este plugin son código: MIT. Solo el arte dentro del zip de la app (personajes, íconos, imágenes) tiene otra licencia: ver `ART-LICENSE.md` en la raíz del repositorio.

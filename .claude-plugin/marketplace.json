@@ -6,9 +6,10 @@
     { "name": "ceo-base", "source": "./plugins/ceo-base", "description": "La forma de trabajar del CEO: entender antes de hacer, delegar a cabezas, memoria, nada sale a terceros sin \"envíalo\", Shabbat opcional." },
     { "name": "negocios", "source": "./plugins/negocios", "description": "Asesor de negocios: precios, tratos, socios y contratos, con números reales." },
     { "name": "diseno", "source": "./plugins/diseno", "description": "Equipo de diseño: asesor-diseno dirige, dev-creativo construye, critico-diseno revisa. Trae su PLAYBOOK y el estilo panel-dueno." },
-    { "name": "adaptar", "source": "./plugins/adaptar", "description": "/adaptar-a-mi: escribe tu perfil personal para cada agente, sin perder nada de lo anterior." },
-    { "name": "actualizaciones", "source": "./plugins/actualizaciones", "description": "/novedades: te explica en palabras simples qué cambió y solo instala con tu sí." },
-    { "name": "sugerencias", "source": "./plugins/sugerencias", "description": "/sugerir-mejora: manda una idea de mejora (sin datos personales), solo con tu sí." },
+    { "name": "adaptar", "source": "./plugins/adaptar", "description": "/adaptar:adaptar-a-mi: escribe tu perfil personal para cada agente, sin perder nada de lo anterior." },
+    { "name": "actualizaciones", "source": "./plugins/actualizaciones", "description": "/actualizaciones:novedades: te explica en palabras simples qué cambió y solo instala con tu sí." },
+    { "name": "sugerencias", "source": "./plugins/sugerencias", "description": "/sugerencias:sugerir-mejora: manda una idea de mejora (sin datos personales), solo con tu sí." },
+    { "name": "complementos", "source": "./plugins/complementos", "description": "/complementos:instalar-complementos: las skills de terceros que más rinden (superpowers, gstack, graphify...) con su porqué; tú eliges, se revisa cada repo y nada se instala sin tu sí." },
     { "name": "avisos", "source": "./plugins/avisos", "description": "Opcional, solo Mac: tarjetas del calendario y aros de las sesiones de Claude con su aviso \"terminó\"." }
   ]
 }

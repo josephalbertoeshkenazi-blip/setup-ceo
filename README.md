@@ -1,38 +1,16 @@
 # setup-ceo
 
-Una forma de trabajar con Claude Code, lista para instalar con un link. La armó Joseph Eshkenazi. Es gratis para uso personal (no se revende) y se adapta a ti: nada personal viene incluido.
+English | [Español](README.es.md)
 
-Tu Claude pasa a trabajar como un CEO: te entiende antes de hacer, delega lo largo a ayudantes, recuerda lo que le corriges y nada importante le llega a otra persona hasta que tú dices "envíalo".
+**The Claude Code setup that interviews you and learns how you work.**
 
-## Para ti (la persona)
+Prompts and commands are written in Spanish; Claude answers in your language.
 
-Funciona en Mac (usa `plutil`, que solo existe en macOS). Una vez al día revisa si hay versión nueva (solo lee el repo, no manda nada).
+![the adaptar-a-mi interview, then the Avisos "done" notice (invented data)](docs/adaptar-demo.gif)
 
-Pásale este link a tu Claude Code y dile: "instala esto". Lo que obtienes:
+## Install
 
-| Pieza | Qué hace, en una línea |
-|---|---|
-| `ceo-base` | Tu Claude te dice "Lo que entendí" antes de algo grande, delega, guarda lo que le corriges y respeta Shabbat (opcional: te lo pregunta al adaptarse). |
-| `negocios` | Un asesor de negocios para precios, tratos, socios y contratos, con números reales. |
-| `diseno` | Tres ayudantes de diseño (uno dirige, uno construye, uno revisa) para que tus páginas y apps se vean de primera. |
-| `adaptar` | `/adaptar-a-mi`: te hace pocas preguntas y escribe tu perfil para que todo trabaje a tu manera. |
-| `actualizaciones` | `/novedades`: te explica en palabras simples qué hay de nuevo y solo instala si dices que sí. |
-| `sugerencias` | `/sugerir-mejora`: manda una idea de mejora (sin datos tuyos) solo con tu sí. |
-| `avisos` (opcional, recomendado, solo Mac) | Tarjetas del calendario y aros de tus sesiones de Claude con su aviso "terminó". Mira la demo abajo. |
-
-Las sugerencias se publican como issue público; no pongas datos personales.
-
-Tu perfil vive en `~/.claude/mi-perfil/`, fuera de lo que se instala. Las actualizaciones nunca lo tocan.
-
-### Cómo se ve Avisos
-
-![Demostración de Avisos](docs/avisos-demo.png)
-
-Es una demostración con nombres inventados ("app-gym", "web-tienda", "tareas"), no una captura de una computadora real. Los personajes son los de la app, hechos con IA.
-
-## Para tu Claude
-
-Si tu humano te pasó este link, haz esto, en orden, con la Terminal:
+In the Terminal, in order:
 
 ```
 claude plugin marketplace add https://github.com/josephalbertoeshkenazi-blip/setup-ceo
@@ -42,26 +20,97 @@ claude plugin install diseno@setup-ceo
 claude plugin install adaptar@setup-ceo
 claude plugin install actualizaciones@setup-ceo
 claude plugin install sugerencias@setup-ceo
+claude plugin install complementos@setup-ceo
 ```
 
-Después, pregúntale si quiere Avisos (solo macOS 14 o más nuevo; opcional pero recomendado). Muéstrale la demo de arriba. Si dice que sí:
+Optional, macOS 14 or newer, recommended (see "How Avisos looks" below):
 
 ```
 claude plugin install avisos@setup-ceo
 ```
 
-Dile que escriba `/reload-plugins` (o que cierre y abra Claude). Luego corre `/adaptar:adaptar-a-mi` para adaptarlo a tu humano: hace como máximo 4 preguntas simples y no pierde nada de lo anterior. Si instaló Avisos, sigue con `/avisos:instalar`.
+Then, inside Claude Code: `/reload-plugins` (or restart), then `/adaptar:adaptar-a-mi` (the interview: at most 4 simple questions, loses nothing from before). If you installed Avisos, continue with `/avisos:instalar`. For the third-party skills, type `/complementos:instalar-complementos` yourself.
 
-No instales nada más sin el sí de tu humano.
+**Shortcut.** Instead of typing the commands, paste this to Claude Code:
 
-## Comandos
+```
+Install https://github.com/josephalbertoeshkenazi-blip/setup-ceo by following its README.
+```
 
-| Escribe | Para qué |
+Tested with Claude Code 2.1.304 on macOS, 2026-10-20. It needs macOS: the update check and Avisos use `plutil` and macOS apps.
+
+## Why
+
+Most setups are one list of prompts for everybody. This one interviews you first: `/adaptar:adaptar-a-mi` asks at most 4 simple questions and writes your profile to `~/.claude/mi-perfil/`, outside anything that gets installed, so updates never overwrite it.
+
+Then it learns your taste and how you do business. Each advisor keeps its own memory (`~/.claude/agent-memory/`):
+
+- The design advisor logs whether you liked what it made at first sight and keeps a running counter at the top of its memory: **"approved first try: X of Y"** (in the files it reads "aprobado a la primera: X de Y").
+- The design critic, a separate fresh-eyes agent that judges a finished build in a real browser and never edits it, keeps **"agreed with the user X of Y"**. If that stays under 70% after 5 deliveries, it says so in every report, and the playbook tells you to adjust or drop it.
+- The business advisor records every deal, what was agreed, how the other side behaved, and what you really earned per hour.
+
+The counters go up with use. If they do not, the setup tells you to switch the team off.
+
+One hard rule: nothing important reaches another person until you say "send it" (`envíalo`).
+
+## What is in it
+
+| Piece | What it does |
 |---|---|
-| `/adaptar:adaptar-a-mi` | Escribir o actualizar tu perfil |
-| `/actualizaciones:novedades` | Ver si hay novedades y decidir si se instalan |
-| `/sugerencias:sugerir-mejora` | Mandar una idea de mejora |
-| `/ceo-base:nueva-cabeza` | Crear un ayudante nuevo para un área tuya |
-| `/avisos:instalar` / `/avisos:desinstalar` | Poner o quitar Avisos |
+| `ceo-base` | Your Claude writes "what I understood" before big tasks, delegates long work, keeps what you correct, and follows a recipe book (which chain of skills for which task; skips skills you do not have). Shabbat rule is optional. |
+| `negocios` | A business advisor for prices, deals, partners and contracts, with real numbers. |
+| `diseno` | Three design helpers: one directs, one builds, one reviews, so pages and apps look premium. |
+| `adaptar` | `/adaptar:adaptar-a-mi`: the interview that writes your profile. |
+| `actualizaciones` | `/actualizaciones:novedades`: tells you in plain words what changed; installs only if you say yes. |
+| `sugerencias` | `/sugerencias:sugerir-mejora`: sends an improvement idea as a public issue, only after you confirm the text. |
+| `complementos` | `/complementos:instalar-complementos`: shows the third-party skills worth having, with why. You choose all, some or none; each repo is checked first; nothing installs without your yes. |
+| `avisos` (optional, macOS only) | Calendar cards and a ring per Claude session with a "done" notice. |
 
-Licencia: uso personal, no se revende. Mira el archivo `LICENSE`.
+## Optional skills, and why
+
+These are other people's projects, installed from their own source at a pinned version. Nothing is copied here. See `plugins/complementos/skills/instalar-complementos/catalogo.md` for exact commands, licenses and commits.
+
+| Skill | Why you would want it |
+|---|---|
+| superpowers | Claude agrees on what to build before coding, plans in small steps, tests first. |
+| gstack | An engineering team as commands: office hours, plan, review, QA in a real browser, ship. Heavy install. |
+| graphify | Turns a project into a map you can query instead of re-reading files. |
+| impeccable | Fixes UI that looks generic: hierarchy, spacing, type, motion. |
+| last30days | What people are saying about a topic in the last 30 days. |
+| avoid-ai-writing | Removes AI-sounding phrasing before you send text. |
+| hyperframes | Real explainer and promo videos built from scratch. |
+| claude-video-vision | Lets Claude watch a video through frames and a transcript. |
+| repo-eval | GREEN/YELLOW/RED check of a repo before you install it (ships inside `complementos`). |
+
+## How Avisos looks
+
+![Avisos demo](docs/avisos-demo.png)
+
+An illustration with invented names, not a capture of a real computer. The characters are from the app, made with AI.
+
+## For your Claude
+
+If your human gave you this link: run the commands in "Install" in order. Ask whether they want Avisos and show them the "How Avisos looks" image before you install it. Then tell them to type `/reload-plugins` and run `/adaptar:adaptar-a-mi`. Before you finish, offer the third-party skills ("Want me to show you the important skills, with what each is for?"); if yes, tell them to type `/complementos:instalar-complementos` themselves (only the person who types it can start it); if no, do not insist. Do not install anything else without your human's yes.
+
+## Commands
+
+| Type | What for |
+|---|---|
+| `/adaptar:adaptar-a-mi` | Write or update your profile |
+| `/actualizaciones:novedades` | See what is new and decide whether to install it |
+| `/sugerencias:sugerir-mejora` | Send an improvement idea |
+| `/ceo-base:nueva-cabeza` | Create a new helper for one of your areas |
+| `/complementos:instalar-complementos` | See the important skills and pick which to install |
+| `/avisos:instalar` / `/avisos:desinstalar` | Install or remove Avisos |
+
+## Safety
+
+Read `SECURITY.md`: a table of what every piece reads, writes, sends over the network and runs, and how to report a problem.
+
+## Support
+
+Open an issue and it will be read. There is no guarantee of a fast reply. Suggestions are public issues, so put no personal data in them.
+
+## License
+
+Code: MIT (`LICENSE`). Avisos art (characters, icons, images, the app package): its own license, `ART-LICENSE.md`; free to use inside this setup. Third-party skills keep their own licenses; see `NOTICE.md`.

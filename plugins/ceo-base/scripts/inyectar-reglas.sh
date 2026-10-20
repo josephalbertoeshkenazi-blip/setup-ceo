@@ -3,6 +3,10 @@
 # Un plugin no puede traer un CLAUDE.md, por eso las reglas base llegan por aquí.
 raiz="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 cat "$raiz/reglas/reglas-ceo.md"
+if [ -f "$raiz/recetario.md" ]; then
+  printf '\n---\n'
+  cat "$raiz/recetario.md"
+fi
 perfil="$HOME/.claude/mi-perfil/ceo.md"
 if [ -f "$perfil" ]; then
   printf '\n---\n# Perfil del dueño (manda sobre las reglas de arriba)\n\n'

@@ -32,7 +32,7 @@ Para cada CAMPO de cada perfil, marca: ya lo sé (y de dónde), o falta.
 ## Paso 3. Pregunta solo lo que falta (máximo 4 preguntas en total)
 - Si el pedido ya trae las respuestas, úsalas y no preguntes.
 - Junta lo que falta en **4 preguntas como máximo**, para todos los agentes juntos. Preguntas simples, en su idioma, una por línea, con un ejemplo de respuesta. Nada de jerga.
-- **Siempre pregunta (cuenta dentro de las 4):** "¿Guardas Shabbat?". En `ceo.md`, sección "Reglas mías", escribe la línea exacta `Guarda Shabbat: sí` o `Guarda Shabbat: no`. Con `no`, la regla de Shabbat queda apagada para este dueño; la base del setup no se toca. Si el perfil ya tiene esa línea, respétala y no preguntes otra vez.
+- **Siempre pregunta (cuenta dentro de las 4):** "¿Hay días u horas en que nada debe salir a otras personas? (ej.: Shabbat, fines de semana)". En `ceo.md`, sección "Reglas mías", guarda su respuesta en una línea `Horarios sin envíos: <su respuesta>` y, además, la línea exacta `Guarda Shabbat: sí` si menciona Shabbat o `Guarda Shabbat: no` si no. Con `no`, la regla de Shabbat queda apagada para este dueño (los otros horarios que diga sí se respetan); la base del setup no se toca. Si el perfil ya tiene esas líneas, respétalas y no preguntes otra vez.
 - Prioriza lo que más cambia los consejos: su negocio y mercado, sus precios o piso, cómo negocia (el rasgo a vigilar) y cómo quiere que le hablen.
 - Si ya sabes todo, no preguntes: dile en una línea qué vas a escribir y sigue.
 - Espera sus respuestas antes de escribir. Si no contesta alguna, déjala como "(por definir)".

@@ -1,20 +1,21 @@
-Todos los derechos reservados. Copyright (c) 2026 Joseph Eshkenazi.
+MIT License
 
-Licencia de uso personal
+Copyright (c) 2026 Joseph Eshkenazi
 
-Puedes instalar este setup y usarlo para ti, en tus propias computadoras.
-Puedes adaptarlo a tu manera para tu uso personal (por ejemplo, con /adaptar-a-mi).
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-No puedes:
-- venderlo, revenderlo ni cobrar por él;
-- publicarlo o repartirlo, entero o en partes, como tuyo o como parte de otro producto;
-- usarlo para hacer un servicio o producto que se vende a otras personas.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Si quieres hacer algo de esto, pídele permiso por escrito al autor.
-
-Este software se da "tal cual", sin garantía de ningún tipo. El autor no responde
-por daños que salgan de usarlo.
-
-Material de terceros: lo que este setup toma de otras personas (por ejemplo, partes del
-PLAYBOOK de diseño con licencia MIT y Apache-2.0, y las recetas de código con sus
-licencias indicadas en los propios archivos) conserva su licencia original.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
