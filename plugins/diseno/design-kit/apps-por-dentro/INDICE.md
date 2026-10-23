@@ -9,6 +9,10 @@ Lecciones para el interior de apps y paneles (no landings), medidas en apps real
 | `02-app-con-mucha-informacion.md` | paneles con mucha data: tablas, filtros, vistas, KPIs, gráficos, los dos vacíos, carga y error, con números |
 | `03-recetas-codigo.md` | tokens de movimiento y 10 recetas propias (web y SwiftUI): lista → detalle, "Hecho → Siguiente", reordenar, hoja, esqueleto, números, anillo, gestos, micro-interacciones, tabla |
 | `04-apps-vistas-y-cara-de-ia.md` | interiores medidos en vivo (shadcn, Plausible, Cal.com, Linear), cómo medir una app y la lista de lo que delata "hecho por IA" |
+| `05-tendencias-2026-10.md` | qué cambió entre agosto y octubre de 2026 (CSS nativo, cara de IA, Liquid Glass, librerías que suben). **Revisar después de 2027-01** |
+| `06-ia-para-ui.md` | cómo se usa la IA para diseñar y programar interfaces: flujos que funcionan, qué falla y la compuerta de un detector. **Revisar después de 2027-01** |
+| `07-3d-y-animacion-avanzada.md` | tabla de decisión para sitios de marca: View Transitions, scroll, GSAP, Lenis, three.js, Rive; pesos y soporte de navegadores. **Revisar después de 2027-01** |
+| `09-salud-y-habitos-en-el-telefono.md` | apps de salud y hábitos en el teléfono: 12 patrones, qué las hace cansadas y números de partida. **Revisar después de 2027-01** |
 
 ## Según el pedido
 
@@ -25,6 +29,15 @@ Lecciones para el interior de apps y paneles (no landings), medidas en apps real
 
 **Micro-interacciones y movimiento en cualquier app**
 `03-recetas-codigo.md` §0 y §9, más el PLAYBOOK, sección "Movimiento". Regla: CSS → Web Animations API → librería; bajo 300 ms; nada animado en lo que se hace con el teclado o cien veces al día.
+
+**Sitio de marca con 3D, scroll o animación avanzada**
+`07-3d-y-animacion-avanzada.md` §1 (tabla de decisión) y el PLAYBOOK, sección "Movimiento de sitios nivel premio". Nada de esto va dentro de una app de uso diario.
+
+**App de salud, hábitos o registro diario en el teléfono**
+`09-salud-y-habitos-en-el-telefono.md` §2 y §5, y después `01-app-sencilla.md`.
+
+**Saber qué está de moda o qué herramientas de IA usar para diseñar**
+`05-tendencias-2026-10.md` y `06-ia-para-ui.md`. Mira primero la fecha de arriba: pasado 2027-01, rehaz la búsqueda con `last30days`.
 
 **Revisar si algo se ve "hecho por IA"**
 `04-apps-vistas-y-cara-de-ia.md` §3, y la lista del PLAYBOOK.

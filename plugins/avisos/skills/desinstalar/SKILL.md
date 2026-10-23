@@ -20,7 +20,7 @@ ls "$HOME/Library/Application Support/Avisos Amigos/scripts/desinstalar-hooks.sh
   bash "$HOME/Library/Application Support/Avisos Amigos/scripts/desinstalar-hooks.sh"
   ```
 
-- Si no existe, descarga el paquete y compruébalo igual que en `/avisos:instalar`, paso 1 (misma dirección, misma huella `f7c497d77f38c0712303b910aaa46969c9cce1d872630b1e946747ccac9d3774`; si la huella es otra, **detente**). Después:
+- Si no existe, descarga el paquete y compruébalo igual que en `/avisos:instalar`, paso 1 (misma dirección, misma huella `f9c351f22021acdf2037ad208d662d1c5e4b01edaaff62f71b042a6c84ffb1cc`; si la huella es otra, **detente**). Después:
 
   ```bash
   cd "$HOME/Library/Caches/avisos-instalar/avisos-para-amigos" && bash claude/scripts/desinstalar-hooks.sh

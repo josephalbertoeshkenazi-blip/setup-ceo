@@ -1,6 +1,6 @@
 ---
 name: sugerir-mejora
-description: Redacta una idea de mejora para el setup-ceo, sin ningún dato personal, y la manda como issue de GitHub al repo setup-ceo solo cuando el dueño dice que sí. Úsala cuando el dueño diga "esto podría ser mejor", "dile a Joseph que..." o tenga una idea para el setup.
+description: Redacta una idea de mejora para el setup-ceo, sin ningún dato personal, y la manda como issue de GitHub al repo setup-ceo solo cuando el dueño dice que sí. Úsala cuando el dueño diga "esto podría ser mejor", "mándale esta idea a quien hizo el setup" o tenga una idea para el setup.
 argument-hint: "[la idea]"
 ---
 # Sugerir una mejora al setup-ceo

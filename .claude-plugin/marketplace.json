@@ -1,15 +1,17 @@
 {
   "name": "setup-ceo",
-  "description": "Forma de trabajar con Claude Code: un CEO con cabezas por área, un asesor de negocios, un equipo de diseño y un perfil personal que las actualizaciones nunca tocan.",
+  "description": "Forma de trabajar con Claude Code: un CEO con cabezas por área, un asesor de negocios, un equipo de diseño, una revisión de seguridad y un perfil personal que las actualizaciones nunca tocan.",
   "owner": { "name": "Joseph Eshkenazi" },
   "plugins": [
-    { "name": "ceo-base", "source": "./plugins/ceo-base", "description": "La forma de trabajar del CEO: entender antes de hacer, delegar a cabezas, memoria, nada sale a terceros sin \"envíalo\", Shabbat opcional." },
+    { "name": "ceo-base", "source": "./plugins/ceo-base", "description": "La forma de trabajar del CEO: entender antes de hacer, delegar a cabezas, memoria, y nada sale a terceros sin \"envíalo\"." },
     { "name": "negocios", "source": "./plugins/negocios", "description": "Asesor de negocios: precios, tratos, socios y contratos, con números reales." },
-    { "name": "diseno", "source": "./plugins/diseno", "description": "Equipo de diseño: asesor-diseno dirige, dev-creativo construye, critico-diseno revisa. Trae su PLAYBOOK y el estilo panel-dueno." },
-    { "name": "adaptar", "source": "./plugins/adaptar", "description": "/adaptar:adaptar-a-mi: escribe tu perfil personal para cada agente, sin perder nada de lo anterior." },
+    { "name": "diseno", "source": "./plugins/diseno", "description": "Equipo de diseño: asesor-diseno dirige, dev-creativo construye, critico-diseno revisa. Trae su PLAYBOOK, el estilo panel-dueno y aprende de tus trabajos pasados." },
+    { "name": "adaptar", "source": "./plugins/adaptar", "description": "/adaptar:adaptar-a-mi: una entrevista de unos 10 minutos para cualquier persona (puedes pausar y trae lo que sabe otra IA): escribe tu perfil y te recomienda qué instalar." },
     { "name": "actualizaciones", "source": "./plugins/actualizaciones", "description": "/actualizaciones:novedades: te explica en palabras simples qué cambió y solo instala con tu sí." },
     { "name": "sugerencias", "source": "./plugins/sugerencias", "description": "/sugerencias:sugerir-mejora: manda una idea de mejora (sin datos personales), solo con tu sí." },
-    { "name": "complementos", "source": "./plugins/complementos", "description": "/complementos:instalar-complementos: las skills de terceros que más rinden (superpowers, gstack, graphify...) con su porqué; tú eliges, se revisa cada repo y nada se instala sin tu sí." },
+    { "name": "complementos", "source": "./plugins/complementos", "description": "/complementos:instalar-complementos: las skills de terceros que más rinden, de un catálogo revisado y fijado a una versión; tú eliges y nada se instala sin tu sí." },
+    { "name": "seguridad", "source": "./plugins/seguridad", "description": "/seguridad:revisar-mi-seguridad: revisa tu Mac y tu Claude en 5 minutos (solo mira), te explica sin jerga lo que importa y arregla cada cosa con tu sí y su forma de deshacer." },
+    { "name": "programar", "source": "./plugins/programar", "description": "Para quien programa: /programar:bug-hunt (busca los bugs de un proyecto y deja un plan) y /programar:rules-migrate (parte un CLAUDE.md largo en reglas por carpeta)." },
     { "name": "avisos", "source": "./plugins/avisos", "description": "Opcional, solo Mac: tarjetas del calendario y aros de las sesiones de Claude con su aviso \"terminó\"." }
   ]
 }

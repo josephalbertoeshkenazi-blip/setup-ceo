@@ -14,7 +14,8 @@ bash "${CLAUDE_PLUGIN_ROOT}/scripts/estado.sh"
 ```
 
 Te dice la versión instalada de cada plugin, la última del repo y el CHANGELOG nuevo.
-- Si dice `CONEXION: fallo`, explícale en una línea que la computadora no pudo entrar al repo (revisa internet) y que vuelva a intentar más tarde. Para.
+- Si dice `CONEXION: fallo`, explícale en una línea que la computadora no pudo entrar al repo (revisa internet) y que vuelva a intentar más tarde.
+- Con `CONEXION: fallo`, después de explicarlo, para.
 - Si todo está "al día", dile "Estás al día (versión X)" y para.
 
 ## Paso 2. Explicar en palabras simples
@@ -23,6 +24,7 @@ Con el CHANGELOG nuevo, escríbele:
 - **Qué cambia para él** en el día a día, si algo.
 - **Qué no se toca**: su perfil (`~/.claude/mi-perfil/`) y su memoria quedan igual.
 - Plugins nuevos que no tiene instalados: menciónalos aparte, con una línea de qué hacen, y pregunta si los quiere.
+- Si la novedad trae un plugin nuevo que no tiene, como `seguridad` (revisa tu Mac y tus cuentas) o `programar` (caza de bugs y CLAUDE.md más corto), ofrécelo en una línea con su comando (`claude plugin install seguridad@setup-ceo`, `claude plugin install programar@setup-ceo`), solo con su sí.
 
 Cierra con: "¿Lo instalo?" y espera.
 

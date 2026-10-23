@@ -15,6 +15,7 @@ input,textarea,[contenteditable]{caret-color:var(--cursor)}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--foco);outline-offset:2px}
+@media (forced-colors:active){:focus-visible,.asistente .campo:focus-within,.buscar:focus-within,.hoja2 textarea:focus-visible{outline:2px solid CanvasText}}
 h1,h2,h3,p,ul,ol,dl,dd{margin:0}
 ul,ol{padding:0;list-style:none}
 .i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}  /* íconos de línea (Lucide) */

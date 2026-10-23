@@ -1,0 +1,8 @@
+{
+  "name": "seguridad",
+  "version": "2.0.0",
+  "description": "Revisa la seguridad de tu computadora sin cambiar nada y arregla lo que tú apruebes, con respaldo y forma de deshacer.",
+  "author": { "name": "Joseph Eshkenazi" },
+  "license": "MIT",
+  "keywords": ["setup-ceo"]
+}

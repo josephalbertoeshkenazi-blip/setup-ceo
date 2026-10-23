@@ -9,17 +9,20 @@ Reglas del recetario (mandan sobre cualquier cadena de abajo):
 5. **El flujo propio de un proyecto gana.** Si el `CLAUDE.md` del proyecto define cómo se hace ese tipo de tarea, ese flujo es la cadena.
 6. **Nunca instales una skill nueva por tu cuenta.** Si ayudaría una que no tienes, dilo en una línea y ofrece `/complementos:instalar-complementos`.
 
-Las skills vienen de estos complementos (opcionales, se instalan con `/complementos:instalar-complementos`): superpowers, gstack, graphify, impeccable, last30days, avoid-ai-writing, hyperframes, claude-video-vision, repo-eval.
+Las skills vienen de estos complementos (opcionales, se instalan con `/complementos:instalar-complementos`): superpowers, gstack, graphify, impeccable, last30days, avoid-ai-writing, hyperframes, claude-video-vision, repo-eval y los plugins programar y seguridad.
 
 | Tarea | Cadena | Qué hace cada paso |
 |---|---|---|
-| Idea nueva, "¿vale la pena?" | `office-hours` → `last30days` → `plan-ceo-review` | grillar la idea, ver qué dice el mercado hoy, decidir si es lo correcto |
+| Tengo una idea, "¿vale la pena?" | `office-hours` (gstack, si está instalado) → `last30days` → `plan-ceo-review` | grillar la idea, ver qué dice el mercado hoy, decidir si es lo correcto |
 | Cosa grande (pantalla nueva + datos, varios archivos) | `brainstorming` → `writing-plans` → `subagent-driven-development` → `review` → `qa` | acordar qué hace, pasos chicos, construir con ayudantes, revisar el código, probarlo como usuario |
 | Cambio chico (un comportamiento) | `test-driven-development` → `verification-before-completion` | prueba primero, luego demostrar con salida real que funciona |
 | Algo roto | `investigate` (o `systematic-debugging`) → arreglar → `qa` | causa raíz antes de tocar código, luego probar |
 | Revisar que no queden bugs antes de juntar | `review` → arreglar → `qa` | revisión del código y prueba como usuario |
 | Mejorar o pulir una interfaz | `impeccable` → `design-review` | diseño y detalles, luego revisión visual en el navegador |
 | Plan de arquitectura | `plan-eng-review` | revisar datos, bordes y pruebas antes de construir |
+| Busca todos los bugs de mi proyecto | `bug-hunt` | revisar todo el código con varios agentes, descartar falsas alarmas y dejar un plan de arreglos |
+| Mi CLAUDE.md es muy largo | `rules-migrate` | separar las reglas que solo valen para ciertas carpetas, para que carguen solo cuando hacen falta |
+| ¿Estoy seguro? / revisar mi seguridad | `seguridad:revisar-mi-seguridad` | revisar tu Mac y tus cuentas con un informe simple, sin cambiar nada sin tu sí |
 | Seguridad, pagos, datos de usuarios | `cso` | auditoría de secretos, accesos y fugas |
 | Publicar | `review` → `ship` → `land-and-deploy` → `canary` | revisar, subir, desplegar y vigilar |
 | "Mejor forma de hacer X hoy" | `last30days` | qué dice la gente en los últimos 30 días |

@@ -34,13 +34,13 @@ sw_vers -productVersion; uname -m; /usr/bin/python3 --version
 ## Paso 1: descarga el paquete y compruébalo
 
 ```bash
-rm -rf "$HOME/Library/Caches/avisos-instalar" && mkdir -p "$HOME/Library/Caches/avisos-instalar" && cd "$HOME/Library/Caches/avisos-instalar" && curl -fL --retry 3 -o avisos.zip "https://github.com/josephalbertoeshkenazi-blip/setup-ceo/releases/download/avisos-1.0/avisos-para-amigos.zip" && shasum -a 256 avisos.zip
+rm -rf "$HOME/Library/Caches/avisos-instalar" && mkdir -p "$HOME/Library/Caches/avisos-instalar" && cd "$HOME/Library/Caches/avisos-instalar" && curl -fL --retry 3 -o avisos.zip "https://github.com/josephalbertoeshkenazi-blip/setup-ceo/releases/download/avisos-1.1/avisos-para-amigos.zip" && shasum -a 256 avisos.zip
 ```
 
 La huella tiene que ser exactamente:
 
 ```
-f7c497d77f38c0712303b910aaa46969c9cce1d872630b1e946747ccac9d3774
+f9c351f22021acdf2037ad208d662d1c5e4b01edaaff62f71b042a6c84ffb1cc
 ```
 
 Si es otra, **detente**: no abras el archivo, bórralo (`rm -rf "$HOME/Library/Caches/avisos-instalar"`) y dile al dueño que la descarga no es la esperada. Si coincide, descomprímelo:
@@ -92,15 +92,7 @@ Tienen que aparecer `Avisos.dmg`, `claude`, `LEEME.md`, `LEEME-PARA-TU-CLAUDE.md
 
    Tiene que mostrar una línea. Arriba a la derecha, en la barra de menú, aparece una campanita.
 
-## Paso 3: Shabbat y Yom Tov
-
-Antes de preguntar, mira si `~/.claude/mi-perfil/ceo.md` tiene la línea `Guarda Shabbat: sí` o `Guarda Shabbat: no`: si la tiene, úsala y no preguntes. Si no la tiene, pregúntale: "¿Guardas Shabbat?". Si dice que sí (o el perfil dice sí), dile:
-
-> Abre la campanita, entra a **Ajustes…** y en "Shabbat y Yom Tov" prende **Activado** y elige tu ciudad. Así Avisos no muestra nada desde el encendido de velas hasta la salida, y lo que caiga en ese tiempo te lo enseña al terminar.
-
-Las ciudades son Panamá, Ciudad de México, Bogotá, Caracas, Buenos Aires, Miami, Nueva York y Jerusalén. Si la suya no está, que elija la más cercana con la misma hora y avísale que los horarios pueden variar unos minutos.
-
-## Paso 4: conecta Claude Code
+## Paso 3: conecta Claude Code
 
 1. Mira qué cambiaría, sin cambiar nada todavía:
 
@@ -140,7 +132,7 @@ Las ciudades son Panamá, Ciudad de México, Bogotá, Caracas, Buenos Aires, Mia
 
 **Importante:** los ganchos funcionan en las sesiones de Claude Code que se abran **desde ahora**. Esta, la tuya, no cuenta.
 
-## Paso 5: prueba que funciona
+## Paso 4: prueba que funciona
 
 1. **Esto lo hace el dueño.** Dile:
 
@@ -156,7 +148,7 @@ Las ciudades son Panamá, Ciudad de México, Bogotá, Caracas, Buenos Aires, Mia
 
 3. Pregúntale si ve estas tres cosas:
    - **El aro:** en la campanita, en "Sesiones de Claude", un personaje dentro de un aro con el nombre de la carpeta. Mientras Claude trabaja, el aro gira.
-   - **"Terminó":** cuando Claude acaba, sale arriba, en el centro, un aviso chico con el nombre de la carpeta y "terminó". No sale si en ese momento está mirando esa misma pestaña, ni durante Shabbat.
+   - **"Terminó":** cuando Claude acaba, sale arriba, en el centro, un aviso chico con el nombre de la carpeta y "terminó". No sale si en ese momento está mirando esa misma pestaña.
    - **El clic:** al hacer clic en ese aviso, o en la fila del menú, se abre esa pestaña de Terminal. La primera vez macOS pregunta "Avisos quiere controlar Terminal": hay que pulsar **Aceptar**.
 
 4. Si las tres funcionan, borra la descarga y terminaste:
@@ -178,7 +170,7 @@ Las ciudades son Panamá, Ciudad de México, Bogotá, Caracas, Buenos Aires, Mia
 
 **El clic no lleva a la pestaña.** Solo funciona con la app Terminal de macOS. Si nunca salió la pregunta del permiso, o se negó: Ajustes del Sistema, Privacidad y seguridad, Automatización, Avisos, y prender **Terminal**.
 
-**No sale el aviso "terminó".** Que esté prendido en Ajustes ("Avisar cuando una sesión termina"), que no estuviera mirando esa pestaña cuando terminó y que no sea Shabbat.
+**No sale el aviso "terminó".** Que esté prendido en Ajustes ("Avisar cuando una sesión termina"), que no estuviera mirando esa pestaña cuando terminó.
 
 **macOS dice que Avisos "no se puede abrir".** Es el paso 2.3: Privacidad y seguridad y **Abrir igualmente**. Solo pasa la primera vez.
 

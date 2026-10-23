@@ -1,5 +1,7 @@
 # Campos del perfil: asesor-negocios
 
+> Solo se pregunta si la rama es fundador (o si la persona habla de precios, clientes o un negocio).
+
 Archivo de perfil: `~/.claude/mi-perfil/asesor-negocios.md`
 
 Lo que `/adaptar:adaptar-a-mi` necesita saber del dueño para este agente. Busca primero en sus archivos; pregunta solo lo que falte.

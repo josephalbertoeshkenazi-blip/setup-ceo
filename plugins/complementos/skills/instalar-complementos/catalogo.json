@@ -1,0 +1,895 @@
+{
+  "esquema": 2,
+  "revisado": "2026-10-23",
+  "reglas": "Solo entra lo GREEN de repo-eval. Se instala desde la fuente oficial, fijado a la versión revisada. Nunca se copia.",
+  "piezas": [
+    {
+      "id": "superpowers",
+      "para_que": {
+        "es": "Hace que Claude piense antes de construir: te interroga sobre lo que quieres, escribe un plan en pasos chicos, programa con pruebas primero y revisa su propio trabajo.",
+        "en": "Makes Claude agree on what to build before coding: it brainstorms, plans in small steps, writes tests first and reviews its own work."
+      },
+      "tipo": "plugin-tercero",
+      "fuente": "https://github.com/obra/superpowers",
+      "licencia": "MIT",
+      "pin": {
+        "etiqueta": "v7.0.0",
+        "commit": "bb92a77741419a4ab5f06e711a283343f1ada0c3"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "Ultimo commit 2026-10-21; 304110 estrellas; 184 issues abiertos / 877 cerrados; v7.0.0 (2026-10-10) -> bb92a77 confirmado. Mas nuevo: v7.0.1 (2ce8aa15d05bd57213e6f746f953aafb7ded7a8b, 2026-10-21) pero el marketplace oficial aun apunta a v7.0.0: conviene quedarse."
+      },
+      "peso": "liviano",
+      "perfiles": [
+        "empleado",
+        "fundador",
+        "programa"
+      ],
+      "nivel_minimo": "intermedio",
+      "senales": [
+        "programar",
+        "app",
+        "código",
+        "plan",
+        "pruebas",
+        "build",
+        "code",
+        "feature"
+      ],
+      "instalar": [
+        "claude plugin marketplace add anthropics/claude-plugins-official",
+        "claude plugin install superpowers@claude-plugins-official"
+      ],
+      "verificar": "claude plugin list muestra superpowers@claude-plugins-official con Version 7.0.0",
+      "desinstalar": [
+        "claude plugin uninstall superpowers@claude-plugins-official"
+      ],
+      "toca_fuera": [
+        "Si el marketplace oficial ya existe, el primer comando no es error: sigue con el segundo."
+      ],
+      "skills": [
+        "brainstorming",
+        "writing-plans",
+        "subagent-driven-development",
+        "test-driven-development",
+        "systematic-debugging",
+        "verification-before-completion"
+      ]
+    },
+    {
+      "id": "gstack",
+      "para_que": {
+        "es": "Un equipo de ingeniería en comandos: revisar una idea como inversionista, planear, revisar el código, probar la app como un usuario real en el navegador y llevarla a producción.",
+        "en": "An engineering team as commands: pressure-test an idea, plan, review code, QA the real app in a browser, ship, debug and security-audit."
+      },
+      "tipo": "skill-git",
+      "fuente": "https://github.com/garrytan/gstack",
+      "licencia": "MIT",
+      "pin": {
+        "etiqueta": null,
+        "commit": "43d6ed28f2bf55acae23a13be3d1e053f8958d3b"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "Ultimo commit 2026-10-23, 137368 estrellas, 14 contribuyentes con top 510/553 (92%); 65 abiertos / 960 cerrados; 0 etiquetas. Commit 43d6ed2 existe (2026-10-20, VERSION 1.91.165.0); main ya va en 1.91.182.0 (b04cc35832183a89ed71eed628de15a6f315a1a8), cambia a diario."
+      },
+      "peso": "pesado",
+      "perfiles": [
+        "programa",
+        "fundador",
+        "ideas"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "idea",
+        "negocio",
+        "startup",
+        "proyecto aparte",
+        "quiero empezar",
+        "lanzar",
+        "producto",
+        "business",
+        "side project"
+      ],
+      "instalar": [
+        "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack",
+        "git -C ~/.claude/skills/gstack fetch --depth 1 origin 43d6ed28f2bf55acae23a13be3d1e053f8958d3b && git -C ~/.claude/skills/gstack checkout 43d6ed28f2bf55acae23a13be3d1e053f8958d3b",
+        "cd ~/.claude/skills/gstack && ./setup"
+      ],
+      "verificar": "existe ~/.claude/skills/gstack/SKILL.md y, al reiniciar Claude, aparecen skills como qa y review",
+      "desinstalar": [
+        "rm -r ~/.claude/skills/gstack"
+      ],
+      "toca_fuera": [
+        "PESADO: pide git y bun (1.3.3 o más nuevo); si falta bun, instalarlo es un paso aparte con su propio sí: brew install oven-sh/bun/bun (sin brew, detente y pregunta).",
+        "Su ./setup descarga un Chromium (cientos de MB, varios minutos). Leer ~/.claude/skills/gstack/setup entero y mostrarlo ANTES de correrlo.",
+        "Su README sugiere pegar una sección en el CLAUDE.md del dueño: NO se hace salvo que el dueño lo pida."
+      ],
+      "skills": [
+        "office-hours",
+        "plan-ceo-review",
+        "plan-eng-review",
+        "investigate",
+        "review",
+        "qa",
+        "design-review",
+        "cso",
+        "ship",
+        "land-and-deploy",
+        "canary"
+      ]
+    },
+    {
+      "id": "graphify",
+      "para_que": {
+        "es": "Convierte una carpeta de código, documentos o notas en un mapa que se puede consultar. Ahorra mucha lectura al entrar a un proyecto grande.",
+        "en": "Turns a folder of code, docs or notes into a queryable knowledge graph, so you stop re-reading files to understand a big project."
+      },
+      "tipo": "pypi",
+      "fuente": "https://github.com/Graphify-Labs/graphify",
+      "licencia": "Apache-2.0",
+      "pin": {
+        "etiqueta": "0.9.93",
+        "commit": "==0.9.93"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "PyPI graphifyy: version mas nueva 0.9.94 (2026-10-22); 0.9.93 sigue publicada. project_urls.Repository = https://github.com/Graphify-Labs/graphify (confirmado). Tag v0.9.93 -> b90b9df (2026-10-20); v0.9.94 -> c588b72d936927790a87ad009955078ed40562a3. 133722 estrellas, 100 contribuyentes (top 55%)."
+      },
+      "peso": "medio",
+      "perfiles": [
+        "programa",
+        "fundador"
+      ],
+      "nivel_minimo": "intermedio",
+      "senales": [
+        "proyecto grande",
+        "muchos archivos",
+        "documentos",
+        "notas",
+        "codebase",
+        "repo"
+      ],
+      "instalar": [
+        "uv tool install graphifyy==0.9.93",
+        "graphify install"
+      ],
+      "verificar": "graphify --help responde y existe ~/.claude/skills/graphify/SKILL.md",
+      "desinstalar": [
+        "uv tool uninstall graphifyy"
+      ],
+      "toca_fuera": [
+        "graphify agrega un bloque a tu CLAUDE.md (~/.claude/CLAUDE.md): decirlo ANTES del sí final; si no lo acepta, no se instala.",
+        "Pide Python 3.10 o más y uv (o pipx: pipx install graphifyy==0.9.93). Si faltan, brew install uv es un paso aparte con su propio sí."
+      ],
+      "skills": [
+        "graphify"
+      ]
+    },
+    {
+      "id": "impeccable",
+      "para_que": {
+        "es": "Mejora lo que ya se ve mal: jerarquía, espaciado, tipografía, color, movimiento y textos de una interfaz. Quita el aspecto genérico de hecho por IA.",
+        "en": "Fixes UI that looks generic or off: hierarchy, spacing, type, color, motion and copy."
+      },
+      "tipo": "plugin-tercero",
+      "fuente": "https://github.com/pbakaus/impeccable",
+      "licencia": "Apache-2.0",
+      "pin": {
+        "etiqueta": "skill-v4.7.0",
+        "commit": "aeeb3d8c30b5f95aeeb3e893b0f1a308af8fdb8f"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "Ultimo commit 2026-10-23; 31 abiertos / 394 cerrados; skill-v4.7.0 -> aeeb3d8 (2026-10-19) confirmado y es la ultima skill-v*. Top 1869/2509 (74%)."
+      },
+      "peso": "liviano",
+      "perfiles": [
+        "creativo",
+        "fundador"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "diseño",
+        "web",
+        "página",
+        "interfaz",
+        "se ve genérico",
+        "pulir",
+        "design",
+        "landing",
+        "ui"
+      ],
+      "instalar": [
+        "claude plugin marketplace add pbakaus/impeccable#skill-v4.7.0",
+        "claude plugin install impeccable@impeccable"
+      ],
+      "verificar": "claude plugin list muestra impeccable@impeccable con Version 4.7.0",
+      "desinstalar": [
+        "claude plugin uninstall impeccable@impeccable"
+      ],
+      "toca_fuera": [
+        "Su lanzador baja un binario la primera vez que se usa, a ~/.impeccable/bin/."
+      ],
+      "skills": [
+        "impeccable"
+      ]
+    },
+    {
+      "id": "last30days",
+      "para_que": {
+        "es": "Te dice qué está diciendo la gente de un tema en los últimos 30 días (Reddit, X, YouTube, Hacker News, GitHub), para no quedarte con información vieja.",
+        "en": "Researches what people are actually saying about a topic in the last 30 days, so advice is current, not stale."
+      },
+      "tipo": "plugin-tercero",
+      "fuente": "https://github.com/mvanhorn/last30days-skill",
+      "licencia": "MIT",
+      "pin": {
+        "etiqueta": "v3.28.0",
+        "commit": "50998cd1ba583f13a63b20e3fb5d906c71c31655"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "Ultimo commit 2026-10-23; 65194 estrellas; v3.28.0 -> 50998cd (2026-10-11) confirmado. Mas nuevas: v3.28.1 (10-20), v3.29.0 y v3.30.0 (2026-10-22, 7fac0fc31ba5212b5ddaa29252d9f7148cec8423): 3 versiones en 2 dias, mejor esperar."
+      },
+      "peso": "medio",
+      "perfiles": [
+        "estudiante",
+        "fundador",
+        "creativo",
+        "empleado"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "investigar",
+        "tendencias",
+        "mercado",
+        "qué dice la gente",
+        "competencia",
+        "research",
+        "trends"
+      ],
+      "instalar": [
+        "claude plugin marketplace add mvanhorn/last30days-skill#v3.28.0",
+        "claude plugin install last30days@last30days-skill"
+      ],
+      "verificar": "claude plugin list muestra last30days@last30days-skill con Version 3.28.0",
+      "desinstalar": [
+        "claude plugin uninstall last30days@last30days-skill"
+      ],
+      "toca_fuera": [
+        "En su primer uso su asistente de arranque instala yt-dlp y la CLI de Digg y ofrece extraer las cookies del navegador para leer X/Twitter; cada cosa pide su propio sí y sin ellas funciona con menos fuentes.",
+        "Algunas fuentes piden claves propias del dueño."
+      ],
+      "skills": [
+        "last30days"
+      ]
+    },
+    {
+      "id": "avoid-ai-writing",
+      "para_que": {
+        "es": "Revisa un texto y le quita lo que suena a robot. Úsalo antes de mandar un correo, una propuesta, un ensayo o un post.",
+        "en": "Audits and rewrites text to remove AI-sounding phrasing. Use it before sending an email, proposal or post."
+      },
+      "tipo": "plugin-tercero",
+      "fuente": "https://github.com/conorbronsdon/avoid-ai-writing",
+      "licencia": "MIT",
+      "pin": {
+        "etiqueta": "v3.38.0",
+        "commit": "f9f626b74b64654788abed23823fb87b6980867d"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "Ultimo commit 2026-10-20; 5208 estrellas; v3.38.0 -> f9f626b (2026-10-15) confirmado y es la mas nueva. 51 contribuyentes, top 434/601 (72%)."
+      },
+      "peso": "liviano",
+      "perfiles": [
+        "empleado",
+        "estudiante",
+        "fundador",
+        "creativo"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "correo",
+        "propuesta",
+        "ensayo",
+        "post",
+        "informe",
+        "email",
+        "essay",
+        "report"
+      ],
+      "instalar": [
+        "claude plugin marketplace add conorbronsdon/avoid-ai-writing#v3.38.0",
+        "claude plugin install avoid-ai-writing@conorbronsdon-skills"
+      ],
+      "verificar": "claude plugin list muestra avoid-ai-writing@conorbronsdon-skills con Version 3.38.0",
+      "desinstalar": [
+        "claude plugin uninstall avoid-ai-writing@conorbronsdon-skills"
+      ],
+      "toca_fuera": [],
+      "skills": [
+        "avoid-ai-writing"
+      ]
+    },
+    {
+      "id": "hyperframes",
+      "para_que": {
+        "es": "Hace videos de verdad: explicadores, promos y animaciones construidos desde cero (guion visual, escenas, movimiento y voz).",
+        "en": "Builds real videos (explainers, promos, motion graphics) from scratch: storyboard, scenes, motion and voice."
+      },
+      "tipo": "plugin-tercero",
+      "fuente": "https://github.com/heygen-com/hyperframes",
+      "licencia": "Apache-2.0",
+      "pin": {
+        "etiqueta": "v0.8.181",
+        "commit": "ae02e5aceff4742e5d72c20f0859eb3e6b449035"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "Ultimo commit 2026-10-23; 70574 estrellas; v0.8.181 -> ae02e5a (2026-10-20) confirmado. Mas nueva v0.8.188 (3badc9bfa586d15311b498a0839ed2064906b883, 2026-10-23, 3 dias de pin). 121 abiertos / 420 cerrados."
+      },
+      "peso": "medio",
+      "perfiles": [
+        "creativo"
+      ],
+      "nivel_minimo": "intermedio",
+      "senales": [
+        "video",
+        "animación",
+        "promo",
+        "explicador",
+        "reel",
+        "motion"
+      ],
+      "instalar": [
+        "claude plugin marketplace add heygen-com/hyperframes#v0.8.181",
+        "claude plugin install hyperframes@hyperframes"
+      ],
+      "verificar": "claude plugin list muestra hyperframes@hyperframes con Version 0.8.181",
+      "desinstalar": [
+        "claude plugin uninstall hyperframes@hyperframes"
+      ],
+      "toca_fuera": [
+        "Pide Node.js 22 o más y FFmpeg.",
+        "Algunas voces y música piden iniciar sesión gratis en HeyGen: lo decide el dueño."
+      ],
+      "skills": [
+        "hyperframes"
+      ]
+    },
+    {
+      "id": "claude-video-vision",
+      "para_que": {
+        "es": "Le da ojos a Claude para ver un video (archivo o YouTube): extrae fotogramas y la transcripción para resumirlo o analizarlo.",
+        "en": "Lets Claude watch a video (file or YouTube): it extracts frames and a transcript so Claude can summarize or analyze it."
+      },
+      "tipo": "plugin-tercero",
+      "fuente": "https://github.com/jordanrendric/claude-video-vision",
+      "licencia": "MIT",
+      "pin": {
+        "etiqueta": "v1.4.0",
+        "commit": "4a4f99016f249a24018cd19b66531ebbcd58024b"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "Ultimo commit 2026-10-06 (pushed_at 10-14); v1.4.0 -> 4a4f990 (2026-10-06) confirmado, es la ultima; 3 abiertos / 10 cerrados; top 60/104 (58%)."
+      },
+      "peso": "medio",
+      "perfiles": [
+        "estudiante",
+        "creativo"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "clase grabada",
+        "video",
+        "youtube",
+        "reunión grabada",
+        "lecture",
+        "recording"
+      ],
+      "instalar": [
+        "claude plugin marketplace add jordanrendric/claude-video-vision#v1.4.0",
+        "claude plugin install claude-video-vision@claude-video-vision"
+      ],
+      "verificar": "claude plugin list muestra claude-video-vision@claude-video-vision con Version 1.4.0",
+      "desinstalar": [
+        "claude plugin uninstall claude-video-vision@claude-video-vision"
+      ],
+      "toca_fuera": [
+        "Usa ffmpeg. La transcripción puede ir por Whisper local (baja modelos la primera vez) o por las APIs de Gemini u OpenAI, que piden clave propia y mandan el audio a ese servicio: que el dueño elija.",
+        "Ver uno o dos videos a la vez para no llenar la memoria."
+      ],
+      "skills": [
+        "claude-video-vision:watch-video"
+      ]
+    },
+    {
+      "id": "animaciones",
+      "para_que": {
+        "es": "Tres skills de animación de Emil Kowalski: hacer una animación desde cero con buen criterio, revisar las que ya tienes y que no traben la página.",
+        "en": "Three animation skills by Emil Kowalski: build an animation with good judgment, review existing motion, and keep it smooth."
+      },
+      "tipo": "skill-git",
+      "fuente": "https://github.com/emilkowalski/skills",
+      "licencia": "MIT",
+      "pin": {
+        "etiqueta": null,
+        "commit": "2d228630ba1446365f614a108cb8252f1feda202"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "MIT, 49 mil estrellas, último commit 2026-10-11, 0 issues abiertos / 19 cerrados; solo texto (markdown), sin scripts. Sin etiquetas: se fija por commit."
+      },
+      "peso": "liviano",
+      "perfiles": [
+        "creativo",
+        "programa"
+      ],
+      "nivel_minimo": "intermedio",
+      "senales": [
+        "animación",
+        "animar",
+        "movimiento",
+        "transición",
+        "motion",
+        "web",
+        "app"
+      ],
+      "instalar": [
+        "git clone --quiet https://github.com/emilkowalski/skills.git ~/.claude/vendor/emilkowalski-skills",
+        "git -C ~/.claude/vendor/emilkowalski-skills checkout --quiet 2d228630ba1446365f614a108cb8252f1feda202",
+        "cp -R ~/.claude/vendor/emilkowalski-skills/skills/animate ~/.claude/skills/animate",
+        "cp -R ~/.claude/vendor/emilkowalski-skills/skills/review-animations ~/.claude/skills/review-animations",
+        "cp -R ~/.claude/vendor/emilkowalski-skills/skills/animation-performance ~/.claude/skills/animation-performance"
+      ],
+      "verificar": "existen ~/.claude/skills/animate/SKILL.md, ~/.claude/skills/review-animations/SKILL.md y ~/.claude/skills/animation-performance/SKILL.md",
+      "desinstalar": [
+        "rm -r ~/.claude/skills/animate ~/.claude/skills/review-animations ~/.claude/skills/animation-performance ~/.claude/vendor/emilkowalski-skills"
+      ],
+      "toca_fuera": [
+        "Baja una copia del repo a ~/.claude/vendor/emilkowalski-skills y copia 3 carpetas a ~/.claude/skills/. Si ya existe una skill con ese nombre, NO se pisa: se avisa y se salta."
+      ],
+      "skills": [
+        "animate",
+        "review-animations",
+        "animation-performance"
+      ]
+    },
+    {
+      "id": "obsidian-markdown",
+      "para_que": {
+        "es": "Enseña a Claude a escribir notas de Obsidian bien hechas (enlaces entre notas, etiquetas, propiedades), para quien ordena su estudio o su vida en Obsidian.",
+        "en": "Teaches Claude to write proper Obsidian notes (wikilinks, tags, properties)."
+      },
+      "tipo": "skill-git",
+      "fuente": "https://github.com/kepano/obsidian-skills",
+      "licencia": "MIT",
+      "pin": {
+        "etiqueta": null,
+        "commit": "3ccff5338ea700537839b21900aa5358a0402c98"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "MIT, 50 mil estrellas, del creador de Obsidian, 16 contribuyentes, último commit 2026-09-15; solo texto, sin scripts. La proporción de issues (38 abiertos / 22 cerrados) no pesa en un repo sin código."
+      },
+      "peso": "liviano",
+      "perfiles": [
+        "estudiante",
+        "personal"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "obsidian",
+        "notas",
+        "apuntes",
+        "segundo cerebro",
+        "organizar"
+      ],
+      "instalar": [
+        "git clone --quiet https://github.com/kepano/obsidian-skills.git ~/.claude/vendor/kepano-obsidian-skills",
+        "git -C ~/.claude/vendor/kepano-obsidian-skills checkout --quiet 3ccff5338ea700537839b21900aa5358a0402c98",
+        "cp -R ~/.claude/vendor/kepano-obsidian-skills/skills/obsidian-markdown ~/.claude/skills/obsidian-markdown"
+      ],
+      "verificar": "existe ~/.claude/skills/obsidian-markdown/SKILL.md",
+      "desinstalar": [
+        "rm -r ~/.claude/skills/obsidian-markdown ~/.claude/vendor/kepano-obsidian-skills"
+      ],
+      "toca_fuera": [
+        "Baja una copia del repo a ~/.claude/vendor/kepano-obsidian-skills y copia 1 carpeta a ~/.claude/skills/. Solo sirve si la persona usa Obsidian."
+      ],
+      "skills": [
+        "obsidian-markdown"
+      ]
+    },
+    {
+      "id": "gitleaks",
+      "para_que": {
+        "es": "Busca claves y contraseñas olvidadas en tus carpetas y en lo que vas a subir a GitHub, sin mostrarlas. La usa la revisión de seguridad.",
+        "en": "Finds leaked keys and passwords in your folders and commits, without printing them. Used by the security check."
+      },
+      "tipo": "brew",
+      "fuente": "https://github.com/gitleaks/gitleaks",
+      "licencia": "MIT",
+      "pin": {
+        "etiqueta": "v8.30.1",
+        "commit": "83d9cd684c87d95d656c1458ef04895a7f1cbd8e"
+      },
+      "repo_eval": {
+        "veredicto": "GREEN",
+        "fecha": "2026-10-23",
+        "evidencia": "MIT, 30 mil estrellas, versión estable v8.30.1 (la misma que trae Homebrew), 280 abiertos / 716 cerrados; herramienta estándar para buscar secretos."
+      },
+      "peso": "liviano",
+      "perfiles": [
+        "programa",
+        "fundador",
+        "empleado"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        ".env",
+        "clave",
+        "contraseña",
+        "token",
+        "github",
+        "código"
+      ],
+      "instalar": [
+        "brew install gitleaks"
+      ],
+      "verificar": "gitleaks version muestra 8.30.1 o más nuevo",
+      "desinstalar": [
+        "brew uninstall gitleaks"
+      ],
+      "toca_fuera": [
+        "Necesita Homebrew. Si no hay brew, no se instala brew: se explica y se sigue sin gitleaks. Normalmente la ofrece el guardia de seguridad."
+      ],
+      "skills": []
+    },
+    {
+      "id": "repo-eval",
+      "para_que": {
+        "es": "Antes de instalar cualquier librería o skill que encontraste, te dice si es segura: licencia, actividad, quién la mantiene. Responde verde, amarillo o rojo con datos.",
+        "en": "Before installing any library or skill you found, it checks license, activity and maintainers and gives a GREEN/YELLOW/RED verdict with evidence."
+      },
+      "tipo": "plugin-propio",
+      "fuente": "viene dentro del plugin complementos (complementos:repo-eval)",
+      "licencia": "MIT",
+      "pin": null,
+      "repo_eval": null,
+      "peso": "liviano",
+      "perfiles": [
+        "empleado",
+        "estudiante",
+        "fundador",
+        "creativo",
+        "personal",
+        "principiante",
+        "programa",
+        "ideas"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "instalar",
+        "librería",
+        "es seguro",
+        "library",
+        "safe to install"
+      ],
+      "instalar": [],
+      "verificar": "ya viene con el plugin complementos",
+      "desinstalar": [],
+      "toca_fuera": [],
+      "skills": [
+        "repo-eval"
+      ]
+    },
+    {
+      "id": "negocios",
+      "para_que": {
+        "es": "Asesor de negocios: precios, tratos, socios y contratos, con números reales.",
+        "en": "Business advisor: prices, deals, partners and contracts, with real numbers."
+      },
+      "tipo": "plugin-propio",
+      "fuente": "este mismo mercado",
+      "licencia": "propia",
+      "pin": null,
+      "repo_eval": null,
+      "peso": "liviano",
+      "perfiles": [
+        "fundador",
+        "ideas"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "precio",
+        "cliente",
+        "contrato",
+        "socio",
+        "negocio",
+        "price",
+        "client",
+        "deal"
+      ],
+      "instalar": [
+        "claude plugin install negocios@setup-ceo"
+      ],
+      "verificar": "claude plugin list muestra negocios@setup-ceo",
+      "desinstalar": [
+        "claude plugin uninstall negocios@setup-ceo"
+      ],
+      "toca_fuera": [],
+      "skills": []
+    },
+    {
+      "id": "diseno",
+      "para_que": {
+        "es": "Equipo de diseño: un asesor dirige, un desarrollador creativo construye y un crítico revisa. Aprende tu gusto.",
+        "en": "Design team: an advisor leads, a creative developer builds and a critic reviews. It learns your taste."
+      },
+      "tipo": "plugin-propio",
+      "fuente": "este mismo mercado",
+      "licencia": "propia",
+      "pin": null,
+      "repo_eval": null,
+      "peso": "liviano",
+      "perfiles": [
+        "creativo"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "diseño",
+        "marca",
+        "portafolio",
+        "figma",
+        "design",
+        "brand",
+        "portfolio"
+      ],
+      "instalar": [
+        "claude plugin install diseno@setup-ceo"
+      ],
+      "verificar": "claude plugin list muestra diseno@setup-ceo",
+      "desinstalar": [
+        "claude plugin uninstall diseno@setup-ceo"
+      ],
+      "toca_fuera": [],
+      "skills": []
+    },
+    {
+      "id": "seguridad",
+      "para_que": {
+        "es": "Revisión de seguridad de 5 minutos: solo mira y no cambia nada sin tu sí.",
+        "en": "A 5-minute security check: it only looks and changes nothing without your yes."
+      },
+      "tipo": "plugin-propio",
+      "fuente": "este mismo mercado",
+      "licencia": "propia",
+      "pin": null,
+      "repo_eval": null,
+      "peso": "liviano",
+      "perfiles": [
+        "empleado",
+        "estudiante",
+        "fundador",
+        "creativo",
+        "personal",
+        "principiante",
+        "programa",
+        "ideas"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "seguridad",
+        "contraseña",
+        "clave",
+        "hackeo",
+        "security",
+        "password"
+      ],
+      "instalar": [
+        "claude plugin install seguridad@setup-ceo"
+      ],
+      "verificar": "claude plugin list muestra seguridad@setup-ceo",
+      "desinstalar": [
+        "claude plugin uninstall seguridad@setup-ceo"
+      ],
+      "toca_fuera": [],
+      "skills": [
+        "seguridad:revisar-mi-seguridad",
+        "revisar-mi-seguridad"
+      ]
+    },
+    {
+      "id": "programar",
+      "para_que": {
+        "es": "Skills para quien programa: caza de bugs en todo el código y limpieza de un CLAUDE.md demasiado largo.",
+        "en": "Skills for people who code: whole-codebase bug hunt and splitting an oversized CLAUDE.md."
+      },
+      "tipo": "plugin-propio",
+      "fuente": "este mismo mercado",
+      "licencia": "propia",
+      "pin": null,
+      "repo_eval": null,
+      "peso": "liviano",
+      "perfiles": [
+        "programa"
+      ],
+      "nivel_minimo": "intermedio",
+      "senales": [
+        "programar",
+        "código",
+        "bug",
+        "code",
+        "debug"
+      ],
+      "instalar": [
+        "claude plugin install programar@setup-ceo"
+      ],
+      "verificar": "claude plugin list muestra programar@setup-ceo",
+      "desinstalar": [
+        "claude plugin uninstall programar@setup-ceo"
+      ],
+      "toca_fuera": [],
+      "skills": [
+        "bug-hunt",
+        "rules-migrate",
+        "programar:bug-hunt",
+        "programar:rules-migrate"
+      ]
+    },
+    {
+      "id": "avisos",
+      "para_que": {
+        "es": "Avisos para la Mac: tarjetas antes de cada evento del calendario y aviso cuando Claude termina. Solo Mac con macOS 14 o más nuevo.",
+        "en": "Mac alerts: cards before each calendar event and a notice when Claude finishes. macOS 14 or newer only."
+      },
+      "tipo": "plugin-propio",
+      "fuente": "este mismo mercado",
+      "licencia": "propia",
+      "pin": null,
+      "repo_eval": null,
+      "peso": "liviano",
+      "perfiles": [
+        "personal",
+        "empleado",
+        "fundador",
+        "estudiante"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "calendario",
+        "reuniones",
+        "recordatorios",
+        "calendar",
+        "meetings",
+        "reminders"
+      ],
+      "instalar": [
+        "claude plugin install avisos@setup-ceo"
+      ],
+      "verificar": "claude plugin list muestra avisos@setup-ceo; /avisos:instalar hace el resto",
+      "desinstalar": [
+        "claude plugin uninstall avisos@setup-ceo"
+      ],
+      "toca_fuera": [
+        "Solo macOS 14 o más nuevo; la skill de instalar lo comprueba."
+      ],
+      "skills": []
+    },
+    {
+      "id": "conector-calendario",
+      "para_que": {
+        "es": "Conecta Google Calendar a Claude para que lo pueda leer cuando se lo pidas.",
+        "en": "Connect Google Calendar to Claude so it can read it when you ask."
+      },
+      "tipo": "conector-guia",
+      "fuente": "https://claude.ai/settings/connectors",
+      "licencia": "n/a",
+      "pin": null,
+      "repo_eval": null,
+      "peso": "liviano",
+      "perfiles": [
+        "personal",
+        "empleado",
+        "estudiante"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "calendario",
+        "reuniones",
+        "calendar"
+      ],
+      "instalar": [],
+      "abrir": "https://claude.ai/settings/connectors",
+      "url_verificada": false,
+      "verificar": "el conector aparece como conectado en esa página",
+      "desinstalar": [],
+      "toca_fuera": [
+        "Es la persona quien da el permiso en la página de Google; Claude no ve la clave."
+      ],
+      "skills": []
+    },
+    {
+      "id": "conector-gmail",
+      "para_que": {
+        "es": "Conecta Gmail a Claude para que lo pueda leer cuando se lo pidas.",
+        "en": "Connect Gmail to Claude so it can read it when you ask."
+      },
+      "tipo": "conector-guia",
+      "fuente": "https://claude.ai/settings/connectors",
+      "licencia": "n/a",
+      "pin": null,
+      "repo_eval": null,
+      "peso": "liviano",
+      "perfiles": [
+        "personal",
+        "empleado",
+        "estudiante"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "correo",
+        "email",
+        "gmail"
+      ],
+      "instalar": [],
+      "abrir": "https://claude.ai/settings/connectors",
+      "url_verificada": false,
+      "verificar": "el conector aparece como conectado en esa página",
+      "desinstalar": [],
+      "toca_fuera": [
+        "Es la persona quien da el permiso en la página de Google; Claude no ve la clave."
+      ],
+      "skills": []
+    },
+    {
+      "id": "conector-drive",
+      "para_que": {
+        "es": "Conecta Google Drive a Claude para que lo pueda leer cuando se lo pidas.",
+        "en": "Connect Google Drive to Claude so it can read it when you ask."
+      },
+      "tipo": "conector-guia",
+      "fuente": "https://claude.ai/settings/connectors",
+      "licencia": "n/a",
+      "pin": null,
+      "repo_eval": null,
+      "peso": "liviano",
+      "perfiles": [
+        "personal",
+        "empleado",
+        "estudiante"
+      ],
+      "nivel_minimo": "principiante",
+      "senales": [
+        "documentos",
+        "archivos",
+        "drive",
+        "docs"
+      ],
+      "instalar": [],
+      "abrir": "https://claude.ai/settings/connectors",
+      "url_verificada": false,
+      "verificar": "el conector aparece como conectado en esa página",
+      "desinstalar": [],
+      "toca_fuera": [
+        "Es la persona quien da el permiso en la página de Google; Claude no ve la clave."
+      ],
+      "skills": []
+    }
+  ]
+}

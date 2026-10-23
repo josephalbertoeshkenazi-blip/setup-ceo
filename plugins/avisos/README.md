@@ -5,7 +5,6 @@ Una app de la barra de menú de la Mac:
 - **Calendario:** una tarjeta grande en el centro de la pantalla 10 minutos antes de cada evento y otra vez a la hora exacta.
 - **Sesiones de Claude Code:** cada sesión abierta en la Terminal aparece como un personaje dentro de un aro. Gira mientras Claude trabaja, se pone azul cuando Claude te necesita y verde cuando termina.
 - **"Terminó":** cuando una sesión acaba, sale un aviso chico arriba en la pantalla. Un clic y estás en esa pestaña.
-- **Shabbat y Yom Tov:** si lo prendes en Ajustes, no muestra nada en ese tiempo y te enseña lo pendiente al salir.
 
 Es gratis, no manda nada a internet y no necesita cuenta. Necesita macOS 14 o más nuevo.
 

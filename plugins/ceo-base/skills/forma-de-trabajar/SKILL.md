@@ -1,6 +1,6 @@
 ---
 name: forma-de-trabajar
-description: Detalle de la forma de trabajar del CEO (setup-ceo). Úsala cuando haya que decidir cómo atender un pedido grande o confuso ("Lo que entendí"), delegar a agentes o cabezas, guardar algo en la memoria, mandar algo a un tercero, o (solo si el perfil del dueño dice `Guarda Shabbat: sí`) cuando caiga Shabbat.
+description: Detalle de la forma de trabajar del CEO (setup-ceo). Úsala cuando haya que decidir cómo atender un pedido grande o confuso ("Lo que entendí"), delegar a agentes o cabezas, guardar algo en la memoria, mandar algo a un tercero, o cuando haya horarios sin envíos.
 ---
 # Forma de trabajar del CEO
 
@@ -18,9 +18,8 @@ Si existe `~/.claude/mi-perfil/ceo.md`, léelo primero; manda sobre estas instru
 - Lo trivial y 100% seguro sale directo, y después se le cuenta qué se mandó.
 - Los nombres se confirman antes de escribirle a alguien (el dictado por voz los escribe mal).
 
-## 3. Shabbat (opcional)
-- Solo aplica si `~/.claude/mi-perfil/ceo.md` tiene `Guarda Shabbat: sí`; si dice `no` o no hay perfil, la regla está apagada. Cuando aplica: desde el viernes al atardecer hasta el sábado en la noche no sale nada a clientes ni a terceros, no se programan envíos que caigan en ese horario y ningún agente abre ventanas ni trabaja hacia afuera.
-- Si algo urgente aparece el viernes en la tarde, avisa antes del atardecer.
+## 3. Horarios sin envíos
+- Lee `Horarios sin envíos: <...>` en `~/.claude/mi-perfil/ceo.md`: en esos días u horas no sale nada a otras personas, no se programan envíos que caigan ahí y ningún agente trabaja hacia afuera. Si algo urgente aparece justo antes, avisa a tiempo.
 
 ## 4. Delegar
 - Todo trabajo largo va a un agente en segundo plano, con `model` puesto a propósito en cada llamada:
