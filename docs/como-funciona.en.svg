@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="220" viewBox="0 0 880 220" role="img" aria-labelledby="t d">
+<title id="t">How setup-ceo works</title>
+<desc id="d">Five steps: install in 5 minutes, a 10-minute interview, it builds your rules and memory, it works with you and waits for your envíalo (send it), and it learns from your corrections.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/></marker></defs>
+<rect x="0" y="0" width="880" height="220" rx="16" ry="16" fill="#f8fafc" stroke="#cbd5e1"/>
+<rect x="6" y="50" width="140" height="120" rx="12" ry="12" fill="#ffffff" stroke="#1d4ed8" stroke-width="2"/>
+<circle cx="28" cy="50" r="15" fill="#1d4ed8"/><text x="28" y="56" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">1</text>
+<text x="76" y="100" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#0f172a">You install</text>
+<text x="76" y="122" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#0f172a">(5 min)</text>
+<line x1="149" y1="110" x2="183" y2="110" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="186" y="50" width="140" height="120" rx="12" ry="12" fill="#ffffff" stroke="#1d4ed8" stroke-width="2"/>
+<circle cx="208" cy="50" r="15" fill="#1d4ed8"/><text x="208" y="56" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">2</text>
+<text x="256" y="100" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#0f172a">It interviews you</text>
+<text x="256" y="122" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#0f172a">(10 min)</text>
+<line x1="329" y1="110" x2="363" y2="110" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="366" y="50" width="140" height="120" rx="12" ry="12" fill="#ffffff" stroke="#1d4ed8" stroke-width="2"/>
+<circle cx="388" cy="50" r="15" fill="#1d4ed8"/><text x="388" y="56" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">3</text>
+<text x="436" y="100" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#0f172a">Builds your rules</text>
+<text x="436" y="122" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#0f172a">and memory</text>
+<line x1="509" y1="110" x2="543" y2="110" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="546" y="50" width="140" height="120" rx="12" ry="12" fill="#ffffff" stroke="#1d4ed8" stroke-width="2"/>
+<circle cx="568" cy="50" r="15" fill="#1d4ed8"/><text x="568" y="56" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">4</text>
+<text x="616" y="100" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#0f172a">Works with you and</text>
+<text x="616" y="122" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#0f172a">waits for your</text>
+<text x="616" y="144" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#0f172a">"envíalo" (send it)</text>
+<line x1="689" y1="110" x2="723" y2="110" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="726" y="50" width="140" height="120" rx="12" ry="12" fill="#ffffff" stroke="#1d4ed8" stroke-width="2"/>
+<circle cx="748" cy="50" r="15" fill="#1d4ed8"/><text x="748" y="56" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">5</text>
+<text x="796" y="100" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#0f172a">Learns from</text>
+<text x="796" y="122" text-anchor="middle" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#0f172a">your corrections</text>
+</svg>

@@ -21,3 +21,6 @@ Lo que `/adaptar:adaptar-a-mi` necesita saber del dueño para la forma de trabaj
 - **Fechas importantes**: exámenes, entregas o fechas límite que vienen; sirven para recordatorios.
 - **Quién más lo ve**: si alguien más usa esta computadora o ve lo que Claude prepara; lo de "Temas que no toco" nunca va en algo compartido.
 - **Ideas y proyectos aparte**: una línea corta por idea o proyecto aparte que mencionó, sin detalles que quiera guardar en secreto.
+- **Sesión principal** (no se pregunta): solo si el dueño quiere una sesión que delegue y se mantenga liviana, se guarda `Sesión principal: <ruta de la carpeta>`. Sin esa línea, la guardia de delegación no actúa.
+- **Guardar mis mensajes** (no se pregunta): `Guardar mis mensajes: sí` enciende un registro local de lo que el dueño escribe, para encontrar "te lo mandé". Apagado por defecto.
+- **Capturar correcciones** (no se pregunta): `Capturar correcciones: no` apaga la cola de correcciones. Encendido por defecto.

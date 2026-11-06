@@ -44,8 +44,8 @@ What Avisos stores: per session, the state (working, needs you, done), the termi
 
 ## Reporting a problem
 
-Use GitHub's "Report a vulnerability" in the Security tab of this repository if it is shown. Otherwise open an issue titled "Security" and describe the problem without exploit details or any personal data; a private channel will be arranged from there. Replies are best effort, not guaranteed fast.
+Use GitHub's "Report a vulnerability" in the Security tab of this repository if it is shown. Otherwise open an issue with the "Algo no funciona / Something is broken" form, title it "Security", and describe the problem without exploit details or any personal data; a private channel will be arranged from there. Replies are best effort, not guaranteed fast.
 
 ## En español
 
-La tabla de arriba dice qué lee, escribe, envía por internet y corre cada pieza. Nada se instala sin tu sí. Para reportar un problema: pestaña Security del repositorio, o un issue titulado "Security" sin detalles del ataque ni datos personales.
+La tabla de arriba dice qué lee, escribe, envía por internet y corre cada pieza. Nada se instala sin tu sí. Para reportar un problema: pestaña Security del repositorio, o un issue con el formulario "Algo no funciona / Something is broken", con el título "Security", sin detalles del ataque ni datos personales.

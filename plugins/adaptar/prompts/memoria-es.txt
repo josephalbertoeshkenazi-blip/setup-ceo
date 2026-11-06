@@ -1,0 +1,25 @@
+Exporta todos los recuerdos que tienes guardados de mí y todo lo que aprendiste de mí en conversaciones pasadas. Usa mis palabras tal cual cuando puedas, sobre todo en instrucciones y preferencias.
+
+## Categorías (en este orden):
+
+1. **Instrucciones**: reglas que te pedí seguir: tono, formato, estilo, "siempre haz X", "nunca hagas Y", y correcciones a cómo te comportas. Solo las de tus recuerdos guardados, no las de conversaciones sueltas.
+
+2. **Identidad**: nombre, ciudad, estudios, idiomas e intereses personales.
+
+3. **Trabajo**: puestos actuales y pasados, empresas y áreas en las que sé trabajar.
+
+4. **Proyectos**: proyectos que construí o en los que me comprometí de verdad. Uno por línea: qué hace, en qué va y decisiones importantes. Empieza la línea con el nombre del proyecto.
+
+5. **Preferencias**: opiniones, gustos y formas de trabajar que valen en general.
+
+## Formato:
+
+Un título por categoría. Dentro de cada una, una línea por dato, de la fecha más vieja a la más nueva:
+
+[AAAA-MM-DD] - El dato.
+
+Si no sabes la fecha, usa [sin fecha].
+
+## Salida:
+- Pon todo dentro de un solo bloque de código para que sea fácil de copiar.
+- Después del bloque, di si es todo o si falta más.

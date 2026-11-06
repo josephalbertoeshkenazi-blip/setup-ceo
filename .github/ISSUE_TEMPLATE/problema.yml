@@ -1,0 +1,59 @@
+name: Algo no funciona / Something is broken
+description: Cuéntanos qué pasó. / Tell us what happened.
+title: "[Problema] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes mira [docs/problemas.md](https://github.com/josephalbertoeshkenazi-blip/setup-ceo/blob/main/docs/problemas.md). Los issues son públicos: no pegues claves, contraseñas ni datos personales.
+        / First check [docs/problemas.en.md](https://github.com/josephalbertoeshkenazi-blip/setup-ceo/blob/main/docs/problemas.en.md). Issues are public: do not paste keys, passwords or personal data.
+  - type: textarea
+    id: que-paso
+    attributes:
+      label: Qué pasó / What happened
+    validations:
+      required: true
+  - type: textarea
+    id: esperaba
+    attributes:
+      label: Qué esperabas / What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: Pasos para repetirlo / Steps to repeat it
+    validations:
+      required: true
+  - type: input
+    id: version-claude
+    attributes:
+      label: Salida de claude --version / Output of claude --version
+    validations:
+      required: true
+  - type: textarea
+    id: plugins
+    attributes:
+      label: Salida de claude plugin list / Output of claude plugin list
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: mac
+    attributes:
+      label: Versión de macOS / macOS version
+      placeholder: "ej. 26.1 / e.g. 26.1"
+    validations:
+      required: true
+  - type: textarea
+    id: validar
+    attributes:
+      label: Salida de python3 scripts/validar.py (opcional, solo si clonaste el repo) / Output of python3 scripts/validar.py (optional, only if you cloned the repo)
+      render: text
+  - type: checkboxes
+    id: sin-secretos
+    attributes:
+      label: Antes de enviar / Before you send
+      options:
+        - label: No pegué claves ni datos personales / I did not paste keys or personal data
+          required: true

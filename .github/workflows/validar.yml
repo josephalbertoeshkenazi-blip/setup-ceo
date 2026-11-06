@@ -1,0 +1,20 @@
+name: validar
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bajar el código
+        run: |
+          git init -q .
+          git fetch -q --depth 1 "https://github.com/$GITHUB_REPOSITORY" "$GITHUB_SHA"
+          git checkout -q FETCH_HEAD
+      - name: Validar plugins, versiones, enlaces y emojis
+        run: python3 -I scripts/validar.py .

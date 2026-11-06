@@ -1,0 +1,32 @@
+name: Idea / Idea
+description: Propón una mejora. / Suggest an improvement.
+title: "[Idea] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Los issues son públicos: no pegues claves ni datos personales.
+        / Issues are public: do not paste keys or personal data.
+  - type: textarea
+    id: que-quieres
+    attributes:
+      label: Qué quieres lograr / What you want to get done
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Tu idea / Your idea
+    validations:
+      required: true
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Cómo lo haces hoy (opcional) / How you do it today (optional)
+  - type: checkboxes
+    id: sin-secretos
+    attributes:
+      label: Antes de enviar / Before you send
+      options:
+        - label: No pegué claves ni datos personales / I did not paste keys or personal data
+          required: true

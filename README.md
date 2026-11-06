@@ -1,118 +1,211 @@
 # setup-ceo
 
-English | [Español](README.es.md)
+[English](README.en.md) | Español
 
-**The Claude Code setup that interviews you and learns how you work.**
+**El setup de Claude Code que te entrevista y aprende cómo trabajas.**
 
-Prompts and commands are written in Spanish; Claude answers in your language.
+Los prompts y comandos están escritos en español; Claude te contesta en tu idioma.
 
-![the adaptar-a-mi interview, then the Avisos "done" notice (invented data)](docs/adaptar-demo.gif)
+![la entrevista de adaptar-a-mi y el aviso "terminó" de Avisos (datos inventados)](docs/adaptar-demo.gif)
 
-## Install
+![cómo funciona: instalas en 5 minutos, te entrevista 10 minutos, arma tus reglas y memoria, trabaja contigo y espera tu "envíalo", y aprende de tus correcciones](docs/como-funciona.svg)
 
-Two steps. In the Terminal:
+## Empieza en 5 minutos
+
+Lo que necesitas antes:
+
+- Una Mac. El setup está probado en Mac.
+- Un plan de Claude que incluya Claude Code: Pro, Max, Ultra, Team o Enterprise (o una cuenta de Console). El plan gratis no lo incluye ([fuente](https://code.claude.com/docs/en/setup)).
+
+### Con Claude Desktop
+
+1. Baja Claude Desktop de [claude.com/download](https://claude.com/download), ábrelo y entra con tu cuenta.
+2. Crea una carpeta vacía llamada `mi-claude` dentro de Documentos. En Claude Desktop abre la pestaña "Code", empieza una sesión **local** (corre en tu Mac, no en la nube) y escoge esa carpeta. Si te pregunta si confías en la carpeta, di que sí.
+3. Pega esto y dale Enter:
+
+   ```
+   Instala https://github.com/josephalbertoeshkenazi-blip/setup-ceo siguiendo su README.
+   ```
+
+   Claude te va a pedir permiso para comandos. Di que sí solo a estos: `claude --version`, `curl -fsSL https://claude.ai/install.sh | bash` (solo si falta Claude Code), `claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo` y los seis `claude plugin install ...@setup-ceo`. Si pide otra cosa, di que no y pregúntale para qué es.
+
+4. Cuando termine, abre una sesión NUEVA en la pestaña "Code" y escribe `/adaptar:adaptar-a-mi`.
+
+Más detalle, y qué se puede y qué no en las pestañas Chat y Cowork: [docs/claude-desktop.md](docs/claude-desktop.md).
+
+### Con la Terminal
+
+Abre la Terminal: Cmd + Espacio, escribe "Terminal" y Enter.
+
+1. Instala Claude Code con el instalador oficial (sáltate esto si `claude --version` ya muestra un número):
+
+   ```
+   curl -fsSL https://claude.ai/install.sh | bash
+   ```
+
+   Abre una ventana nueva de la Terminal y corre `claude` una vez para entrar con tu cuenta.
+2. Agrega el catálogo:
+
+   ```
+   claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo
+   ```
+
+3. Instala las seis piezas base:
+
+   ```
+   claude plugin install ceo-base@setup-ceo
+   claude plugin install adaptar@setup-ceo
+   claude plugin install complementos@setup-ceo
+   claude plugin install seguridad@setup-ceo
+   claude plugin install actualizaciones@setup-ceo
+   claude plugin install sugerencias@setup-ceo
+   ```
+
+4. En la Terminal escribe `claude` y Enter. Adentro, escribe `/adaptar:adaptar-a-mi`.
+
+La entrevista dura unos 10 minutos. Puedes hablar libre o por voz, pausar y seguir otro día, y traer lo que otra IA (ChatGPT, por ejemplo) ya sabe de ti. No pierde nada de lo anterior. Al final te recomienda lo que te sirve e instala el resto de los plugins (`negocios`, `diseno`, `programar`, `avisos`) solo con tu sí. Las skills de terceros nunca las instala la entrevista: te deja escrito un comando `/complementos:instalar-complementos ...` y lo escribes tú.
+
+Lo primero que hace `/adaptar:adaptar-a-mi` es preguntarte si ya usaste Claude Code y si usas el chat de Claude o ChatGPT. Si es así, trae lo que ya saben de ti con un copiar y pegar (tú decides qué se lee y confirmas el resumen antes de guardarlo), y después te pregunta solo lo que falta. Si no usas nada de eso, la entrevista corre completa.
+
+Para repetirlo más adelante: `/adaptar:trae-mi-memoria` trae en 2 minutos lo que el chat de Claude, ChatGPT, Gemini u otra IA ya sabe de ti, sin repetir la entrevista.
+
+**Más rápido.** En vez de escribir los comandos, pégale esto a Claude Code:
 
 ```
-claude plugin marketplace add https://github.com/josephalbertoeshkenazi-blip/setup-ceo
-claude plugin install ceo-base@setup-ceo
-claude plugin install adaptar@setup-ceo
-claude plugin install complementos@setup-ceo
-claude plugin install seguridad@setup-ceo
-claude plugin install actualizaciones@setup-ceo
-claude plugin install sugerencias@setup-ceo
+Instala https://github.com/josephalbertoeshkenazi-blip/setup-ceo siguiendo su README.
 ```
 
-Then, inside Claude Code: `/reload-plugins` (or restart), and run `/adaptar:adaptar-a-mi`.
+Revisado con Claude Code 2.1.318 en macOS, 2026-11-05. Funciona en Mac: la revisión de seguridad, el chequeo de novedades y Avisos usan `plutil` y herramientas de macOS.
 
-That is the second step: an interview of about 10 minutes. You can talk freely or by voice, pause and come back another day, and bring what another AI (ChatGPT, for example) already knows about you. It loses nothing from before. At the end it recommends what fits you and installs the rest of the plugins (`negocios`, `diseno`, `programar`, `avisos`) only with your yes. Third-party skills are never installed by the interview: it hands you a ready-made `/complementos:instalar-complementos ...` command and you type it yourself.
+### Una sesión por proyecto
 
-**Shortcut.** Instead of typing the commands, paste this to Claude Code:
+Abre cada proyecto una vez, en su propia sesión de Claude (en su carpeta), y fíjala para tenerla a mano. La principal reparte: cuando un trabajo es de un proyecto, se lo manda a su sesión. En Claude Desktop (pestaña Code) puede hablar con las otras sesiones locales abiertas; si la del proyecto no está abierta, te dice en una línea qué carpeta abrir y qué pegar. En la Terminal, si tu versión de Claude Code trae `ListAgents` y `SendMessage`, puede mandarle el mensaje a otra sesión abierta; si no, deja el pedido escrito en un archivo de la carpeta del proyecto y te avisa. Elige una sola: Desktop (recomendado) o Terminal, porque no se ven entre sí. Fuentes: [mensajes entre sesiones](https://code.claude.com/docs/en/cross-session-messaging.md) y [Claude Code en Desktop](https://code.claude.com/docs/en/desktop.md).
 
-```
-Install https://github.com/josephalbertoeshkenazi-blip/setup-ceo by following its README.
-```
+## Conecta tu correo, calendario y archivos
 
-Checked with Claude Code 2.1.307 on macOS, 2026-10-23. It needs macOS: the security check, the update check and Avisos use `plutil` and macOS tools.
+Cómo agregar un conector: en la pestaña "Code" de Claude Desktop, el "+" junto a la caja de texto > Add connectors; o Customize > Connectors > elige uno > Connect, e inicia sesión en ese servicio. Los conectores que agregas en claude.ai también funcionan en la pestaña "Code" y en Claude Code cuando entras con tu cuenta de Claude. Con una clave de API no se cargan ([guía de conectores](https://claude.com/docs/connectors/getting-started)).
 
-## Why
+Requisitos: la pestaña "Code" de Claude Desktop necesita un plan de pago (Pro, Max, Ultra, Team o Enterprise). En Team o Enterprise, un Owner tiene que activar primero Gmail y los demás conectores de Google.
 
-Most setups are one list of prompts for everybody. This one interviews you first: `/adaptar:adaptar-a-mi` takes about 10 minutes, asks one question at a time, and writes your profile to `~/.claude/mi-perfil/`, outside anything that gets installed, so updates never overwrite it. It reads your past Claude history only if you allow it.
-
-Then it learns your taste and how you do business. Each advisor keeps its own memory (`~/.claude/agent-memory/`):
-
-- The design advisor logs whether you liked what it made at first sight and keeps a running counter at the top of its memory: **"approved first try: X of Y"** (in the files it reads "aprobado a la primera: X de Y"). If you show it your past work, with your permission, it writes your taste to `~/.claude/mi-perfil/diseno/GUSTO.md` and every "yes, like this / no, not this" updates that file.
-- The design critic, a separate fresh-eyes agent that judges a finished build in a real browser and never edits it, keeps **"agreed with the user X of Y"**. If that stays under 70% after 5 deliveries, it says so in every report, and the playbook tells you to adjust or drop it.
-- The business advisor records every deal, what was agreed, how the other side behaved, and what you really earned per hour.
-
-The counters go up with use. If they do not, the setup tells you to switch the team off.
-
-One hard rule: nothing important reaches another person until you say "send it" (`envíalo`).
-
-## What is in it
-
-| Piece | What it does |
+| Qué usas | Qué hacer |
 |---|---|
-| `ceo-base` | Your Claude writes "what I understood" before big tasks, delegates long work, keeps what you correct, never pastes a key in the chat, and follows a recipe book (which chain of skills for which task; skips skills you do not have). |
-| `adaptar` | `/adaptar:adaptar-a-mi`: the 10-minute interview that writes your profile, recommends what fits you and installs it with your yes. |
-| `complementos` | `/complementos:instalar-complementos`: a reviewed catalog of third-party skills (pinned versions, only repos that passed a check). You choose all, some or none; nothing installs without your yes. |
-| `seguridad` | `/seguridad:revisar-mi-seguridad`: a 5-minute check of your Mac and your Claude that only looks, explains in plain words what matters, and fixes one thing at a time with your yes and a way to undo it. |
-| `actualizaciones` | `/actualizaciones:novedades`: tells you in plain words what changed; installs only if you say yes. |
-| `sugerencias` | `/sugerencias:sugerir-mejora`: sends an improvement idea as a public issue, only after you confirm the text. |
-| `negocios` | A business advisor for prices, deals, partners and contracts, with real numbers. Recommended by the interview when you run a business. |
-| `diseno` | Three design helpers: one directs, one builds, one reviews, so pages and apps look premium. They learn from your past work. |
-| `programar` | For people who code: `/programar:bug-hunt` hunts bugs across a whole project and writes a fix plan; `/programar:rules-migrate` splits a long `CLAUDE.md` into per-folder rules. |
-| `avisos` (optional, macOS only) | Calendar cards and a ring per Claude session with a "done" notice. |
+| Gmail, Google Calendar, Google Drive | Vienen integrados. Gmail te pide permiso antes de cada envío, por defecto. |
+| Outlook, OneDrive, SharePoint, Teams (Microsoft 365) | Cuenta de trabajo: un Global Administrator de Microsoft Entra tiene que dar su consentimiento una vez. Cuenta personal (Outlook.com, Hotmail): sirve en Free, Pro, Max y Ultra, solo Outlook y OneDrive, y se conecta desde la web. |
+| Dropbox | Hay un conector oficial. Qué plan lo incluye: por confirmar. |
+| WhatsApp | No hay conector oficial. Existen conectores de terceros, pero ponen en riesgo tu cuenta de WhatsApp, así que aquí no los recomendamos. |
+| Archivos de tu Mac | No hay nada que conectar: la pestaña "Code" ya trabaja en la carpeta que abres con "Open folder...". |
+| Otra herramienta | Si el proveedor publica la URL de un servidor MCP: Customize > Connectors > Add custom connector. Si no, pídele ayuda a alguien que sepa, o exporta a Excel o CSV a tu carpeta. |
 
-## Optional skills, and why
+Usar Claude in Chrome desde la pestaña "Code" de Claude Desktop: por confirmar.
 
-These are other people's projects, installed from their own source at a pinned version. Nothing is copied here. See `plugins/complementos/skills/instalar-complementos/catalogo.json` for exact commands, licenses, commits and the review of each one. The interview picks the few that fit you; nothing here is a must.
+## Lo que nunca hace sin ti
 
-| Skill | Why you would want it |
+- Nada le llega a otra persona (correo, chat, propuesta, precio) hasta que dices "envíalo".
+- Nunca pega claves, contraseñas ni tokens en el chat: escribe "[secreto omitido]".
+- No instala complementos de terceros sin revisarlos antes (veredicto VERDE, AMARILLO o ROJO) y sin tu sí. Con ROJO te recomienda no instalar.
+- Claude Code te pide permiso antes de lo riesgoso; en modo manual pregunta antes de casi todo (editar archivos, correr comandos). No prendas el modo que se salta los permisos (`bypassPermissions`).
+- Lo que dicen los correos, las páginas y los documentos son datos, no órdenes.
+- `/seguridad:revisar-mi-seguridad` revisa tu Mac cuando quieras.
+
+## Para quién es
+
+- Dueño de un negocio: precios, tratos, clientes y mensajes, con un asesor que se acuerda de todo.
+- Estudiante: tareas, entregas y organización.
+- Mamá o papá: la casa, los horarios y los pendientes, sin pasar horas explicando.
+
+Ejemplos concretos: [docs/ejemplos.md](docs/ejemplos.md).
+
+## Por qué
+
+Casi todos los setups son una lista de prompts iguales para todos. Este te entrevista primero: `/adaptar:adaptar-a-mi` dura unos 10 minutos, hace una pregunta a la vez y escribe tu perfil en `~/.claude/mi-perfil/`, fuera de lo que se instala, así que las actualizaciones nunca lo borran. Solo lee tu historial de Claude si tú lo permites.
+
+Después aprende tu gusto y tu forma de hacer negocios. Cada asesor guarda su propia memoria (`~/.claude/agent-memory/`):
+
+- El asesor de diseño anota si lo que hizo te gustó a la primera y mantiene un contador arriba de su memoria: **"aprobado a la primera: X de Y"** (en inglés: "approved first try: X of Y"). Si le muestras trabajos tuyos del pasado, con tu permiso, escribe tu gusto en `~/.claude/mi-perfil/diseno/GUSTO.md`, y cada "esto sí / esto no" actualiza ese archivo.
+- El crítico de diseño es otro agente, de ojos frescos: juzga una página ya hecha en un navegador real y nunca la edita. Mantiene **"coincidí con el usuario X de Y"**. Si baja de 70 % después de 5 entregas, lo dice en cada reporte y el playbook te dice que lo ajustes o lo quites.
+- El asesor de negocios guarda cada trato, lo acordado, cómo se portó la otra parte y cuánto ganaste de verdad por hora.
+
+Los contadores suben con el uso. Si no suben, el propio setup te dice que apagues al equipo.
+
+Una regla dura: nada importante le llega a otra persona hasta que dices "envíalo".
+
+## Qué trae
+
+| Pieza | Qué hace |
 |---|---|
-| superpowers | Claude agrees on what to build before coding, plans in small steps, tests first. |
-| gstack | An engineering team as commands: office hours, plan, review, QA in a real browser, ship. Heavy install; also useful if you have business ideas. |
-| graphify | Turns a project into a map you can query instead of re-reading files. |
-| impeccable | Fixes UI that looks generic: hierarchy, spacing, type, motion. |
-| animaciones | Three animation skills by Emil Kowalski: build, review and keep motion smooth. |
-| last30days | What people are saying about a topic in the last 30 days. |
-| avoid-ai-writing | Removes AI-sounding phrasing before you send text. |
-| hyperframes | Real explainer and promo videos built from scratch. |
-| claude-video-vision | Lets Claude watch a video through frames and a transcript. |
-| obsidian-markdown | Teaches Claude to write proper Obsidian notes. |
-| gitleaks | Finds forgotten keys and passwords in your folders and before you push, without printing them. |
-| repo-eval | GREEN/YELLOW/RED check of a repo before you install it (ships inside `complementos`). |
+| `ceo-base` | Tu Claude escribe "Lo que entendí" antes de algo grande, delega lo largo, guarda lo que le corriges, nunca pega una clave en el chat y sigue un recetario (qué cadena de skills usar según la tarea; se salta las que no tengas). |
+| `adaptar` | `/adaptar:adaptar-a-mi`: la entrevista de 10 minutos que escribe tu perfil, te recomienda lo que te sirve y lo instala con tu sí. |
+| `complementos` | `/complementos:instalar-complementos`: un catálogo revisado de skills de terceros (versiones fijas, solo repos que pasaron una revisión). Tú eliges todas, algunas o ninguna; nada se instala sin tu sí. |
+| `/complementos:buscar-skill` | Buscar una skill que no está en la lista: revisa hasta 3 en lugares de confianza y solo instala con tu sí |
+| `/ceo-base:revisar-correcciones` | Revisar las veces que corregiste a Claude y guardar lo que se repite ([cómo funciona la memoria](docs/memoria.md)) |
+| `seguridad` | `/seguridad:revisar-mi-seguridad`: revisa tu Mac y tu Claude en 5 minutos (solo mira), te explica en palabras simples lo que importa y arregla una cosa a la vez con tu sí y una forma de deshacer. |
+| `actualizaciones` | `/actualizaciones:novedades`: te explica en palabras simples qué hay de nuevo; solo instala si dices que sí. |
+| `sugerencias` | `/sugerencias:sugerir-mejora`: manda una idea de mejora como issue público, solo después de que confirmes el texto. |
+| `negocios` | Un asesor de negocios para precios, tratos, socios y contratos, con números reales. La entrevista lo recomienda si tienes un negocio. |
+| `diseno` | Tres ayudantes de diseño: uno dirige, uno construye, uno revisa, para que tus páginas y apps se vean de primera. Aprenden de tus trabajos pasados. |
+| `programar` | Para quien programa: `/programar:bug-hunt` busca los bugs de todo un proyecto y deja un plan de arreglos; `/programar:rules-migrate` parte un `CLAUDE.md` largo en reglas por carpeta. |
+| `avisos` (opcional, solo macOS) | Tarjetas del calendario y un aro por cada sesión de Claude con su aviso "terminó". |
 
-## How Avisos looks
+## Skills opcionales, y por qué
 
-![Avisos demo](docs/avisos-demo.png)
+Son proyectos de otras personas, instalados desde su fuente oficial en una versión fija. Aquí no se copia nada. Los comandos exactos, licencias, commits y la revisión de cada una están en [catalogo.json](plugins/complementos/skills/instalar-complementos/catalogo.json). La entrevista escoge las pocas que te quedan bien; ninguna es obligatoria.
 
-An illustration with invented names, not a capture of a real computer. The characters are from the app, made with AI.
-
-## For your Claude
-
-If your human gave you this link: run the commands in "Install" in order (the six base plugins). Then tell them to type `/reload-plugins` and run `/adaptar:adaptar-a-mi`: the interview recommends and installs the rest (`negocios`, `diseno`, `programar`, `avisos`) with their yes, so do not install those yourself unless they ask; if they ask for Avisos, show them the "How Avisos looks" image first. Third-party skills are different: tell them to type `/complementos:instalar-complementos` themselves (only the person who types it can start it); if they say no, do not insist. Do not install anything else without your human's yes.
-
-## Commands
-
-| Type | What for |
+| Skill | Para qué te sirve |
 |---|---|
-| `/adaptar:adaptar-a-mi` | The 10-minute interview: write or update your profile and get recommendations |
-| `/seguridad:revisar-mi-seguridad` | Check your Mac and your Claude, and fix what you approve |
-| `/actualizaciones:novedades` | See what is new and decide whether to install it |
-| `/sugerencias:sugerir-mejora` | Send an improvement idea |
-| `/ceo-base:nueva-cabeza` | Create a new helper for one of your areas |
-| `/complementos:instalar-complementos` | See the important skills and pick which to install |
-| `/programar:bug-hunt` / `/programar:rules-migrate` | Hunt bugs across a project / split a long `CLAUDE.md` |
-| `/avisos:instalar` / `/avisos:desinstalar` | Install or remove Avisos |
+| superpowers | Claude acuerda qué construir antes de programar, planea en pasos chicos y hace pruebas primero. |
+| gstack | Un equipo de ingeniería en comandos: revisar la idea, planear, revisar código, probar en un navegador real, publicar. Instalación pesada; también sirve si tienes ideas de negocio. |
+| graphify | Convierte un proyecto en un mapa que se puede consultar, en vez de releer archivos. |
+| impeccable | Arregla interfaces de aspecto genérico: jerarquía, espaciado, tipografía, movimiento. |
+| animaciones | Tres skills de animación de Emil Kowalski: construir, revisar y mantener fluido el movimiento. |
+| last30days | Qué dice la gente de un tema en los últimos 30 días. |
+| avoid-ai-writing | Le quita al texto lo que suena a robot antes de mandarlo. |
+| hyperframes | Videos explicativos y promos hechos desde cero. |
+| claude-video-vision | Deja que Claude vea un video con fotogramas y transcripción. |
+| obsidian-markdown | Le enseña a Claude a escribir notas de Obsidian bien hechas. |
+| gitleaks | Busca claves y contraseñas olvidadas en tus carpetas y antes de subir a GitHub, sin mostrarlas. |
+| repo-eval | Veredicto VERDE, AMARILLO o ROJO de un repo antes de instalarlo (viene dentro de `complementos`). |
 
-## Safety
+## Cómo se ve Avisos
 
-Read `SECURITY.md`: a table of what every piece reads, writes, sends over the network and runs, and how to report a problem. The security check never asks for, shows or stores a password or key.
+![Demostración de Avisos](docs/avisos-demo.png)
 
-## Support
+Es una ilustración con nombres inventados ("app-gym", "web-tienda", "tareas"), no una captura de una computadora real. Los personajes son los de la app, hechos con IA.
 
-Open an issue and it will be read. There is no guarantee of a fast reply. Suggestions are public issues, so put no personal data in them.
+## Para tu Claude
 
-## License
+Si tu humano te pasó este link, sigue estos pasos en orden y explícale cada uno en palabras simples:
 
-Code: MIT (`LICENSE`). Avisos art (characters, icons, images, the app package): its own license, `ART-LICENSE.md`; free to use inside this setup. Third-party skills keep their own licenses; see `NOTICE.md`.
+1. Corre `claude --version`. Si muestra un número, sigue al paso 3.
+2. Si no existe, explícale que falta instalar Claude Code y, con su sí, corre el instalador oficial: `curl -fsSL https://claude.ai/install.sh | bash`. Si estás en la Terminal, dile que abra una ventana nueva y corra `claude` una vez para entrar con su cuenta. Si estás en la pestaña Code de Claude Desktop, no hace falta para instalar los plugins.
+3. Corre `claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo` y después los seis `claude plugin install X@setup-ceo` de "Con la Terminal" (los seis plugins base).
+4. Dile que abra una sesión NUEVA (la pestaña "Code" de Claude Desktop o la Terminal) y escriba `/adaptar:adaptar-a-mi`. En la Terminal, si sigue en la misma sesión, que escriba `/reload-plugins` primero. En Claude Desktop, siempre una sesión nueva.
+
+La entrevista recomienda e instala el resto (`negocios`, `diseno`, `programar`, `avisos`) con su sí, así que no los instales tú salvo que los pida; si pide Avisos, muéstrale antes la imagen de "Cómo se ve Avisos". Las skills de terceros son distintas: dile que escriba él mismo `/complementos:instalar-complementos` (solo la corre quien la escribe); si dice que no, no insistas. No instales nada más sin el sí de tu humano.
+
+## Comandos
+
+| Escribe | Para qué |
+|---|---|
+| `/adaptar:adaptar-a-mi` | La entrevista de 10 minutos: primero trae lo que ya saben de ti Claude Code, el chat de Claude o ChatGPT; después pregunta solo lo que falta, escribe tu perfil y te recomienda |
+| `/adaptar:trae-mi-memoria` | Para repetirlo más adelante: traer a tu perfil lo que el chat de Claude, ChatGPT u otra IA ya sabe de ti |
+| `/seguridad:revisar-mi-seguridad` | Revisar tu Mac y tu Claude, y arreglar lo que apruebes |
+| `/actualizaciones:novedades` | Ver si hay novedades y decidir si se instalan |
+| `/sugerencias:sugerir-mejora` | Mandar una idea de mejora |
+| `/ceo-base:nueva-cabeza` | Crear un ayudante nuevo para un área tuya |
+| `/complementos:instalar-complementos` | Ver las skills importantes y elegir cuáles instalar |
+| `/programar:bug-hunt` / `/programar:rules-migrate` | Buscar bugs en un proyecto / partir un `CLAUDE.md` largo |
+| `/avisos:instalar` / `/avisos:desinstalar` | Poner o quitar Avisos |
+
+## Seguridad
+
+Lee [SECURITY.md](SECURITY.md): una tabla de qué lee, escribe, manda por internet y corre cada pieza, y cómo reportar un problema. La revisión de seguridad nunca pide, muestra ni guarda una clave o contraseña.
+
+Cuando corriges a Claude, `ceo-base` anota una línea corta en `~/.claude/ceo-estado/cola-correcciones.jsonl`, solo en tu computadora y con las claves tapadas. Viene encendido; para apagarlo, escribe `Capturar correcciones: no` en `~/.claude/mi-perfil/ceo.md`. Detalle en [cómo funciona la memoria](docs/memoria.md).
+
+## Soporte
+
+Si algo no funciona, mira primero [docs/problemas.md](docs/problemas.md). Si sigue igual, abre un issue (un reporte público en GitHub; necesitas una cuenta gratis de GitHub) con el formulario "Algo no funciona" y se leerá. No hay garantía de respuesta rápida. Los issues son públicos: no pongas datos personales. Para cambiar algo tú mismo, mira [CONTRIBUTING.md](CONTRIBUTING.md); los problemas de seguridad van por [SECURITY.md](SECURITY.md), no por un issue público.
+
+## Licencia
+
+Código: MIT ([LICENSE](LICENSE)). El arte de Avisos (personajes, íconos, imágenes y el paquete de la app): licencia propia en [ART-LICENSE.md](ART-LICENSE.md); se puede usar dentro de este setup. Las skills de terceros conservan su licencia; mira [NOTICE.md](NOTICE.md).

@@ -1,0 +1,25 @@
+Export all of my stored memories and everything you have learned about me from past conversations. Use my own words whenever you can, especially for instructions and preferences.
+
+## Categories (in this order):
+
+1. **Instructions**: rules I asked you to follow: tone, format, style, "always do X", "never do Y", and corrections to how you behave. Only from your stored memories, not from loose conversations.
+
+2. **Identity**: name, city, studies, languages and personal interests.
+
+3. **Work**: current and past roles, companies and areas I know how to work in.
+
+4. **Projects**: projects I built or genuinely committed to. One per line: what it does, where it stands and important decisions. Start the line with the project name.
+
+5. **Preferences**: opinions, tastes and ways of working that apply in general.
+
+## Format:
+
+One heading per category. Inside each, one line per item, from the oldest date to the newest:
+
+[YYYY-MM-DD] - The item.
+
+If you do not know the date, use [no date].
+
+## Output:
+- Put everything inside a single code block so it is easy to copy.
+- After the block, say whether that is everything or whether there is more.

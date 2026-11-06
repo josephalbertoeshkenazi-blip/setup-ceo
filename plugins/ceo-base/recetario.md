@@ -7,7 +7,7 @@ Reglas del recetario (mandan sobre cualquier cadena de abajo):
 3. **Anuncia la cadena antes de la primera herramienta**, en una línea por paso con lo que hace por el dueño. Pregunta simple ("qué es", "por qué"): solo responde, sin cadena.
 4. **Nombrada = corrida.** Cada skill que anuncias, la invocas de verdad con la herramienta de skills. No hagas a mano el trabajo de una skill que nombraste.
 5. **El flujo propio de un proyecto gana.** Si el `CLAUDE.md` del proyecto define cómo se hace ese tipo de tarea, ese flujo es la cadena.
-6. **Nunca instales una skill nueva por tu cuenta.** Si ayudaría una que no tienes, dilo en una línea y ofrece `/complementos:instalar-complementos`.
+6. **Nunca instales una skill nueva por tu cuenta.** Si ayudaría una que no tienes, dilo en una línea y ofrece `/complementos:instalar-complementos`; si no está en esa lista, ofrece `/complementos:buscar-skill` (la corre el dueño).
 
 Las skills vienen de estos complementos (opcionales, se instalan con `/complementos:instalar-complementos`): superpowers, gstack, graphify, impeccable, last30days, avoid-ai-writing, hyperframes, claude-video-vision, repo-eval y los plugins programar y seguridad.
 
@@ -26,6 +26,7 @@ Las skills vienen de estos complementos (opcionales, se instalan con `/complemen
 | Seguridad, pagos, datos de usuarios | `cso` | auditoría de secretos, accesos y fugas |
 | Publicar | `review` → `ship` → `land-and-deploy` → `canary` | revisar, subir, desplegar y vigilar |
 | "Mejor forma de hacer X hoy" | `last30days` | qué dice la gente en los últimos 30 días |
+| "Necesito una skill para X" (y no la tengo) | `buscar-skill` | busca en lugares de confianza, revisa hasta 3 y propone una; solo la corre el dueño |
 | "¿Uso esta librería o skill?" | `repo-eval` | veredicto verde, amarillo o rojo con datos, antes de instalar |
 | Entender un proyecto grande | `graphify` | mapa consultable del código y los documentos |
 | Texto que lee otra persona (correo, propuesta, post) | redactar → `avoid-ai-writing` | borrador y quitarle lo que suena a robot |

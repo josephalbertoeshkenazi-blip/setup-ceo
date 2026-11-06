@@ -16,6 +16,9 @@ Cada una con cuándo la das por sabida y dónde queda en el perfil.
 
 Una cosa puede quedar como "paso" si la persona no quiso contestar. "Paso" cuenta como sabido: no se vuelve a preguntar.
 
+## Cuando se trajo información (el arranque)
+El arranque (paso 2 de `SKILL.md`) trae información de dos lugares: lo que se leyó con su permiso (lo que su Claude ya sabe de ella) y lo que contestó cada chat (Claude, ChatGPT u otra IA). Con lo que ella aprobó en "Lo que ya sé de ti", marca como sabido lo que ese resumen cubrió: casi siempre las cosas 1 (quién es), 3 (herramientas) y 6 (cómo quiere que le hablen), y a veces la 5 (nivel con IA: usa Claude Code = `intermedio` como mínimo, y `avanzado` solo si lo leído muestra skills propias, agentes, hooks o varios `CLAUDE.md` de proyectos; solo el chat o ChatGPT = `intermedio` como mucho). **No vuelvas a preguntar esas: salta la pregunta y confírmalo como afirmación.** Las 2, 7 y 8 casi nunca salen de ahí y se siguen preguntando. Si no leíste ni trajiste nada (por ejemplo "No, nunca" o "Sí, pero no leas nada", con "Ninguno"), no se marca nada y la entrevista corre completa (tope de unas 12).
+
 ## Cómo se usan las ramas
 - Después de las 4 preguntas base dices en voz alta la rama que te suena ("Me suena que eres sobre todo estudiante, y empezando con IA; si no es así, dímelo."), como afirmación y junto con la siguiente pregunta. La persona puede corregirla.
 - Cada rama es un archivo en `ramas/`: `empleado.md`, `estudiante.md`, `fundador.md`, `creativo.md`, `personal.md`. `principiante.md` se suma a cualquiera de ellas.
@@ -50,13 +53,21 @@ Todos van en `~/.claude/mi-perfil/ceo.md` salvo que se diga otro archivo. Si un 
 | `asesor-negocios.md` (sus 5 campos) | F1, F3, F5, F6 (solo rama fundador) |
 | `asesor-diseno.md`, `critico-diseno.md` y `diseno/GUSTO.md` | F7, C1, C2, C3, C6, C7 |
 
+## La línea `Arranque:`
+Una sola línea con partes `clave=valor` separadas por `; `, sin paréntesis anidados. Si el arranque ya terminó, la línea es exactamente `Arranque: terminado`. Valores permitidos:
+- `claude-code=` `pendiente` | `leído` | `no leído` | `no usa`
+- `chats=` `pendiente` | `ninguno` | una lista separada por comas de `<IA> hecho` o `<IA> falta` (por ejemplo `Claude hecho, ChatGPT falta`); Claude siempre antes que ChatGPT
+- `resumen=` `pendiente` | `sin confirmar` | `confirmado`
+
+`Historial:` (arriba) solo habla de si se leyó el historial de la Mac; no repite lo del arranque. La línea `Memoria traída de ...` del Historial de `ceo.md` se escribe solo después de guardar, nunca en este archivo.
+
 ## El archivo de pausa
 Después de **cada** respuesta guardas (con la herramienta de escribir archivos) `~/.claude/mi-perfil/.entrevista.md`. Sirve para que la persona pueda decir "después" y seguir otro día sin repetir nada.
 
 Reglas:
 - Nunca guardes respuestas textuales con datos sensibles: nada de salud, plata, creencias, hijos, nombres de familia, claves ni números de cuentas. Solo notas cortas en tus palabras, lo mínimo para no volver a preguntar.
 - Lo que está en `Temas que no toco` no entra ni como nota.
-- La línea `Última pregunta: <n>` va exacta, sola en su línea. `n` es cuántas preguntas NUMERADAS (las base 1 a 4 y las de rama, que siguen 5, 6, 7..., en el orden en que se hicieron) la persona contestó o a cuántas dijo "paso". Las ofertas, permisos, repreguntas y confirmaciones no cuentan y no reciben número. "Después" / "luego seguimos" NO cuenta como contestada: pausa la entrevista, esa pregunta se anota en una línea `Pendiente: <cuál>` y es la primera que se hace al volver. `listar-agentes.sh` lee la línea `Última pregunta` para saber si hay una entrevista a medias.
+- La línea `Última pregunta: <n>` va exacta, sola en su línea. `n` es cuántas preguntas NUMERADAS (las base 1 a 4 y las de rama, que siguen 5, 6, 7..., en el orden en que se hicieron) la persona contestó o a cuántas dijo "paso". Las ofertas, permisos, repreguntas y confirmaciones no cuentan y no reciben número (tampoco las preguntas del arranque ni "¿Está bien así?"). "Después" / "luego seguimos" NO cuenta como contestada: pausa la entrevista, esa pregunta se anota en una línea `Pendiente: <cuál>` y es la primera que se hace al volver. `listar-agentes.sh` lee la línea `Última pregunta` para saber si hay una entrevista a medias.
 
 Formato exacto:
 
@@ -71,6 +82,7 @@ Rama: estudiante + principiante
 Etiquetas: estudiante, principiante, ideas
 Nivel con IA: principiante
 Historial: no hay | leído | no leído (dijo que no)
+Arranque: claude-code=leído; chats=Claude hecho, ChatGPT falta; resumen=sin confirmar
 Migrar: no | esperando el export de ChatGPT | hecho
 
 ## Rúbrica
@@ -100,9 +112,10 @@ Migrar: no | esperando el export de ChatGPT | hecho
 ```
 
 ## Cómo se retoma
-- Si `listar-agentes.sh` dice `ENTREVISTA_EN_CURSO: sí (pregunta n)`, lees el archivo de pausa antes de decir nada y abres con: "La otra vez nos quedamos en la pregunta n+1. ¿Seguimos o empezamos de nuevo?" (con el número ya sumado: si `Última pregunta: 5`, dices "nos quedamos en la pregunta 6"). "La otra vez nos quedamos en la pregunta n+1" = la pendiente: si hay línea `Pendiente: <cuál>`, esa es la pregunta n+1 y la primera que haces al volver; después borras la línea.
+- Si `listar-agentes.sh` dice `ENTREVISTA_EN_CURSO: sí (pregunta n)`, lees el archivo de pausa antes de decir nada. Cuando el arranque ya terminó, abres con "La otra vez nos quedamos en la pregunta n+1. ¿Seguimos o empezamos de nuevo?" (con el número ya sumado: si `Última pregunta: 5`, dices "nos quedamos en la pregunta 6"). "La otra vez nos quedamos en la pregunta n+1" = la pendiente: si hay línea `Pendiente: <cuál>`, esa es la pregunta n+1 y la primera que haces al volver; después borras la línea.
 - **Seguimos:** das un reflejo de una línea con las "Notas para seguir" ("Me quedé con que estudias ingeniería y tu universidad solo deja usar IA para explicar") y haces la siguiente pregunta que falta. No repites tips de `Tips ya dados`.
 - **Empezamos de nuevo:** borras el archivo y arrancas desde la apertura.
+- **Si `Arranque:` no dice `terminado`**, abre con "La otra vez nos quedamos al empezar (lo de tu memoria). ¿Seguimos ahí o empezamos de nuevo?" (no con "pregunta n+1": `Última pregunta` es 0). La entrevista se retoma en el paso del arranque que falta, antes de cualquier pregunta numerada (las del arranque no tienen número; `Última pregunta` puede ser 0): si falta la pregunta de Claude Code, la haces; si ya está y faltan chats, haces la pregunta de los chats o solo el chat que falta, de uno en uno y Claude antes que ChatGPT; si solo falta confirmar, muestras "Lo que ya sé de ti" otra vez con "¿Está bien así?". Lo ya leído o traído no se vuelve a pedir: sale de las "Notas para seguir". Después sigue la entrevista saltando lo cubierto.
 - Si `Migrar: esperando el export de ChatGPT`, preguntas una vez si ya le llegó el correo (ver `migrar.md`).
 
 ## Al terminar
