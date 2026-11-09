@@ -46,7 +46,12 @@ rama_remota() {
   if git -C "$mk" rev-parse --verify --quiet "origin/$b" >/dev/null; then echo "origin/$b"; else echo "HEAD"; fi
 }
 
-archivo_ultimo() { git -C "$(carpeta_mercado)" show "$(rama_remota):$1" 2>/dev/null; }
+# Git Bash toma "origin/main:carpeta/archivo" por lista de rutas y lo rompe; se apaga esa conversión solo para
+# este git. Con la conversión apagada, -C /c/... ya no llegaría bien al git de Windows: por eso cd y no -C.
+archivo_ultimo() {
+  local mk r; mk=$(carpeta_mercado); r=$(rama_remota)
+  ( cd "$mk" 2>/dev/null && MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL="*" git show "$r:$1" ) 2>/dev/null
+}
 
 version_de_json() { grep -m1 '"version"' | sed -E 's/.*"version"[^"]*"([^"]+)".*/\1/'; }
 

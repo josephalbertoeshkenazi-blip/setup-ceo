@@ -57,7 +57,7 @@ setup-ceo updates itself, with reviewed versions. To update right now, say "actu
 
 - It can take a while: the automatic update runs when a session opens and can take up to about 10 minutes to download the new version; you see it when you open the next session.
 - You may have turned it off. Say "actualízate solo" to turn it back on.
-- If you have 2.0, 2.1 or 2.2, update once by hand: tell Claude "actualiza el setup-ceo", or run `claude plugin marketplace update setup-ceo` and `claude plugin update actualizaciones@setup-ceo` (and the same for each plugin you have). From then on it stays up to date by itself. On Windows with 2.0 or 2.1 the notice does not show up, so do it this way.
+- If you have 2.0, 2.1 or 2.2, update once by hand: tell Claude "actualiza el setup-ceo", or run `claude plugin marketplace update setup-ceo` and `claude plugin update actualizaciones@setup-ceo` (and the same for each plugin you have). From then on it stays up to date by itself. On Windows with 2.0 or 2.1 the notice does not show up, and with 2.2 it shows up but does not mark which plugins to install: in both cases do it this way.
 - If your company or your computer turns off Claude Code updates, it will not update by itself; ask Claude "actualiza el setup-ceo" whenever you want.
 
 ## Windows

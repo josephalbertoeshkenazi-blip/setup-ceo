@@ -22,11 +22,11 @@ SHA=$(git ls-remote --tags origin "refs/tags/v$VERSION^{}" | awk '{print $1}' | 
 git cat-file -e "$SHA^{commit}" 2>/dev/null || git fetch -q origin "refs/tags/v$VERSION:refs/tags/v$VERSION" || fallar "no pude bajar v$VERSION"
 
 version_json() {
-  git show "$1:$2" 2>/dev/null |
+  MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL="*" git show "$1:$2" 2>/dev/null |
     node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).version||""))}catch(e){}})'
 }
 version_changelog() {
-  git show "$1:CHANGELOG.md" 2>/dev/null | grep -m1 -E '^## [0-9]+\.[0-9]+\.[0-9]+' | sed -E 's/^## ([0-9]+\.[0-9]+\.[0-9]+).*/\1/'
+  MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL="*" git show "$1:CHANGELOG.md" 2>/dev/null | grep -m1 -E '^## [0-9]+\.[0-9]+\.[0-9]+' | sed -E 's/^## ([0-9]+\.[0-9]+\.[0-9]+).*/\1/'
 }
 
 # 3. Las versiones de ese commit son X.Y.Z

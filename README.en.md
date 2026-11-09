@@ -225,7 +225,7 @@ The interview recommends and installs the rest (`negocios`, `diseno`, `programar
 2. To do it right now, say "actualízate" (update yourself).
 3. To turn it off, say "no te actualices solo" (do not update yourself). To turn it back on, say "actualízate solo".
 4. If a version turns out bad, the author rolls it back for everyone and the fix reaches you by itself.
-5. **If you have 2.0, 2.1 or 2.2, update once by hand and from then on it stays up to date by itself.** Tell Claude "actualiza el setup-ceo", or run `claude plugin marketplace update setup-ceo` and `claude plugin update actualizaciones@setup-ceo` (and the same for each plugin you have). On Windows with 2.0 or 2.1 the notice does not show up, so do it this way.
+5. **If you have 2.0, 2.1 or 2.2, update once by hand and from then on it stays up to date by itself.** Tell Claude "actualiza el setup-ceo", or run `claude plugin marketplace update setup-ceo` and `claude plugin update actualizaciones@setup-ceo` (and the same for each plugin you have). On Windows with 2.0 or 2.1 the notice does not show up, and with 2.2 it shows up but does not mark which plugins to install: in both cases do it this way.
 
 The install command does not change. If something does not update by itself, see [docs/problemas.en.md](docs/problemas.en.md).
 

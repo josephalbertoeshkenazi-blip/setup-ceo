@@ -48,7 +48,7 @@ repo_github() {
 
 # Versión de un plugin en un commit: git show <ref>:plugins/<p>/.claude-plugin/plugin.json
 version_en() {
-  git show "$1:plugins/$2/.claude-plugin/plugin.json" 2>/dev/null |
+  MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL="*" git show "$1:plugins/$2/.claude-plugin/plugin.json" 2>/dev/null |
     node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{process.stdout.write(String(JSON.parse(s).version||""))})'
 }
 
@@ -69,7 +69,7 @@ borrar_rama() {
 # Los PLUGINS_BASE que ya existían en <ref> (según su marketplace.json): lo que un dueño de esa versión tiene.
 plugins_base_en() {
   local ref="$1" nombres p
-  nombres=$(git show "$ref:.claude-plugin/marketplace.json" 2>/dev/null |
+  nombres=$(MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL="*" git show "$ref:.claude-plugin/marketplace.json" 2>/dev/null |
     node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{for(const p of JSON.parse(s).plugins||[])console.log(p.name)}catch(e){}})') || return 1
   nombres=$(printf '%s\n' "$nombres" | tr -d '\r')
   for p in $PLUGINS_BASE; do

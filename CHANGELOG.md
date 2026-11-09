@@ -17,7 +17,8 @@ Agentes que cambiaron: ninguno
 - Si una versión sale mala, el autor la vuelve atrás para todos y te llega sola.
 - `ceo-base`: la regla 11 cambió. Antes esperaba tu sí antes de instalar las novedades; ahora el setup se actualiza solo y Claude solo te lo cuenta.
 - Riesgo, dicho claro: lo que se actualiza solo corre en tu computadora; si alguien tomara la cuenta de GitHub de este repo podría mandarte una versión mala. Por eso solo llegan versiones etiquetadas y revisadas, y puedes apagarlo.
-- Si tienes la 2.0, la 2.1 o la 2.2, actualízate una sola vez y desde ahí queda solo. Dile a Claude "actualiza el setup-ceo", o corre `claude plugin marketplace update setup-ceo` y `claude plugin update actualizaciones@setup-ceo` (y lo mismo con cada plugin que tengas). En Windows con la 2.0 o la 2.1 el aviso no te sale, así que hazlo así.
+- Si tienes la 2.0, la 2.1 o la 2.2, actualízate una sola vez y desde ahí queda solo. Dile a Claude "actualiza el setup-ceo", o corre `claude plugin marketplace update setup-ceo` y `claude plugin update actualizaciones@setup-ceo` (y lo mismo con cada plugin que tengas). En Windows con la 2.0 o la 2.1 el aviso no te sale, y con la 2.2 sale pero no marca qué plugins instalar: en los dos casos hazlo así.
+- En Windows, la revisión de novedades no veía ningún plugin (Git Bash rompía una ruta) y nunca marcaba qué actualizar. Arreglado.
 - El comando para instalar no cambia.
 - Más documentación: README, problemas comunes, guía de Claude Desktop, SECURITY y CONTRIBUTING explican la actualización sola y cómo se publica una versión (el trabajo va en la rama `desarrollo`; `main` solo se mueve con `scripts/publicar.sh`).
 

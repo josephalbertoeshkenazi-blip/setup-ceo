@@ -325,3 +325,47 @@ test('el paso 3 de novedades usa buscar-claude y no dice "tu Mac"', () => {
   assert.ok(t.includes('buscar-claude.sh'));
   assert.ok(!/revisa tu Mac/.test(t));
 });
+
+// Git Bash convierte "origin/main:.claude-plugin/marketplace.json" en "origin\main;.claude-plugin\marketplace.json"
+// (lo toma por lista de rutas) y git falla: estado.sh no veía ningún plugin en Windows. Comprobado en
+// windows-latest con Git 2.56. Este git falso imita las dos trampas: sin apagar la conversión, rompe ese
+// argumento; con la conversión apagada, una ruta /c/... ya no se traduce y git no la encuentra.
+test('archivo_ultimo y plugins_del_mercado leen origin/rama:carpeta/archivo sin que Git Bash lo rompa', { skip: esWindows && 'en Windows lo prueban de verdad las pruebas de estado.sh' }, () => {
+  const { home, env } = entornoCasa();
+  const mk = join(home, '.claude/plugins/marketplaces/setup-ceo');
+  mkdirSync(join(mk, '.claude-plugin'), { recursive: true });
+  mkdirSync(join(mk, 'plugins/actualizaciones/.claude-plugin'), { recursive: true });
+  writeFileSync(join(mk, '.claude-plugin/marketplace.json'), JSON.stringify({ name: 'setup-ceo', plugins: [{ name: 'actualizaciones', source: './plugins/actualizaciones' }] }));
+  writeFileSync(join(mk, 'plugins/actualizaciones/.claude-plugin/plugin.json'), JSON.stringify({ name: 'actualizaciones', version: '2.3.0' }));
+  const bare = join(tmp('origen-'), 'o.git');
+  assert.equal(spawnSync('git', ['init', '-q', '--bare', '-b', 'main', bare]).status, 0);
+  git(mk, 'init', '-q', '-b', 'main');
+  git(mk, 'add', '.');
+  git(mk, 'commit', '-q', '-m', 'x');
+  git(mk, 'remote', 'add', 'origin', bare);
+  git(mk, 'push', '-q', '-u', 'origin', 'main');
+  json(join(home, '.claude/plugins/known_marketplaces.json'), { 'setup-ceo': { installLocation: mk } });
+  const real = spawnSync('bash', ['-c', 'command -v git'], { encoding: 'utf8' }).stdout.trim();
+  const bin = tmp('git-bash-falso-');
+  ejecutable(join(bin, 'git'), `#!/bin/bash
+if [ "\${MSYS2_ARG_CONV_EXCL:-}" = "*" ] || [ "\${MSYS_NO_PATHCONV:-}" = 1 ]; then
+  for a in "$@"; do case "$a" in /*) echo "fatal: no encuentro $a (ruta sin traducir)" >&2; exit 128;; esac; done
+else
+  for a in "$@"; do if [[ "$a" =~ ^[^:]*/[^:]*:.*/ ]]; then echo "fatal: ambiguous argument '\${a//\\//\\\\}'" >&2; exit 128; fi; done
+fi
+exec "${real}" "$@"
+`);
+  const r = bash(['-c', `. "${aPosix(act)}/comun.sh"; plugins_del_mercado; archivo_ultimo plugins/actualizaciones/.claude-plugin/plugin.json | version_de_json`], conPath(env, bin));
+  assert.equal(r.stdout, 'actualizaciones\n2.3.0\n', r.stderr);
+});
+
+test('todo git show "<rev>:<ruta>" de los scripts apaga la conversión de rutas de Git Bash', () => {
+  const archivos = spawnSync('git', ['ls-files', '*.sh'], { cwd: raiz, encoding: 'utf8' }).stdout.trim().split('\n');
+  const malos = [];
+  for (const f of archivos) {
+    readFileSync(join(raiz, f), 'utf8').split('\n').forEach((l, i) => {
+      if (/git\b[^|;]*\bshow\s+"[^"]*:/.test(l) && !/MSYS2_ARG_CONV_EXCL="\*"/.test(l)) malos.push(`${f}:${i + 1}`);
+    });
+  }
+  assert.deepEqual(malos, []);
+});

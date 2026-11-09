@@ -57,7 +57,7 @@ El setup-ceo se actualiza solo, con versiones revisadas. Para actualizarte ya, d
 
 - Puede tardar: la actualización sola corre al abrir una sesión y tarda hasta unos 10 minutos en bajar la versión nueva; la ves al abrir la sesión siguiente.
 - Quizá lo apagaste. Di "actualízate solo" para prenderlo de nuevo.
-- Si tienes la 2.0, la 2.1 o la 2.2, actualízate una sola vez a mano: dile a Claude "actualiza el setup-ceo", o corre `claude plugin marketplace update setup-ceo` y `claude plugin update actualizaciones@setup-ceo` (y lo mismo con cada plugin que tengas). Desde ahí queda solo. En Windows con la 2.0 o la 2.1 el aviso no te sale, así que hazlo así.
+- Si tienes la 2.0, la 2.1 o la 2.2, actualízate una sola vez a mano: dile a Claude "actualiza el setup-ceo", o corre `claude plugin marketplace update setup-ceo` y `claude plugin update actualizaciones@setup-ceo` (y lo mismo con cada plugin que tengas). Desde ahí queda solo. En Windows con la 2.0 o la 2.1 el aviso no te sale, y con la 2.2 sale pero no marca qué plugins instalar: en los dos casos hazlo así.
 - Si tu empresa o tu computadora apaga las actualizaciones de Claude Code, no se actualiza solo; pídele a Claude "actualiza el setup-ceo" cuando quieras.
 
 ## Windows
