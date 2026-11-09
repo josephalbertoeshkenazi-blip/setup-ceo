@@ -52,17 +52,35 @@ version_en() {
     node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{process.stdout.write(String(JSON.parse(s).version||""))})'
 }
 
-# Pone (o mueve) la rama temporal en un commit.
+# Pone (o mueve) la rama temporal en un commit. ^{commit} porque las etiquetas vX.Y.Z son
+# anotadas y un remoto no acepta un objeto etiqueta como valor de una rama.
 # git corre con la casa real: ahí están sus credenciales (la casa de mentira es solo para claude).
 git_real() { HOME="${HOME_REAL:-$HOME}" USERPROFILE="${USERPROFILE_REAL:-${USERPROFILE:-}}" git "$@"; }
 subir_rama() {
-  git_real push -q origin "+$1:refs/heads/$2" || fallar "no pude subir la rama $2 (hacen falta permisos de escritura)"
+  git_real push -q origin "+$1^{commit}:refs/heads/$2" || fallar "no pude subir la rama $2 (hacen falta permisos de escritura)"
 }
 borrar_rama() {
   if [ -n "$1" ] && ! git_real push -q origin --delete "$1" >/dev/null 2>&1; then
     echo "[probar] AVISO: no pude borrar la rama temporal $1; bórrala a mano" >&2
   fi
   return 0
+}
+
+# Los PLUGINS_BASE que ya existían en <ref> (según su marketplace.json): lo que un dueño de esa versión tiene.
+plugins_base_en() {
+  local ref="$1" nombres p
+  nombres=$(git show "$ref:.claude-plugin/marketplace.json" 2>/dev/null |
+    node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{for(const p of JSON.parse(s).plugins||[])console.log(p.name)}catch(e){}})') || return 1
+  nombres=$(printf '%s\n' "$nombres" | tr -d '\r')
+  for p in $PLUGINS_BASE; do
+    printf '%s\n' "$nombres" | grep -qx "$p" && printf '%s ' "$p"
+  done
+  return 0
+}
+
+# SHA-256 de un archivo, calculado con node para que sirva igual en Mac y en Git Bash.
+suma_de() {
+  node -e 'process.stdout.write(require("crypto").createHash("sha256").update(require("fs").readFileSync(process.argv[1])).digest("hex"))' "$(para_node "$1")"
 }
 
 # Agrega el catálogo desde la rama; reintenta porque GitHub tarda un poco.
