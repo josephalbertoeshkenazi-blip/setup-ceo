@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { raiz } from './ayuda.mjs';
+import { raiz, BASH, sepPath } from './ayuda.mjs';
 
 const leer = (r) => readFileSync(join(raiz, r), 'utf8');
 const flujo = () => leer('.github/workflows/pruebas.yml');
@@ -222,4 +222,70 @@ test('probar-actualizacion.sh instala solo los plugins que existían y protege m
   assert.doesNotMatch(t + c, /shasum|sha256sum|md5/);
   assert.match(t, /PLUGINS_BASE=/);
   assert.match(c, /PLUGINS_BASE/);
+});
+
+// --- Ronda final: publicar.sh contra un origin local (gh falso que dice success) ---
+function mundoPublicar() {
+  const base = mkdtempSync(join(tmpdir(), 'ci-publicar-'));
+  const bare = join(base, 'origen.git');
+  const t = join(base, 'trabajo');
+  mkdirSync(join(t, 'scripts'), { recursive: true });
+  mkdirSync(join(t, 'plugins/uno/.claude-plugin'), { recursive: true });
+  writeFileSync(join(t, 'scripts/publicar.sh'), readFileSync(join(raiz, 'scripts/publicar.sh')));
+  writeFileSync(join(t, '.gitignore'), 'scripts/\n');
+  gitEn(base, 'init', '-q', '--bare', bare);
+  gitEn(t, 'init', '-q', '-b', 'desarrollo');
+  gitEn(t, 'remote', 'add', 'origin', bare);
+  const version = (v) => {
+    writeFileSync(join(t, 'plugins/uno/.claude-plugin/plugin.json'), JSON.stringify({ name: 'uno', version: v }));
+    writeFileSync(join(t, 'CHANGELOG.md'), `# Cambios\n\n## ${v} (2026-11-09)\n\n- algo\n`);
+    gitEn(t, 'add', '-A');
+    gitEn(t, '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', v);
+    gitEn(t, '-c', 'tag.gpgsign=false', 'tag', '-a', `v${v}`, '-m', v);
+    return gitEn(t, 'rev-parse', 'HEAD');
+  };
+  const v220 = version('2.2.0');
+  gitEn(t, 'push', '-q', 'origin', 'HEAD:refs/heads/main', 'HEAD:refs/heads/desarrollo');
+  const v230 = version('2.3.0');
+  gitEn(t, 'push', '-q', 'origin', 'HEAD:refs/heads/desarrollo');
+  gitEn(t, 'checkout', '-q', '-b', 'suelta');
+  const v231 = version('2.3.1');
+  gitEn(t, 'push', '-q', 'origin', '--tags');
+  const bin = join(base, 'bin');
+  mkdirSync(bin);
+  writeFileSync(join(bin, 'gh'), '#!/bin/sh\necho success\n');
+  chmodSync(join(bin, 'gh'), 0o755);
+  const correr = (...args) => spawnSync(BASH, [join(t, 'scripts/publicar.sh'), ...args], {
+    cwd: t, encoding: 'utf8', env: { ...process.env, PATH: `${bin}${sepPath}${process.env.PATH}` },
+  });
+  const main = () => gitEn(base, '--git-dir', bare, 'rev-parse', 'refs/heads/main');
+  return { correr, main, v220, v230, v231 };
+}
+
+test('Minor 10a publicar.sh: --volver con una versión mayor que main para y lo dice', () => {
+  const m = mundoPublicar();
+  const r = m.correr('2.3.0', '--volver');
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.ok(r.stderr.includes('--volver es solo para volver atrás'), r.stderr);
+  assert.equal(m.main(), m.v220);
+});
+
+test('Minor 10b publicar.sh: una etiqueta que no está en desarrollo no se publica', () => {
+  const m = mundoPublicar();
+  const r = m.correr('2.3.1');
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.ok(r.stderr.includes('no está en desarrollo'), r.stderr);
+  assert.equal(m.main(), m.v220);
+});
+
+test('Minor 10 publicar.sh: avanza normal y vuelve atrás con --volver', () => {
+  const m = mundoPublicar();
+  const r1 = m.correr('2.3.0');
+  assert.equal(r1.status, 0, r1.stdout + r1.stderr);
+  assert.ok(r1.stdout.includes('PUBLICADA: v2.3.0'), r1.stdout);
+  assert.equal(m.main(), m.v230);
+  assert.equal(m.correr('2.2.0').status, 1, 'sin --volver no vuelve atrás');
+  const r2 = m.correr('2.2.0', '--volver');
+  assert.equal(r2.status, 0, r2.stdout + r2.stderr);
+  assert.equal(m.main(), m.v220);
 });

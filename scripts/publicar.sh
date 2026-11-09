@@ -1,7 +1,8 @@
 #!/bin/bash
 # Mueve main a una versión etiquetada y con pruebas en verde. main solo apunta a commits con etiqueta vX.Y.Z.
 # Uso: bash scripts/publicar.sh X.Y.Z [--volver]
-#   --volver: permite mover main a una versión igual o menor (a todos los dueños les llega esa versión).
+#   --volver: solo para mover main a una versión igual o menor (a todos los dueños les llega esa versión).
+#   La etiqueta tiene que estar en la rama desarrollo de origin.
 set -u
 uso() { echo "Uso: bash scripts/publicar.sh X.Y.Z [--volver]" >&2; exit 2; }
 fallar() { echo "[publicar] $*" >&2; exit 1; }
@@ -20,6 +21,8 @@ SHA=$(git ls-remote --tags origin "refs/tags/v$VERSION^{}" | awk '{print $1}' | 
 [ -n "$SHA" ] || SHA=$(git ls-remote --tags origin "refs/tags/v$VERSION" | awk '{print $1}' | head -1)
 [ -n "$SHA" ] || fallar "no existe la etiqueta v$VERSION en origin"
 git cat-file -e "$SHA^{commit}" 2>/dev/null || git fetch -q origin "refs/tags/v$VERSION:refs/tags/v$VERSION" || fallar "no pude bajar v$VERSION"
+git fetch -q origin "+refs/heads/desarrollo:refs/remotes/origin/desarrollo" || fallar "no pude bajar origin/desarrollo"
+git merge-base --is-ancestor "$SHA" origin/desarrollo || fallar "v$VERSION (${SHA:0:7}) no está en desarrollo: solo se publica lo que ya se juntó en desarrollo"
 
 version_json() {
   MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL="*" git show "$1:$2" 2>/dev/null |
@@ -54,7 +57,7 @@ if [ -n "$ACTUAL_SHA" ]; then
   if [ -n "$ACTUAL" ]; then
     MAYOR=$(printf '%s\n%s\n' "$ACTUAL" "$VERSION" | sort -t. -k1,1n -k2,2n -k3,3n | tail -1)
     if [ "$MAYOR" = "$VERSION" ] && [ "$ACTUAL" != "$VERSION" ]; then
-      :
+      [ -z "$VOLVER" ] || fallar "--volver es solo para volver atrás; main está en $ACTUAL y $VERSION es mayor: corre sin --volver"
     else
       [ -n "$VOLVER" ] || fallar "main ya está en $ACTUAL; $VERSION no es mayor. Para volver atrás usa --volver"
       FORZAR=1
