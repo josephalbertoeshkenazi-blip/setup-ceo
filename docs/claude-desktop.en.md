@@ -39,7 +39,7 @@ claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo
 
 Installing only through your claude.ai account (the path below) is not enough for those two commands.
 
-Registered this way, setup-ceo updates itself, with reviewed versions (in Desktop too). To update right now, say "actualízate" (update yourself); to turn it off, "no te actualices solo" (do not update yourself). The automatic update only runs in open sessions and the new version shows up in the next session. If it does not update, see [docs/problemas.en.md](problemas.en.md).
+Registered this way, setup-ceo updates itself, with reviewed versions (in Desktop too). To update right now, say "actualízate" (update yourself); to turn it off, "no te actualices solo" (do not update yourself). The automatic update only runs in open sessions and the new version shows up in the next session. If it does not update, see [problemas.en.md](problemas.en.md).
 
 ### One session per project
 

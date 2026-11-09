@@ -162,7 +162,7 @@ One hard rule: nothing important reaches another person until you say "send it" 
 | `/complementos:buscar-skill` | Find a skill that is not on the list: reviews up to 3 in trusted places and only installs with your yes |
 | `/ceo-base:revisar-correcciones` | Review the times you corrected Claude and keep what repeats ([how memory works](docs/memoria.en.md)) |
 | `seguridad` | `/seguridad:revisar-mi-seguridad`: a 5-minute check of your computer and your Claude that only looks, explains in plain words what matters, and fixes one thing at a time with your yes and a way to undo it. |
-| `actualizaciones` | `/actualizaciones:novedades`: tells you in plain words what changed; installs only if you say yes. |
+| `actualizaciones` | `/actualizaciones:novedades`: explains in plain words what changed; the setup updates itself. |
 | `sugerencias` | `/sugerencias:sugerir-mejora`: sends an improvement idea as a public issue, only after you confirm the text. |
 | `negocios` | A business advisor for prices, deals, partners and contracts, with real numbers. Recommended by the interview when you run a business. |
 | `diseno` | Three design helpers: one directs, one builds, one reviews, so pages and apps look premium. They learn from your past work. |
@@ -212,7 +212,7 @@ The interview recommends and installs the rest (`negocios`, `diseno`, `programar
 | `/adaptar:adaptar-a-mi` | The 10-minute interview: first brings in what Claude Code, the Claude chat or ChatGPT already know about you, then asks only what is missing, writes your profile and recommends what fits |
 | `/adaptar:trae-mi-memoria` | To run it again later: bring what the Claude chat, ChatGPT or another AI already knows about you into your profile |
 | `/seguridad:revisar-mi-seguridad` | Check your computer and your Claude, and fix what you approve |
-| `/actualizaciones:novedades` | See what is new and decide whether to install it |
+| `/actualizaciones:novedades` | See what is new |
 | `/sugerencias:sugerir-mejora` | Send an improvement idea |
 | `/ceo-base:nueva-cabeza` | Create a new helper for one of your areas |
 | `/complementos:instalar-complementos` | See the important skills and pick which to install |

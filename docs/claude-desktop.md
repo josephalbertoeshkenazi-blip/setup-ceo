@@ -39,7 +39,7 @@ claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo
 
 Instalar solo desde tu cuenta de claude.ai (la ruta de abajo) no basta para esos dos comandos.
 
-Así registrado, el setup-ceo se actualiza solo, con versiones revisadas (también en Desktop). Para actualizarte ya, di "actualízate"; para apagarlo, "no te actualices solo". La actualización sola solo corre en sesiones abiertas y la versión nueva se ve en la sesión siguiente. Si no se actualiza, mira [docs/problemas.md](problemas.md).
+Así registrado, el setup-ceo se actualiza solo, con versiones revisadas (también en Desktop). Para actualizarte ya, di "actualízate"; para apagarlo, "no te actualices solo". La actualización sola solo corre en sesiones abiertas y la versión nueva se ve en la sesión siguiente. Si no se actualiza, mira [problemas.md](problemas.md).
 
 ### Una sesión por proyecto
 

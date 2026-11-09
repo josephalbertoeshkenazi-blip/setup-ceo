@@ -43,8 +43,18 @@ test('ningún doc fija la instalación a una rama', () => {
   for (const f of mds()) assert.ok(!readFileSync(f, 'utf8').includes('setup-ceo#'), f);
 });
 
-test('catálogo sin "solo instala con tu sí"', () => {
-  assert.ok(!leer('.claude-plugin/marketplace.json').includes('solo instala con tu sí'));
+test('ningún catálogo, plugin.json ni README dice "solo instala con tu sí"', () => {
+  const jsons = ['.claude-plugin/marketplace.json'];
+  for (const d of readdirSync(join(raiz, 'plugins'))) jsons.push(`plugins/${d}/.claude-plugin/plugin.json`);
+  for (const f of jsons) assert.ok(!leer(f).includes('solo instala con tu sí'), f);
+  // README.md:162 (buscar-skill) sí instala solo con el sí del dueño, por eso no se vigila esa frase ahí.
+  const readmes = ['solo instala si dices que sí', 'installs only if you say yes', 'decidir si se instalan', 'decide whether to install it'];
+  for (const f of ['README.md', 'README.en.md']) for (const fr of readmes) assert.ok(!leer(f).includes(fr), `${f}: ${fr}`);
+});
+
+test('enlaces a problemas en docs/claude-desktop con texto igual al destino', () => {
+  assert.ok(!leer('docs/claude-desktop.md').includes('[docs/problemas.md](problemas.md)'));
+  assert.ok(!leer('docs/claude-desktop.en.md').includes('[docs/problemas.en.md](problemas.en.md)'));
 });
 
 test('versiones 2.3.0', () => {
