@@ -68,6 +68,6 @@ fi
 if [ -n "$FORZAR" ]; then
   git push -q origin --force-with-lease="refs/heads/main:$ACTUAL_SHA" "$SHA:refs/heads/main" || fallar "no pude volver main atrás (¿alguien lo movió mientras tanto?)"
 else
-  git push -q origin "$SHA:refs/heads/main" || fallar "no pude mover main (si no es un avance normal, usa --volver)"
+  git push -q origin "$SHA:refs/heads/main" || fallar "no pude mover main: o no hay conexión, o main tiene commits que no están en desarrollo. Junta main en desarrollo, etiqueta de nuevo y vuelve a publicar"
 fi
 echo "PUBLICADA: v$VERSION (${SHA:0:7})"
