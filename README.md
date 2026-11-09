@@ -221,18 +221,19 @@ La entrevista recomienda e instala el resto (`negocios`, `diseno`, `programar`, 
 
 ## Actualizar
 
-Dentro de Claude escribe `/actualizaciones:novedades`, o pídele a Claude "actualiza el setup-ceo". Por detrás son dos comandos:
+1. Se actualiza solo, con versiones revisadas.
+2. Para hacerlo ya, di "actualízate".
+3. Para apagarlo, di "no te actualices solo". Para prenderlo de nuevo, "actualízate solo".
+4. Si una versión sale mala, el autor la vuelve atrás para todos y te llega sola.
+5. **Si tienes 2.0, 2.1 o 2.2, actualízate una sola vez y desde ahí queda solo.** Dile a Claude "actualiza el setup-ceo", o corre `claude plugin marketplace update setup-ceo` y `claude plugin update actualizaciones@setup-ceo` (y lo mismo con cada plugin que tengas). En Windows con 2.0 o 2.1 el aviso no te sale, así que hazlo así.
 
-```
-claude plugin marketplace update setup-ceo
-claude plugin update ceo-base@setup-ceo
-```
-
-(el segundo se repite con cada plugin que tengas instalado). Si usas Windows y ya tenías la versión 2.0 o 2.1, corre esos dos comandos una vez a mano, o pídele a Claude "actualiza el setup-ceo": la versión vieja no puede avisarte desde Windows. Desde la 2.2.0 el aviso funciona solo.
+El comando de instalación no cambia. Si algo no se actualiza solo, mira [docs/problemas.md](docs/problemas.md).
 
 ## Seguridad
 
 Lee [SECURITY.md](SECURITY.md): una tabla de qué lee, escribe, manda por internet y corre cada pieza, y cómo reportar un problema. La revisión de seguridad nunca pide, muestra ni guarda una clave o contraseña.
+
+Riesgo: lo que se actualiza solo corre en tu computadora; si alguien tomara la cuenta de GitHub de este repo podría mandarte una versión mala. Por eso solo llegan versiones etiquetadas y revisadas, y puedes apagarlo diciendo "no te actualices solo".
 
 Cuando corriges a Claude, `ceo-base` anota una línea corta en `~/.claude/ceo-estado/cola-correcciones.jsonl`, solo en tu computadora y con las claves tapadas. Viene encendido; para apagarlo, escribe `Capturar correcciones: no` en `~/.claude/mi-perfil/ceo.md`. Detalle en [cómo funciona la memoria](docs/memoria.md).
 

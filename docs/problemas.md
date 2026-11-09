@@ -51,9 +51,14 @@ No es un error: ya lo tienes. Sigue con `claude plugin install ceo-base@setup-ce
 
 ## Actualizar
 
-Dentro de Claude escribe `/actualizaciones:novedades`. Te cuenta en palabras simples qué hay de nuevo y solo instala si dices que sí. Tu perfil y tu memoria no se pierden.
+El setup-ceo se actualiza solo, con versiones revisadas. Para actualizarte ya, di "actualízate". Tu perfil y tu memoria no se pierden.
 
-Si usas Windows y ya tenías la versión 2.0 o 2.1, corre una vez a mano `claude plugin marketplace update setup-ceo` y `claude plugin update <plugin>@setup-ceo` (uno por cada plugin instalado), o pídele a Claude "actualiza el setup-ceo". Desde la 2.2.0 el aviso funciona solo.
+## No se actualiza solo
+
+- Puede tardar: la actualización sola corre al abrir una sesión y tarda hasta unos 10 minutos en bajar la versión nueva; la ves al abrir la sesión siguiente.
+- Quizá lo apagaste. Di "actualízate solo" para prenderlo de nuevo.
+- Si tienes la 2.0, la 2.1 o la 2.2, actualízate una sola vez a mano: dile a Claude "actualiza el setup-ceo", o corre `claude plugin marketplace update setup-ceo` y `claude plugin update actualizaciones@setup-ceo` (y lo mismo con cada plugin que tengas). Desde ahí queda solo. En Windows con la 2.0 o la 2.1 el aviso no te sale, así que hazlo así.
+- Si tu empresa o tu computadora apaga las actualizaciones de Claude Code, no se actualiza solo; pídele a Claude "actualiza el setup-ceo" cuando quieras.
 
 ## Windows
 

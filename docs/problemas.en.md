@@ -51,9 +51,14 @@ It is not an error: you already have it. Go on with `claude plugin install ceo-b
 
 ## Updating
 
-Inside Claude type `/actualizaciones:novedades`. It tells you in plain words what is new and only installs if you say yes. Your profile and memory are not lost.
+setup-ceo updates itself, with reviewed versions. To update right now, say "actualízate" (update yourself). Your profile and memory are not lost.
 
-If you use Windows and were already on version 2.0 or 2.1, run `claude plugin marketplace update setup-ceo` and `claude plugin update <plugin>@setup-ceo` (one per installed plugin) once by hand, or ask Claude "actualiza el setup-ceo". From 2.2.0 on, the notice works by itself.
+## It does not update by itself
+
+- It can take a while: the automatic update runs when a session opens and can take up to about 10 minutes to download the new version; you see it when you open the next session.
+- You may have turned it off. Say "actualízate solo" to turn it back on.
+- If you have 2.0, 2.1 or 2.2, update once by hand: tell Claude "actualiza el setup-ceo", or run `claude plugin marketplace update setup-ceo` and `claude plugin update actualizaciones@setup-ceo` (and the same for each plugin you have). From then on it stays up to date by itself. On Windows with 2.0 or 2.1 the notice does not show up, so do it this way.
+- If your company or your computer turns off Claude Code updates, it will not update by itself; ask Claude "actualiza el setup-ceo" whenever you want.
 
 ## Windows
 

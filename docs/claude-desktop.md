@@ -39,6 +39,8 @@ claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo
 
 Instalar solo desde tu cuenta de claude.ai (la ruta de abajo) no basta para esos dos comandos.
 
+Así registrado, el setup-ceo se actualiza solo, con versiones revisadas (también en Desktop). Para actualizarte ya, di "actualízate"; para apagarlo, "no te actualices solo". La actualización sola solo corre en sesiones abiertas y la versión nueva se ve en la sesión siguiente. Si no se actualiza, mira [docs/problemas.md](problemas.md).
+
 ### Una sesión por proyecto
 
 Abre cada proyecto una vez en la pestaña Code, con su carpeta. Desde la sesión principal, Claude puede abrir la sesión de un proyecto él mismo: en la versión de la app que probamos (Claude Code 2.1.309 dentro de Desktop) tiene la herramienta `start_session`, que abre una sesión nueva en la carpeta del proyecto con el pedido ya escrito. La app puede pedirte que confíes en esa carpeta; di que sí. Después Claude le manda mensajes a esa sesión, la encuentra en la lista de sesiones y, cuando termina, la app le avisa; no hace falta que le preguntes. También puede listar y leer tus otras sesiones locales (las 20 más recientes, sin archivar). Los agentes en segundo plano salen en el panel de tareas de la app; los "equipos de agentes" no existen en Desktop.
