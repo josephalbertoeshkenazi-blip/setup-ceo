@@ -315,3 +315,41 @@ test('gancho: sin catálogo ni known sale 0 en silencio', () => {
   assert.equal(r.status, 0);
   assert.equal(r.stderr, '');
 });
+
+// auto.sh y las skills con las frases del dueño
+const autoSh = (w, ...a) => spawnSync(BASH, [`${aPosix(scripts)}/auto.sh`, ...a], { encoding: 'utf8', env: w.env });
+const skill = (n) => readFileSync(join(raiz, 'plugins/actualizaciones/skills', n, 'SKILL.md'), 'utf8');
+
+test('auto.sh apagar, estado, prender', () => {
+  const w = mundo({ known: { source: GIT } });
+  assert.equal(autoSh(w, 'apagar').stdout, 'AUTO: no\n');
+  assert.equal(autoSh(w, 'estado').stdout, 'AUTO: no\nREF: ninguno\nFUENTE: oficial\n');
+  assert.equal(autoSh(w, 'prender').stdout, 'AUTO: si\n');
+  assert.equal(entrada(w).autoUpdate, true);
+});
+
+test('auto.sh otra-cosa sale con 2 y no cambia nada', () => {
+  const w = mundo({ known: { source: GIT } });
+  const r = autoSh(w, 'otra-cosa');
+  assert.equal(r.status, 2);
+  assert.equal(existsSync(w.sf), false);
+  assert.equal(autoSh(w).status, 2);
+});
+
+test('skill actualizar-solo menciona las frases', () => {
+  const t = skill('actualizar-solo');
+  for (const f of ['no te actualices solo', 'apaga las actualizaciones', 'actualízate solo', 'prende las actualizaciones', '¿te actualizas solo?', 'vuelve a la versión anterior', 'auto.sh', '--volver']) {
+    assert.ok(t.includes(f), f);
+  }
+  assert.ok(!t.includes('marketplace add'));
+});
+
+test('novedades: actualízate no pregunta', () => {
+  const t = skill('novedades');
+  assert.ok(t.includes('actualízate'));
+  assert.match(t, /^## Actualizar$/m);
+  assert.match(t, /^## Cuando solo pregunta$/m);
+  assert.ok(!t.includes('nada se instala ni se actualiza sin un sí claro'));
+  assert.ok(t.includes('Instálala ahora'));
+  assert.ok(t.includes('buscar-claude.sh'));
+});
