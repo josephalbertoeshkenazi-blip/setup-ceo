@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          fetch-tags: true
 
       - uses: actions/setup-node@v4
         with:
@@ -77,11 +78,15 @@ jobs:
 
       - name: Actualización real desde 2.0.0
         if: github.event_name == 'push'
-        run: bash scripts/probar-actualizacion.sh 11f73ca "$GITHUB_SHA" "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-200"
+        run: bash scripts/probar-actualizacion.sh v2.0.0 "$GITHUB_SHA" "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-200"
 
       - name: Actualización real desde 2.1.0
         if: github.event_name == 'push'
-        run: bash scripts/probar-actualizacion.sh 170e5e3 "$GITHUB_SHA" "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-210"
+        run: bash scripts/probar-actualizacion.sh v2.1.0 "$GITHUB_SHA" "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-210"
+
+      - name: Actualización real desde 2.2.0
+        if: github.event_name == 'push'
+        run: bash scripts/probar-actualizacion.sh v2.2.0 "$GITHUB_SHA" "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-220"
 
       - name: Borrar ramas temporales (por si se canceló)
         if: always() && github.event_name == 'push'
@@ -89,3 +94,4 @@ jobs:
           git push origin --delete "ci-inst-$GITHUB_RUN_ID-$RUNNER_OS" || true
           git push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-200" || true
           git push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-210" || true
+          git push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-220" || true

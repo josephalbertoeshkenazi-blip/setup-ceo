@@ -108,3 +108,57 @@ test('el flujo agrega la ruta en forma de Windows y borra las ramas al final', (
   assert.match(y, /if: always\(\) && github\.event_name == 'push'/);
   for (const s of ['ci-inst-', 'ci-act-']) assert.ok(y.includes(`push origin --delete "${s}`), s);
 });
+
+// --- Publicar solo versiones con etiqueta ---
+test('pruebas.yml prueba desde 2.2.0 y 2.0.0 con etiquetas', () => {
+  const y = flujo();
+  assert.match(y, /probar-actualizacion\.sh v2\.2\.0 "\$GITHUB_SHA"/);
+  assert.match(y, /probar-actualizacion\.sh v2\.0\.0 "\$GITHUB_SHA"/);
+  assert.match(y, /probar-actualizacion\.sh v2\.1\.0 "\$GITHUB_SHA"/);
+  assert.doesNotMatch(y, /probar-actualizacion\.sh [0-9a-f]{7}\b/);
+  assert.match(y, /fetch-tags:\s*true/);
+  assert.match(y, /Actualización real desde 2\.2\.0/);
+  assert.match(y, /Actualización real desde 2\.0\.0/);
+  assert.ok(y.includes('push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-220"'));
+});
+
+test('pruebas.yml corre en desarrollo', () => {
+  const m = flujo().match(/branches-ignore:\s*\[([^\]]*)\]/);
+  assert.ok(m, 'falta branches-ignore');
+  const patrones = m[1].split(',').map((p) => p.trim().replace(/^'|'$/g, ''));
+  for (const p of patrones) {
+    const re = new RegExp('^' + p.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*') + '$');
+    assert.ok(!re.test('desarrollo'), `desarrollo calza ${p}`);
+  }
+});
+
+test('probar-actualizacion.sh espera el aviso nuevo, nunca "hay una versión nueva"', () => {
+  const t = leer('scripts/probar-actualizacion.sh');
+  assert.match(t, /grep -qi/);
+  assert.match(t, /hay una versión nueva/);
+  assert.match(t, /se actualizó solo/);
+});
+
+test('publicada.yml revisa la etiqueta', () => {
+  assert.ok(existsSync(join(raiz, '.github/workflows/publicada.yml')), 'falta el archivo');
+  const y = leer('.github/workflows/publicada.yml');
+  assert.match(y, /branches:\s*\[\s*main\s*\]/);
+  assert.match(y, /--exact-match/);
+  assert.match(y, /fetch-depth:\s*0/);
+  assert.match(y, /fetch-tags:\s*true/);
+  const usos = [...y.matchAll(/uses:\s*(\S+)/g)].map((m) => m[1]);
+  for (const u of usos) assert.equal(u, 'actions/checkout@v4');
+});
+
+test('publicar.sh exige la etiqueta, las pruebas y --volver', () => {
+  const s = join(raiz, 'scripts/publicar.sh');
+  assert.ok(existsSync(s), 'falta el archivo');
+  assert.equal(spawnSync('bash', ['-n', s], { encoding: 'utf8' }).status, 0);
+  const t = leer('scripts/publicar.sh');
+  assert.match(t, /ls-remote --tags/);
+  assert.match(t, /gh run list/);
+  assert.match(t, /--volver/);
+  assert.equal(spawnSync('bash', [s], { encoding: 'utf8' }).status, 2);
+  assert.equal(spawnSync('bash', [s, '1.2'], { encoding: 'utf8' }).status, 2);
+  assert.equal(spawnSync('bash', [s, '1.2.3', '--otra'], { encoding: 'utf8' }).status, 2);
+});

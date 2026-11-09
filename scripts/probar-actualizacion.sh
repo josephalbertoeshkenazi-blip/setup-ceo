@@ -62,6 +62,14 @@ done
 verificar_versiones "$NUEVO"
 revisar_reglas
 revisar_hooks
+# Tras actualizar, la primera corrida puede decir "se actualizó solo" y nunca "hay una versión nueva".
 salida=$(salida_novedades) || exit 1
-[ -z "$salida" ] || fallar "tras actualizar, el aviso no debía decir nada y dijo: $salida"
+if printf '%s' "$salida" | grep -qi 'hay una versión nueva'; then
+  fallar "tras actualizar, el aviso dijo que hay una versión nueva: $salida"
+fi
+if [ -n "$salida" ] && ! printf '%s' "$salida" | grep -qi 'se actualizó solo'; then
+  fallar "tras actualizar, el aviso dijo algo inesperado: $salida"
+fi
+salida=$(salida_novedades) || exit 1
+[ -z "$salida" ] || fallar "la segunda corrida del aviso debía salir vacía y dijo: $salida"
 avisar "ACTUALIZACION OK ($VIEJO -> $NUEVO)"

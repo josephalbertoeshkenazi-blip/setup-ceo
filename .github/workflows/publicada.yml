@@ -1,0 +1,29 @@
+name: publicada
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  publicada:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: main solo apunta a una versión con etiqueta
+        run: |
+          v=$(grep -m1 -E '^## [0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md | sed -E 's/^## ([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+          [ -n "$v" ] || { echo "no encuentro la versión en el CHANGELOG"; exit 1; }
+          etiqueta=$(git describe --exact-match --tags HEAD 2>/dev/null || true)
+          [ "$etiqueta" = "v$v" ] || { echo "main debe estar en la etiqueta v$v y está en '${etiqueta:-ninguna}'"; exit 1; }
+          for f in plugins/*/.claude-plugin/plugin.json; do
+            pv=$(sed -nE 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/p' "$f" | head -1)
+            [ "$pv" = "$v" ] || { echo "$f dice '$pv' y el CHANGELOG dice $v"; exit 1; }
+          done
+          echo "main esta en v$v"
