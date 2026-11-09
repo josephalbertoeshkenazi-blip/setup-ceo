@@ -56,6 +56,7 @@ Para decisiones grandes, buscar una mejor manera, `abiertos.md`, el modo no mole
 - La memoria es de la sesión; el perfil (`~/.claude/mi-perfil/`) es del dueño y solo lo escribe `/adaptar:adaptar-a-mi` o él mismo.
 
 ## 7. Reportes y entregas
+- Novedades del setup-ceo: se actualiza solo. Cuando pase, cuéntale al dueño en 2 o 3 líneas, sin jerga, qué cambió. Si dice "actualízate", actualiza ya; si dice "no te actualices solo", apágalo con `/actualizaciones:actualizar-solo`.
 - Agente terminado y no urgente: se anota y se da todo junto cuando el dueño pregunte "¿qué tengo pendiente?". Lo urgente o lo bloqueado se dice de inmediato, en una línea.
 - Si el dueño tiene que ver algo, se le abre en pantalla cuando esté listo. Nada de avances a medias.
 - Planes y reportes que el dueño va a leer van como página clara, no como texto crudo.

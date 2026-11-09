@@ -1,7 +1,7 @@
 {
   "name": "actualizaciones",
-  "version": "2.2.0",
-  "description": "Comando novedades: explica qué cambió en el setup y solo instala con tu sí.",
+  "version": "2.3.0",
+  "description": "Comando novedades: explica qué cambió en el setup; el setup se actualiza solo.",
   "author": { "name": "Joseph Eshkenazi" },
   "license": "MIT",
   "keywords": ["setup-ceo"]

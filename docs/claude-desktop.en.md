@@ -39,6 +39,8 @@ claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo
 
 Installing only through your claude.ai account (the path below) is not enough for those two commands.
 
+Registered this way, setup-ceo updates itself, with reviewed versions (in Desktop too). To update right now, say "actualízate" (update yourself); to turn it off, "no te actualices solo" (do not update yourself). The automatic update only runs in open sessions and the new version shows up in the next session. If it does not update, see [problemas.en.md](problemas.en.md).
+
 ### One session per project
 
 Open each project once in the Code tab, with its folder. From the main session, Claude can open a project's session itself: in the app version we tested (Claude Code 2.1.309 inside Desktop) it has the `start_session` tool, which opens a new session in the project's folder with the request already written. The app may ask you to trust that folder; say yes. Claude then messages that session, finds it in the session list and, when it finishes, the app tells Claude; you do not need to ask. It can also list and read your other local sessions (the 20 most recent, not archived). Background agents show in the app's tasks pane; "agent teams" do not exist in Desktop.

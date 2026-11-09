@@ -9,6 +9,18 @@ Agentes que cambiaron: <agentes, o "ninguno">
 - Qué cambió, en palabras simples.
 ```
 
+## 2.3.0 (2026-11-09)
+Cambió: actualizaciones, ceo-base, más documentación y revisiones
+Agentes que cambiaron: ninguno
+- El setup-ceo ahora se actualiza solo, y solo con versiones revisadas y etiquetadas. Cuando se actualiza, Claude te cuenta en 2 o 3 líneas, sin jerga, qué cambió.
+- Para actualizarte ya, di "actualízate". Para apagarlo, di "no te actualices solo"; para prenderlo de nuevo, "actualízate solo" (`/actualizaciones:actualizar-solo`).
+- Si una versión sale mala, el autor la vuelve atrás para todos y te llega sola.
+- `ceo-base`: la regla 11 cambió. Antes esperaba tu sí antes de instalar las novedades; ahora el setup se actualiza solo y Claude solo te lo cuenta.
+- Riesgo, dicho claro: lo que se actualiza solo corre en tu computadora; si alguien tomara la cuenta de GitHub de este repo podría mandarte una versión mala. Por eso solo llegan versiones etiquetadas y revisadas, y puedes apagarlo.
+- Si tienes la 2.0, la 2.1 o la 2.2, actualízate una sola vez y desde ahí queda solo. Dile a Claude "actualiza el setup-ceo", o corre `claude plugin marketplace update setup-ceo` y `claude plugin update actualizaciones@setup-ceo` (y lo mismo con cada plugin que tengas). En Windows con la 2.0 o la 2.1 el aviso no te sale, así que hazlo así.
+- El comando para instalar no cambia.
+- Más documentación: README, problemas comunes, guía de Claude Desktop, SECURITY y CONTRIBUTING explican la actualización sola y cómo se publica una versión (el trabajo va en la rama `desarrollo`; `main` solo se mueve con `scripts/publicar.sh`).
+
 ## 2.2.0 (2026-11-08)
 Cambió: ceo-base, actualizaciones, adaptar, seguridad, avisos, más documentación y revisiones
 Agentes que cambiaron: guardia

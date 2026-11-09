@@ -162,7 +162,7 @@ One hard rule: nothing important reaches another person until you say "send it" 
 | `/complementos:buscar-skill` | Find a skill that is not on the list: reviews up to 3 in trusted places and only installs with your yes |
 | `/ceo-base:revisar-correcciones` | Review the times you corrected Claude and keep what repeats ([how memory works](docs/memoria.en.md)) |
 | `seguridad` | `/seguridad:revisar-mi-seguridad`: a 5-minute check of your computer and your Claude that only looks, explains in plain words what matters, and fixes one thing at a time with your yes and a way to undo it. |
-| `actualizaciones` | `/actualizaciones:novedades`: tells you in plain words what changed; installs only if you say yes. |
+| `actualizaciones` | `/actualizaciones:novedades`: explains in plain words what changed; the setup updates itself. |
 | `sugerencias` | `/sugerencias:sugerir-mejora`: sends an improvement idea as a public issue, only after you confirm the text. |
 | `negocios` | A business advisor for prices, deals, partners and contracts, with real numbers. Recommended by the interview when you run a business. |
 | `diseno` | Three design helpers: one directs, one builds, one reviews, so pages and apps look premium. They learn from your past work. |
@@ -212,7 +212,7 @@ The interview recommends and installs the rest (`negocios`, `diseno`, `programar
 | `/adaptar:adaptar-a-mi` | The 10-minute interview: first brings in what Claude Code, the Claude chat or ChatGPT already know about you, then asks only what is missing, writes your profile and recommends what fits |
 | `/adaptar:trae-mi-memoria` | To run it again later: bring what the Claude chat, ChatGPT or another AI already knows about you into your profile |
 | `/seguridad:revisar-mi-seguridad` | Check your computer and your Claude, and fix what you approve |
-| `/actualizaciones:novedades` | See what is new and decide whether to install it |
+| `/actualizaciones:novedades` | See what is new |
 | `/sugerencias:sugerir-mejora` | Send an improvement idea |
 | `/ceo-base:nueva-cabeza` | Create a new helper for one of your areas |
 | `/complementos:instalar-complementos` | See the important skills and pick which to install |
@@ -221,18 +221,19 @@ The interview recommends and installs the rest (`negocios`, `diseno`, `programar
 
 ## Updating
 
-Inside Claude type `/actualizaciones:novedades`, or ask Claude "update setup-ceo" ("actualiza el setup-ceo"). Behind the scenes it is two commands:
+1. It updates itself, with reviewed versions only.
+2. To do it right now, say "actualízate" (update yourself).
+3. To turn it off, say "no te actualices solo" (do not update yourself). To turn it back on, say "actualízate solo".
+4. If a version turns out bad, the author rolls it back for everyone and the fix reaches you by itself.
+5. **If you have 2.0, 2.1 or 2.2, update once by hand and from then on it stays up to date by itself.** Tell Claude "actualiza el setup-ceo", or run `claude plugin marketplace update setup-ceo` and `claude plugin update actualizaciones@setup-ceo` (and the same for each plugin you have). On Windows with 2.0 or 2.1 the notice does not show up, so do it this way.
 
-```
-claude plugin marketplace update setup-ceo
-claude plugin update ceo-base@setup-ceo
-```
-
-(the second one is repeated for each plugin you have installed). If you use Windows and were already on version 2.0 or 2.1, run those two commands once by hand, or ask Claude "actualiza el setup-ceo": the old version cannot warn you from Windows. From 2.2.0 on, the notice works by itself.
+The install command does not change. If something does not update by itself, see [docs/problemas.en.md](docs/problemas.en.md).
 
 ## Safety
 
 Read [SECURITY.md](SECURITY.md): a table of what every piece reads, writes, sends over the network and runs, and how to report a problem. The security check never asks for, shows or stores a password or key.
+
+Risk: what updates itself runs on your computer; if someone took over the GitHub account of this repo, they could send you a bad version. That is why only tagged, reviewed versions reach you, and you can turn it off by saying "no te actualices solo" (do not update yourself).
 
 When you correct Claude, `ceo-base` writes a short line to `~/.claude/ceo-estado/cola-correcciones.jsonl`, only on your computer and with keys masked. It is on by default; to turn it off, write `Capturar correcciones: no` in `~/.claude/mi-perfil/ceo.md`. Details in [how memory works](docs/memoria.en.md).
 
