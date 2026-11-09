@@ -27,7 +27,7 @@ REPO=$(repo_github) || exit 1
 crear_casa
 avisar "casa temporal en $CASA; rama $RAMA en $REPO"
 SUBIDA=1
-subir_rama "$VIEJO" "$RAMA"
+subir_rama_sin_workflows "$VIEJO" "$RAMA"
 
 # Capa personal del dueño: la actualización no la puede tocar ni un byte.
 PERFIL="$CASA/.claude/mi-perfil/ceo.md"

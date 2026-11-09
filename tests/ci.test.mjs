@@ -190,6 +190,45 @@ test('subir_rama sube a una rama el commit de una etiqueta anotada (repo bare lo
   assert.equal(gitEn(base, '--git-dir', bare, 'rev-parse', 'refs/heads/ci-prueba'), commit);
 });
 
+// El token de Actions no puede subir un commit con workflows distintos a los de main
+// ("refusing to allow a GitHub App to create or update workflow"): la versión vieja sube sin ellos.
+test('subir_rama_sin_workflows sube el contenido de la etiqueta sin .github/workflows, en un commit sin padres', () => {
+  const base = mkdtempSync(join(tmpdir(), 'ci-sinwf-'));
+  const bare = join(base, 'origen.git');
+  const trabajo = join(base, 'trabajo');
+  mkdirSync(join(trabajo, '.github', 'workflows'), { recursive: true });
+  mkdirSync(join(trabajo, 'plugins', 'p'), { recursive: true });
+  gitEn(base, 'init', '-q', '--bare', bare);
+  gitEn(trabajo, 'init', '-q');
+  gitEn(trabajo, 'remote', 'add', 'origin', bare);
+  writeFileSync(join(trabajo, 'a.txt'), 'uno\n');
+  writeFileSync(join(trabajo, 'plugins', 'p', 'b.txt'), 'dos\n');
+  writeFileSync(join(trabajo, '.github', 'workflows', 'w.yml'), 'on: push\n');
+  writeFileSync(join(trabajo, '.github', 'otro.md'), 'tres\n');
+  gitEn(trabajo, 'add', '.');
+  gitEn(trabajo, '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'uno');
+  gitEn(trabajo, '-c', 'tag.gpgsign=false', 'tag', '-a', 'v9.9.9', '-m', 'anotada');
+  const comun = join(raiz, 'scripts/probar-comun.sh').replace(/\\/g, '/');
+  const r = spawnSync('bash', ['-c', `. "${comun}"; subir_rama_sin_workflows v9.9.9 ci-vieja`], {
+    cwd: trabajo, encoding: 'utf8',
+    env: { ...process.env, GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@t', GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@t' },
+  });
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  const g = (...a) => gitEn(base, '--git-dir', bare, ...a);
+  const archivos = g('ls-tree', '-r', '--name-only', 'refs/heads/ci-vieja').split('\n').sort();
+  assert.deepEqual(archivos, ['.github/otro.md', 'a.txt', 'plugins/p/b.txt']);
+  assert.equal(g('rev-parse', 'refs/heads/ci-vieja:plugins/p/b.txt'), gitEn(trabajo, 'rev-parse', 'v9.9.9:plugins/p/b.txt'));
+  assert.equal(g('rev-list', '--parents', '-n', '1', 'refs/heads/ci-vieja').split(' ').length, 1, 'el commit no debe tener padres');
+  assert.equal(gitEn(trabajo, 'status', '--porcelain'), '', 'no debe tocar el índice ni el árbol de trabajo');
+});
+
+test('probar-actualizacion.sh sube la versión vieja sin workflows y la nueva tal cual', () => {
+  const t = leer('scripts/probar-actualizacion.sh');
+  assert.match(t, /subir_rama_sin_workflows "\$VIEJO" "\$RAMA"/);
+  assert.match(t, /subir_rama "\$NUEVO" "\$RAMA"/);
+  assert.doesNotMatch(t, /subir_rama "\$VIEJO"/);
+});
+
 test('publicada.yml mira todas las etiquetas del commit, no solo una', () => {
   const y = leer('.github/workflows/publicada.yml');
   assert.match(y, /git tag --points-at HEAD \| grep -qx "v\$v"/);

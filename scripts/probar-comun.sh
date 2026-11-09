@@ -59,6 +59,21 @@ git_real() { HOME="${HOME_REAL:-$HOME}" USERPROFILE="${USERPROFILE_REAL:-${USERP
 subir_rama() {
   git_real push -q origin "+$1^{commit}:refs/heads/$2" || fallar "no pude subir la rama $2 (hacen falta permisos de escritura)"
 }
+# El token de Actions no puede subir una rama cuyos workflows difieren de los del repo
+# ("refusing to allow a GitHub App to create or update workflow"). Al plugin no le importan:
+# se sube el contenido de <ref> sin .github/workflows, en un commit sin padres, igual que
+# las versiones de antes de 2.1.0, que no tenían workflows y siempre subieron bien.
+subir_rama_sin_workflows() {
+  local vacio gh arbol commit
+  vacio=$(git mktree </dev/null) || fallar "no pude armar $1 sin workflows"
+  gh=$(git ls-tree "$1:.github" 2>/dev/null | awk -F '\t' '$2 != "workflows"' | git mktree) || fallar "no pude armar $1 sin workflows"
+  arbol=$(git ls-tree "$1^{tree}" | awk -F '\t' -v gh="$gh" -v vacio="$vacio" '
+    $2 != ".github" { print; next }
+    gh != vacio { print "040000 tree " gh "\t.github" }' | git mktree) || fallar "no pude armar $1 sin workflows"
+  commit=$(git -c user.name=probar -c user.email=probar@localhost commit-tree "$arbol" -m "probar: $1 sin workflows") ||
+    fallar "no pude crear el commit de $1"
+  subir_rama "$commit" "$2"
+}
 borrar_rama() {
   if [ -n "$1" ] && ! git_real push -q origin --delete "$1" >/dev/null 2>&1; then
     echo "[probar] AVISO: no pude borrar la rama temporal $1; bórrala a mano" >&2
