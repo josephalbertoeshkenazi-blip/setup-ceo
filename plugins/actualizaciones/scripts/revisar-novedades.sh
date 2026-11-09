@@ -20,19 +20,21 @@ if [ -z "$apagado_por_entorno" ] && [ "$(asegurar_auto)" = "CAMBIO: activado" ];
   echo "Desde ahora el setup-ceo se actualiza solo, solo con versiones revisadas. Díselo al dueño en una línea y que si no lo quiere, diga \"no te actualices solo\"."
 fi
 
-# 2. Resumen después de una actualización
-v=$(version_propia)
+# 2. Resumen después de una actualización. Manda el registro: una sesión abierta antes de actualizarse
+# sigue con el plugin viejo cargado y, si se usara ese, diría que volvió atrás.
+v=$(version_instalada actualizaciones)
+[ -n "$v" ] || v=$(version_propia)
 if [ -n "$v" ]; then
   visto=$(cat "$datos/version-vista" 2>/dev/null)
   if [ -n "$visto" ]; then
     if es_mayor "$v" "$visto"; then
-      echo "El setup-ceo se actualizó solo (de $visto a $v). Al empezar, cuéntale al dueño en 2 o 3 líneas sin jerga qué cambió. Si abajo dice \"Agentes que cambiaron\", ofrécele /adaptar:adaptar-a-mi con esos agentes."
+      echo "El setup-ceo se actualizó (de $visto a $v). Al empezar, cuéntale al dueño en 2 o 3 líneas sin jerga qué cambió. Si abajo dice \"Agentes que cambiaron\", ofrécele /adaptar:adaptar-a-mi con esos agentes."
       changelog_entre "$visto" "$v"
     elif es_mayor "$visto" "$v"; then
       echo "El setup-ceo volvió a la versión $v (estaba en $visto). Díselo al dueño en una línea."
     fi
   elif [ -f "$datos/ultima-revision" ]; then
-    echo "El setup-ceo se actualizó solo (de la anterior a $v). Al empezar, cuéntale al dueño en 2 o 3 líneas sin jerga qué cambió. Si abajo dice \"Agentes que cambiaron\", ofrécele /adaptar:adaptar-a-mi con esos agentes."
+    echo "El setup-ceo se actualizó (de la anterior a $v). Al empezar, cuéntale al dueño en 2 o 3 líneas sin jerga qué cambió. Si abajo dice \"Agentes que cambiaron\", ofrécele /adaptar:adaptar-a-mi con esos agentes."
     changelog_entre "" "$v"
   fi
   echo "$v" > "$datos/version-vista"
@@ -55,6 +57,7 @@ elif ! es_mayor "$ultima" "$inst"; then
   # Ya tiene la del repo: no queda nada pendiente.
   [ -e "$datos/pendiente-desde" ] && unlink "$datos/pendiente-desde"
   [ -e "$datos/orden-dada" ] && unlink "$datos/orden-dada"
+  [ -d "$datos/orden.lock" ] && rmdir "$datos/orden.lock"
   exit 0
 fi
 estado=$(estado_auto)
@@ -84,18 +87,26 @@ else
         case "$estado" in
           *"FUENTE: oficial"*)
             # La orden de instalar sale una sola vez por versión; si no se instaló, después solo se ofrece.
-            if [ "$(cat "$datos/orden-dada" 2>/dev/null)" = "$ultima" ]; then
+            # El candado (mkdir es atómico) evita que dos sesiones abiertas a la vez den la orden las dos.
+            # Si quedó de una sesión cortada, solo se ofrece hasta que se instale; ahí se borra.
+            if ! mkdir "$datos/orden.lock" 2>/dev/null; then
               ofrecer "Ya se pidió instalarla y todavía no se instaló"
             else
-              if [ -n "$volvio" ]; then
-                echo "El autor del setup-ceo volvió a la versión $ultima (tienes $inst). Instálala ahora sin preguntar con el paso \"Actualizar\" de /actualizaciones:novedades y después cuéntale al dueño en 1 línea qué pasó."
+              if [ "$(cat "$datos/orden-dada" 2>/dev/null)" = "$ultima" ]; then
+                ofrecer "Ya se pidió instalarla y todavía no se instaló"
               else
-                echo "Hay una versión nueva del setup-ceo ($ultima; el dueño tiene $inst) que no se instaló sola. Instálala ahora sin preguntar con el paso \"Actualizar\" de /actualizaciones:novedades y después cuéntale al dueño en 2 o 3 líneas qué cambió."
+                # Se anota antes de imprimir: si la sesión se corta, lo peor es ofrecer en vez de ordenar.
+                echo "$ultima" > "$datos/orden-dada"
+                if [ -n "$volvio" ]; then
+                  echo "El autor del setup-ceo volvió a la versión $ultima (tienes $inst). Instálala ahora sin preguntar con el paso \"Actualizar\" de /actualizaciones:novedades y después cuéntale al dueño en 1 línea qué pasó."
+                else
+                  echo "Hay una versión nueva del setup-ceo ($ultima; el dueño tiene $inst) que no se instaló sola. Instálala ahora sin preguntar con el paso \"Actualizar\" de /actualizaciones:novedades y después cuéntale al dueño en 2 o 3 líneas qué cambió."
+                fi
               fi
-              echo "$ultima" > "$datos/orden-dada"
+              rmdir "$datos/orden.lock"
             fi
             ;;
-          *) ofrecer ;;
+          *) ofrecer "Esta instalación no viene del repositorio oficial y no se instala sola" ;;
         esac
       fi
       ;;

@@ -136,7 +136,7 @@ test('probar-actualizacion.sh espera el aviso nuevo, nunca "hay una versión nue
   const t = leer('scripts/probar-actualizacion.sh');
   assert.match(t, /grep -qi/);
   assert.match(t, /hay una versión nueva/);
-  assert.match(t, /se actualizó solo/);
+  assert.match(t, /se actualizó \(de/);
 });
 
 test('publicada.yml revisa la etiqueta', () => {
@@ -225,7 +225,7 @@ test('probar-actualizacion.sh instala solo los plugins que existían y protege m
 });
 
 // --- Ronda final: publicar.sh contra un origin local (gh falso que dice success) ---
-function mundoPublicar() {
+function mundoPublicar({ gh = "success" } = {}) {
   const base = mkdtempSync(join(tmpdir(), 'ci-publicar-'));
   const bare = join(base, 'origen.git');
   const t = join(base, 'trabajo');
@@ -253,13 +253,13 @@ function mundoPublicar() {
   gitEn(t, 'push', '-q', 'origin', '--tags');
   const bin = join(base, 'bin');
   mkdirSync(bin);
-  writeFileSync(join(bin, 'gh'), '#!/bin/sh\necho success\n');
+  writeFileSync(join(bin, 'gh'), `#!/bin/sh\necho ${gh}\n`);
   chmodSync(join(bin, 'gh'), 0o755);
   const correr = (...args) => spawnSync(BASH, [join(t, 'scripts/publicar.sh'), ...args], {
     cwd: t, encoding: 'utf8', env: { ...process.env, PATH: `${bin}${sepPath}${process.env.PATH}` },
   });
   const main = () => gitEn(base, '--git-dir', bare, 'rev-parse', 'refs/heads/main');
-  return { correr, main, v220, v230, v231 };
+  return { correr, main, t, v220, v230, v231 };
 }
 
 test('Minor 10a publicar.sh: --volver con una versión mayor que main para y lo dice', () => {
@@ -287,6 +287,36 @@ test('Minor 10 publicar.sh: avanza normal y vuelve atrás con --volver', () => {
   assert.equal(m.correr('2.2.0').status, 1, 'sin --volver no vuelve atrás');
   const r2 = m.correr('2.2.0', '--volver');
   assert.equal(r2.status, 0, r2.stdout + r2.stderr);
+  assert.equal(m.main(), m.v220);
+});
+
+test('revisión publicar.sh: pruebas que no están en success no se publican', () => {
+  const m = mundoPublicar({ gh: 'failure' });
+  const r = m.correr('2.3.0');
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.ok(r.stderr.includes('no están todas en success'), r.stderr);
+  assert.equal(m.main(), m.v220);
+});
+
+test('revisión publicar.sh: una etiqueta que no existe no se publica', () => {
+  const m = mundoPublicar();
+  const r = m.correr('9.9.9');
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.ok(r.stderr.includes('no existe la etiqueta v9.9.9'), r.stderr);
+  assert.equal(m.main(), m.v220);
+});
+
+test('revisión publicar.sh: plugin.json con otra versión que la etiqueta no se publica', () => {
+  const m = mundoPublicar();
+  writeFileSync(join(m.t, 'plugins/uno/.claude-plugin/plugin.json'), JSON.stringify({ name: 'uno', version: '2.3.9' }));
+  writeFileSync(join(m.t, 'CHANGELOG.md'), '# Cambios\n\n## 2.4.0 (2026-11-09)\n\n- algo\n');
+  gitEn(m.t, 'add', '-A');
+  gitEn(m.t, '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', '2.4.0');
+  gitEn(m.t, '-c', 'tag.gpgsign=false', 'tag', '-a', 'v2.4.0', '-m', '2.4.0');
+  gitEn(m.t, 'push', '-q', 'origin', 'HEAD:refs/heads/desarrollo', '--tags');
+  const r = m.correr('2.4.0');
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.ok(r.stderr.includes("dice '2.3.9' en v2.4.0 y debía decir 2.4.0"), r.stderr);
   assert.equal(m.main(), m.v220);
 });
 

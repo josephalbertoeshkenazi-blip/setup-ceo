@@ -231,6 +231,35 @@ test('carpeta de solo lectura: no-se-pudo-escribir y sin restos', { skip: esWind
   } finally { chmodSync(w.conf, 0o755); }
 });
 
+test('settings de solo lectura: no se reemplaza ni se respalda', { skip: esWindows || esRoot ? 'Windows o root' : false }, () => {
+  const texto = JSON.stringify({ a: 1 });
+  const w = mundo({ known: { source: GIT }, crudo: texto });
+  chmodSync(w.sf, 0o444);
+  try {
+    assert.equal(correr(w, 'asegurar_auto').stdout, 'OMITIDO: no-se-pudo-escribir\n');
+    assert.equal(readFileSync(w.sf, 'utf8'), texto);
+    assert.equal(statSync(w.sf).mode & 0o777, 0o444);
+    assert.equal(existsSync(w.sf + '.antes-de-setup-ceo'), false);
+    assert.deepEqual(sinTmp(w.conf), []);
+  } finally { chmodSync(w.sf, 0o644); }
+});
+
+// Otro programa (Claude Code mismo) escribe settings.json entre la lectura y el renombrado: no se pisa su cambio.
+test('si settings cambia mientras se escribe, no se pisa', () => {
+  const w = mundo({ known: { source: GIT }, crudo: '{"model":"x"}' });
+  const lib = mkdtempSync(join(tmpdir(), 'carrera-'));
+  writeFileSync(join(lib, 'Carrera.pm'), [
+    'package Carrera; use strict; use File::Copy ();',
+    'no warnings "redefine"; my $orig = \\&File::Copy::copy;',
+    '*File::Copy::copy = sub { my $r = $orig->(@_); open(my $h, ">", $ENV{CARRERA_ARCHIVO}) or die; print $h $ENV{CARRERA_TEXTO}; close $h; $r };',
+    '1;', ''].join('\n'));
+  const otro = '{"model":"y"}\n';
+  w.env = { ...w.env, PERL5LIB: aPosix(lib), PERL5OPT: '-MCarrera', CARRERA_ARCHIVO: aPosix(w.sf), CARRERA_TEXTO: otro };
+  assert.equal(correr(w, 'asegurar_auto').stdout, 'OMITIDO: no-se-pudo-escribir\n');
+  assert.equal(readFileSync(w.sf, 'utf8'), otro);
+  assert.deepEqual(sinTmp(w.conf), []);
+});
+
 test('formato como Claude Code: "clave": valor y salto final', () => {
   const w = mundo({ known: { source: GIT } });
   correr(w, 'asegurar_auto');
@@ -328,7 +357,7 @@ test('gancho: primera vez en instalación nueva', () => {
   const r = correrGancho(w);
   assert.equal(r.status, 0);
   assert.ok(r.stdout.includes('Desde ahora el setup-ceo se actualiza solo, solo con versiones revisadas.'), r.stdout);
-  assert.ok(!r.stdout.includes('se actualizó solo'), r.stdout);
+  assert.ok(!r.stdout.includes('se actualizó'), r.stdout);
   assert.ok(!r.stdout.includes(VIEJA));
   assert.equal(readFileSync(join(w.datos, 'version-vista'), 'utf8').trim(), '2.3.0');
 });
@@ -336,7 +365,7 @@ test('gancho: primera vez en instalación nueva', () => {
 test('gancho: después de actualizar resume y no repite', () => {
   const w = mundoGancho({ visto: '2.2.0', ultimaRevision: fecha(0) });
   const r = correrGancho(w);
-  assert.ok(r.stdout.includes('El setup-ceo se actualizó solo (de 2.2.0 a 2.3.0).'), r.stdout);
+  assert.ok(r.stdout.includes('El setup-ceo se actualizó (de 2.2.0 a 2.3.0).'), r.stdout);
   assert.ok(r.stdout.includes(TEXTO_230));
   assert.ok(!r.stdout.includes(TEXTO_220));
   assert.ok(!r.stdout.includes('AAAA-MM-DD'));
@@ -347,7 +376,7 @@ test('gancho: después de actualizar resume y no repite', () => {
 test('gancho: viene de 2.0 sin version-vista', () => {
   const w = mundoGancho({ ultimaRevision: fecha(3) });
   const r = correrGancho(w);
-  assert.ok(r.stdout.includes('se actualizó solo (de la anterior a 2.3.0)'), r.stdout);
+  assert.ok(r.stdout.includes('se actualizó (de la anterior a 2.3.0)'), r.stdout);
   assert.ok(!r.stdout.includes(VIEJA));
   assert.ok(r.stdout.includes(TEXTO_230));
   assert.ok(!r.stdout.includes(TEXTO_220));
@@ -358,7 +387,7 @@ test('gancho: volvió atrás', () => {
   const r = correrGancho(w);
   assert.ok(r.stdout.includes('volvió a la versión 2.3.0'), r.stdout);
   assert.ok(!r.stdout.includes(VIEJA));
-  assert.ok(!r.stdout.includes('se actualizó solo'));
+  assert.ok(!r.stdout.includes('se actualizó'));
 });
 
 test('gancho: respaldo después de un día, no antes', () => {
@@ -769,4 +798,46 @@ test('Minor 2 novedades: la regla de oro dice una sola vez el caso por defecto',
   const c = cabecera(NOV());
   assert.ok(!c.includes('Si solo preguntó "¿hay novedades?", se muestra y se ofrece.'), c);
   assert.equal(c.split('se muestra y se ofrece').length - 1, 1, c);
+});
+
+test('revisión gancho: fuente no oficial con AUTO prendido no dice "apagadas"', () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0`, known: { source: { source: 'github', repo: 'otro/setup-ceo' }, autoUpdate: true } });
+  const r = correrGancho(w);
+  assert.ok(r.stdout.includes('Novedades del setup-ceo: hay una versión nueva (2.4.0; el dueño tiene 2.2.0).'), r.stdout);
+  assert.ok(r.stdout.includes('Esta instalación no viene del repositorio oficial y no se instala sola: ofrécele instalarla con /actualizaciones:novedades.'), r.stdout);
+  assert.ok(!r.stdout.includes('apagadas'), r.stdout);
+  assert.ok(!r.stdout.includes('Instálala ahora'), r.stdout);
+});
+
+test('gancho: sesión vieja tras actualizarse en segundo plano no dice "volvió"', () => {
+  // El plugin cargado sigue en 2.3.0 pero el registro ya tiene 2.4.0 (pasa con /compact en una sesión abierta).
+  const w = mundoGancho({ propia: '2.3.0', instalada: '2.4.0', visto: '2.4.0', remoto: ['2.4.0', '2.3.0'], ultimaRevision: fecha(0) });
+  const r = correrGancho(w);
+  assert.ok(!r.stdout.includes('volvió'), r.stdout);
+  assert.equal(readFileSync(join(w.datos, 'version-vista'), 'utf8').trim(), '2.4.0');
+});
+
+test('gancho: sin registro usa la versión del plugin cargado', () => {
+  const w = mundoGancho({ visto: '2.2.0', ultimaRevision: fecha(0) });
+  writeFileSync(join(w.conf, 'plugins/installed_plugins.json'), JSON.stringify({ version: 2, plugins: {} }));
+  assert.ok(correrGancho(w).stdout.includes('El setup-ceo se actualizó (de 2.2.0 a 2.3.0).'));
+});
+
+test('gancho: si otra sesión tiene el candado, ofrece y no ordena', () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0` });
+  mkdirSync(join(w.datos, 'orden.lock'));
+  const r = correrGancho(w);
+  assert.ok(!r.stdout.includes('Instálala ahora'), r.stdout);
+  assert.ok(r.stdout.includes('ofrécele instalarla con /actualizaciones:novedades'), r.stdout);
+});
+
+test('gancho: la orden suelta el candado y al quedar al día se limpia uno viejo', () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0` });
+  assert.ok(correrGancho(w).stdout.includes('Instálala ahora'));
+  assert.equal(existsSync(join(w.datos, 'orden.lock')), false);
+  mkdirSync(join(w.datos, 'orden.lock')); // quedó de una sesión cortada a la mitad
+  writeFileSync(join(w.conf, 'plugins/installed_plugins.json'), JSON.stringify({ version: 2, plugins: { 'actualizaciones@setup-ceo': [{ installPath: '/y', version: '2.4.0' }] } }));
+  correrGancho(w);
+  assert.equal(existsSync(join(w.datos, 'orden.lock')), false);
+  assert.equal(existsSync(join(w.datos, 'orden-dada')), false);
 });

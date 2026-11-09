@@ -7,7 +7,8 @@
 #   asegurar_auto     CAMBIO: activado | CAMBIO: copiado | SIN-CAMBIO | OMITIDO: <razón>
 #   poner_auto si|no  AUTO: si | AUTO: no | OMITIDO: <razón>
 #   Razones de OMITIDO: sin-perl, sin-perl-json (hay perl pero le falta JSON::PP), sin-fuente, no-oficial, ref-propio, fuente-distinta, valor-invalido,
-#   settings-invalido (JSON malo o enlace roto), no-se-pudo-escribir (falló el respaldo, el temporal o el renombrado).
+#   settings-invalido (JSON malo o enlace roto), no-se-pudo-escribir (settings de solo lectura, otro programa lo cambió
+#   mientras se escribía, o falló el respaldo, el temporal o el renombrado).
 #   estado_auto       AUTO: si|no|sin-dato, REF: <ref|ninguno>, FUENTE: oficial|otra|ninguna
 # Si el dueño apagó las actualizaciones con auto.sh (marca auto-apagado en la carpeta de datos), asegurar_auto
 # nunca las prende: si falta la entrada o el valor, escribe autoUpdate:false.
@@ -18,10 +19,15 @@ _AJUSTES_PERL='use strict; use warnings; use JSON::PP; use Cwd (); use File::Cop
 my ($modo,$valor,$sf,$kf,$mk,$repo,$apagado)=@ARGV;
 binmode STDOUT,":utf8";
 sub fin { print "$_[0]\n"; exit 0; }
-sub leer {
+sub crudo {
   my $f=shift;
   open(my $h,"<:raw",$f) or return undef;
   local $/; my $t=<$h>; close $h;
+  return defined $t ? $t : "";
+}
+sub leer {
+  my $t=crudo(shift);
+  return undef unless defined $t;
   $t =~ s/^\xEF\xBB\xBF//;
   my $d=eval{JSON::PP->new->utf8->allow_nonref->decode($t)};
   return $d;
@@ -61,6 +67,7 @@ my $K=$ke ? $ke->{source} : undef;
 $K=undef unless ref $K eq "HASH";
 
 my ($S,$settings_ok)=({},1);
+my $sf_crudo=crudo($sf);
 if (-e $sf) {
   $S=leer($sf);
   $settings_ok=0 unless ref $S eq "HASH";
@@ -118,6 +125,7 @@ if ($cambia) {
   my $tmp="$real.setup-ceo-tmp.$$";
   umask 077;
   my $ok=eval {
+    die if -e $real && !-w $real;
     if (-f $real && !-e $antes) {
       File::Copy::copy($real,$antes) or die;
       my $m=(stat $real)[2]; chmod($m & 07777,$antes) if defined $m;
@@ -126,6 +134,9 @@ if ($cambia) {
     my $t=$json->encode($S); $t.="\n" unless $t =~ /\n\z/; print $o $t; close $o or die;
     my $v=leer($tmp); die unless ref $v eq "HASH" && igual($v,$S);
     my $modo_orig=(stat $real)[2]; chmod($modo_orig & 07777,$tmp) if defined $modo_orig;
+    # Si otro programa (Claude Code mismo) cambió settings después de leerlo, no se pisa: se intenta en la próxima sesión.
+    my $ahora=crudo($real);
+    die if defined($ahora) != defined($sf_crudo) || (defined $ahora && $ahora ne $sf_crudo);
     rename($tmp,$real) or die;
     1;
   };

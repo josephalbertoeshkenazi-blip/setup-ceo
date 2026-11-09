@@ -7,6 +7,7 @@ set -u
 uso() { echo "Uso: bash scripts/publicar.sh X.Y.Z [--volver]" >&2; exit 2; }
 fallar() { echo "[publicar] $*" >&2; exit 1; }
 
+# 1. Argumentos
 VERSION="${1:-}"; EXTRA="${2:-}"; VOLVER=""
 [ $# -ge 1 ] && [ $# -le 2 ] || uso
 printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || uso
