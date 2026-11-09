@@ -1,5 +1,5 @@
 #!/bin/bash
-# Funciones compartidas por probar-instalacion.sh y probar-actualizacion.sh.
+# Funciones compartidas por probar-instalacion.sh, probar-actualizacion.sh y probar-fuente-oficial.sh.
 # Se usa con "source"; no se corre solo. Compatible con bash 3.2 y Git Bash.
 
 PLUGINS_BASE="ceo-base adaptar complementos seguridad actualizaciones sugerencias"

@@ -66,6 +66,11 @@ jobs:
         if: github.event_name == 'push'
         run: claude --version
 
+      # Lo publicado en main con la fuente oficial (sin rama) y el gancho de este commit: el auto-update queda prendido.
+      - name: Fuente oficial con Claude Code real
+        if: github.event_name == 'push'
+        run: bash scripts/probar-fuente-oficial.sh
+
       - name: Git para subir ramas temporales
         if: github.event_name == 'push'
         run: |

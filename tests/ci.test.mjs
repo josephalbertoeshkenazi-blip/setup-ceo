@@ -289,3 +289,34 @@ test('Minor 10 publicar.sh: avanza normal y vuelve atrás con --volver', () => {
   assert.equal(r2.status, 0, r2.stdout + r2.stderr);
   assert.equal(m.main(), m.v220);
 });
+
+test('I2 pruebas.yml prueba la fuente oficial con Claude Code real, después de instalarlo', () => {
+  const y = flujo();
+  const paso = y.indexOf('- name: Fuente oficial con Claude Code real');
+  assert.ok(paso > 0, 'falta el paso');
+  assert.ok(paso > y.indexOf('- name: Instalar Claude Code'), 'debe ir después de instalar Claude Code');
+  const bloque = y.slice(paso, y.indexOf('- name:', paso + 1));
+  assert.match(bloque, /if: github\.event_name == 'push'/);
+  assert.match(bloque, /run: bash scripts\/probar-fuente-oficial\.sh\s*$/m);
+  assert.doesNotMatch(bloque, /runner\.os/, 'corre en Mac y en Windows');
+});
+
+test('I2 probar-fuente-oficial.sh: catálogo oficial sin rama, gancho de este checkout y casa con espacio', () => {
+  const s = join(raiz, 'scripts/probar-fuente-oficial.sh');
+  assert.ok(existsSync(s), 'falta el archivo');
+  assert.equal(spawnSync(BASH, ['-n', s], { encoding: 'utf8' }).status, 0);
+  const t = leer('scripts/probar-fuente-oficial.sh');
+  assert.ok(t.includes('OFICIAL="josephalbertoeshkenazi-blip/setup-ceo"'));
+  assert.ok(t.includes('claude plugin marketplace add "$OFICIAL"'));
+  assert.ok(!t.includes('$OFICIAL#'), 'sin rama');
+  assert.ok(t.includes('for p in actualizaciones ceo-base'));
+  assert.ok(t.includes('"$RAIZ/plugins/actualizaciones/scripts/revisar-novedades.sh"'));
+  assert.ok(t.includes('CLAUDE_PLUGIN_DATA='));
+  assert.ok(t.includes('casa con espacio'));
+  assert.ok(t.includes('probar-comun.sh') && t.includes('crear_casa'));
+  for (const l of ['AUTO: si', 'REF: ninguno', 'FUENTE: oficial']) assert.ok(t.includes(`"${l}"`), l);
+  assert.ok(t.includes('settings.json.antes-de-setup-ceo'));
+  assert.ok(t.includes('claude plugin list'));
+  assert.ok(!/\bsleep\b/.test(t));
+  assert.equal(spawnSync(BASH, [s, 'sobra'], { encoding: 'utf8' }).status, 2);
+});
