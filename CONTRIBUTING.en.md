@@ -16,7 +16,7 @@ Open an issue and pick "Idea". Say what you want to get done, not only the solut
 2. Make your change.
 3. Run `python3 scripts/validar.py`. It must end with a line that starts with `validar: todo bien`.
 4. Open a pull request and tick the checklist that appears.
-5. New versions reach users by themselves, so work goes on the `desarrollo` branch; `main` only moves with `scripts/publicar.sh` (it adds the version tag).
+5. New versions reach users by themselves, so work goes on the `desarrollo` branch; `main` only moves with `scripts/publicar.sh` (it adds the version tag). To fix a bad 2.3.x, publish a new version with the fix; never use `--volver` below 2.3.0, because that removes the hook that updates everyone by themselves.
 6. This repository is generated from a separate source. If we accept your change, we copy it into that source by hand so it is not lost in the next release.
 
 ## Rules

@@ -759,3 +759,14 @@ test('Minor 4 gancho: perl sin JSON::PP se trata como sin perl (ofrece)', () => 
   sinOrden(r);
   assert.ok(r.stdout.includes('ofrécele instalarla con /actualizaciones:novedades'), r.stdout);
 });
+
+test('Minor 1 actualizar-solo: la nota del mantenedor muestra el uso real de publicar.sh', () => {
+  assert.ok(SOLO().includes('publicar.sh X.Y.Z --volver'));
+  assert.ok(!SOLO().includes('publicar.sh <plugin>'));
+});
+
+test('Minor 2 novedades: la regla de oro dice una sola vez el caso por defecto', () => {
+  const c = cabecera(NOV());
+  assert.ok(!c.includes('Si solo preguntó "¿hay novedades?", se muestra y se ofrece.'), c);
+  assert.equal(c.split('se muestra y se ofrece').length - 1, 1, c);
+});

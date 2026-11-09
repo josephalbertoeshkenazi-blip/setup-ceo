@@ -54,4 +54,4 @@ Si la versión nueva le falló y pide volver atrás, las actualizaciones **se qu
 
 No intentes instalar una versión vieja con comandos: no es confiable.
 
-Nota para Claude (para ti, no se lo digas al dueño): quien mantiene el setup-ceo lo hace con `publicar.sh <plugin> --volver`; es su herramienta.
+Nota para Claude (para ti, no se lo digas al dueño): quien mantiene el setup-ceo lo hace con `publicar.sh X.Y.Z --volver`; es su herramienta.

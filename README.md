@@ -162,7 +162,7 @@ Una regla dura: nada importante le llega a otra persona hasta que dices "envíal
 | `/complementos:buscar-skill` | Buscar una skill que no está en la lista: revisa hasta 3 en lugares de confianza y solo instala con tu sí |
 | `/ceo-base:revisar-correcciones` | Revisar las veces que corregiste a Claude y guardar lo que se repite ([cómo funciona la memoria](docs/memoria.md)) |
 | `seguridad` | `/seguridad:revisar-mi-seguridad`: revisa tu computadora y tu Claude en 5 minutos (solo mira), te explica en palabras simples lo que importa y arregla una cosa a la vez con tu sí y una forma de deshacer. |
-| `actualizaciones` | `/actualizaciones:novedades`: te explica en palabras simples qué cambió; el setup se actualiza solo. |
+| `actualizaciones` | `/actualizaciones:novedades`: te explica en palabras simples qué cambió; el setup se actualiza solo. Si no lo quieres, di "no te actualices solo"; para volver a prenderlo, "actualízate solo" (skill `actualizar-solo`). |
 | `sugerencias` | `/sugerencias:sugerir-mejora`: manda una idea de mejora como issue público, solo después de que confirmes el texto. |
 | `negocios` | Un asesor de negocios para precios, tratos, socios y contratos, con números reales. La entrevista lo recomienda si tienes un negocio. |
 | `diseno` | Tres ayudantes de diseño: uno dirige, uno construye, uno revisa, para que tus páginas y apps se vean de primera. Aprenden de tus trabajos pasados. |

@@ -162,7 +162,7 @@ One hard rule: nothing important reaches another person until you say "send it" 
 | `/complementos:buscar-skill` | Find a skill that is not on the list: reviews up to 3 in trusted places and only installs with your yes |
 | `/ceo-base:revisar-correcciones` | Review the times you corrected Claude and keep what repeats ([how memory works](docs/memoria.en.md)) |
 | `seguridad` | `/seguridad:revisar-mi-seguridad`: a 5-minute check of your computer and your Claude that only looks, explains in plain words what matters, and fixes one thing at a time with your yes and a way to undo it. |
-| `actualizaciones` | `/actualizaciones:novedades`: explains in plain words what changed; the setup updates itself. |
+| `actualizaciones` | `/actualizaciones:novedades`: explains in plain words what changed; the setup updates itself. To stop that, say "no te actualices solo"; to turn it back on, "actualízate solo" (skill `actualizar-solo`). |
 | `sugerencias` | `/sugerencias:sugerir-mejora`: sends an improvement idea as a public issue, only after you confirm the text. |
 | `negocios` | A business advisor for prices, deals, partners and contracts, with real numbers. Recommended by the interview when you run a business. |
 | `diseno` | Three design helpers: one directs, one builds, one reviews, so pages and apps look premium. They learn from your past work. |

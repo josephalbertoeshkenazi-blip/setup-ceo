@@ -4,7 +4,7 @@ description: Revisa si hay una versión nueva del setup-ceo, explica en palabras
 ---
 # Novedades del setup-ceo
 
-Regla de oro: **si el dueño pidió actualizar, o el aviso de inicio dice "Instálala ahora", se actualiza sin preguntar. Si solo preguntó "¿hay novedades?", se muestra y se ofrece. En cualquier otro caso, se muestra y se ofrece.**
+Regla de oro: **si el dueño pidió actualizar, o el aviso de inicio dice "Instálala ahora", se actualiza sin preguntar. En cualquier otro caso, se muestra y se ofrece.**
 
 Si el dueño dice "actualízate solo" o "no te actualices solo" (prender o apagar las actualizaciones solas), eso es de la skill `actualizar-solo`, no de esta.
 

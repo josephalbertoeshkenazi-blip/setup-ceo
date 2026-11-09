@@ -65,3 +65,22 @@ test('versiones 2.3.0', () => {
     assert.equal(pj.version, '2.3.0', d);
   }
 });
+
+test('Minor 3: la fila de actualizaciones del README nombra actualizar-solo', () => {
+  for (const f of ['README.md', 'README.en.md']) {
+    const fila = leer(f).split('\n').find((l) => l.startsWith('| `actualizaciones` |'));
+    assert.ok(fila, f);
+    assert.ok(fila.includes('actualizar-solo'), `${f}: ${fila}`);
+    assert.ok(fila.includes('no te actualices solo') && fila.includes('actualízate solo'), `${f}: ${fila}`);
+  }
+});
+
+test('Minor 12: CONTRIBUTING dice cómo arreglar una 2.3.x mala sin --volver por debajo de 2.3.0', () => {
+  for (const f of ['CONTRIBUTING.md', 'CONTRIBUTING.en.md']) {
+    const t = leer(f);
+    assert.ok(t.includes('2.3.x'), f);
+    assert.ok(t.includes('--volver') && t.includes('2.3.0'), f);
+  }
+  assert.ok(leer('CONTRIBUTING.md').includes('nunca uses `--volver` por debajo de 2.3.0'));
+  assert.ok(leer('CONTRIBUTING.en.md').includes('never use `--volver` below 2.3.0'));
+});
