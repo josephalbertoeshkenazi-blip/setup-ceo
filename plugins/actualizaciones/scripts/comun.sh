@@ -66,3 +66,26 @@ es_mayor() {
 }
 
 ultima_del_changelog() { archivo_ultimo "CHANGELOG.md" | grep -m1 -E '^## [0-9]+\.[0-9]+\.[0-9]+' | awk '{print $2}'; }
+
+# Versión de este plugin (la que está cargada ahora). CLAUDE_PLUGIN_ROOT la pone Claude Code; sin ella, la carpeta del script.
+version_propia() {
+  local raiz; raiz="$(ruta_unix "${CLAUDE_PLUGIN_ROOT:-$(dirname "${BASH_SOURCE[0]}")/..}")"
+  version_de_json < "$raiz/.claude-plugin/plugin.json" 2>/dev/null
+}
+
+# Imprime del CHANGELOG en disco las secciones "## X.Y.Z" con $1 < X.Y.Z <= $2 (máximo 40 líneas).
+# Con $1 vacío, solo la sección $2. La plantilla "## X.Y.Z (AAAA-MM-DD)" no calza.
+changelog_entre() {
+  local f; f="$(carpeta_mercado)/CHANGELOG.md"
+  [ -f "$f" ] || return 0
+  awk -v d="$1" -v h="$2" '
+    function cmp(a,b,  x,y,i){split(a,x,".");split(b,y,".");for(i=1;i<=3;i++){if((x[i]+0)>(y[i]+0))return 1;if((x[i]+0)<(y[i]+0))return -1}return 0}
+    /^## /{
+      imp=0
+      if ($2 ~ /^[0-9]+\.[0-9]+\.[0-9]+$/) {
+        if (d=="") imp=(cmp($2,h)==0); else imp=(cmp($2,d)>0 && cmp($2,h)<=0)
+      }
+    }
+    imp{print}
+  ' "$f" | tr -d '\r' | head -40
+}

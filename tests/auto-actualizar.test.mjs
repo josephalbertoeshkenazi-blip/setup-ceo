@@ -178,3 +178,140 @@ test('CLAUDE_CONFIG_DIR con ruta C:\\ pasa por ruta_unix (Windows fingido)', { s
   const r = correr(w, 'archivo_ajustes');
   assert.equal(r.stdout, '/conf-falso/settings.json\n');
 });
+
+// ---- revisar-novedades.sh (gancho de inicio) ----
+const gancho = join(scripts, 'revisar-novedades.sh');
+const gitq = (dir, ...a) => {
+  const r = spawnSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', '-C', dir, ...a], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr);
+};
+const PLANTILLA = '# Novedades\n\n```\n## X.Y.Z (AAAA-MM-DD)\nCambió: <plugins>\nAgentes que cambiaron: <agentes, o "ninguno">\n- Qué cambió, en palabras simples.\n```\n\n';
+const SECCION = (v, texto, agentes = 'guardia') => `## ${v} (2026-11-0${v.endsWith('3.0') ? 9 : 8})\nCambió: todo\nAgentes que cambiaron: ${agentes}\n- ${texto}\n\n`;
+const TEXTO_230 = 'Se actualiza solo con versiones revisadas.';
+const TEXTO_220 = 'Funciona en Windows.';
+
+// propia: versión del plugin cargado. instalada: la del registro. remoto: secciones del CHANGELOG publicado.
+function mundoGancho({ propia = '2.3.0', instalada = propia, remoto = ['2.3.0', '2.2.0'], known = { source: GIT }, settings, crudo, visto, ultimaRevision, pendiente } = {}) {
+  const w = mundo({ known, settings, crudo });
+  const mk = join(w.conf, 'plugins/marketplaces/setup-ceo');
+  const bare = join(mkdtempSync(join(tmpdir(), 'bare-')), 'origin.git');
+  mkdirSync(mk, { recursive: true });
+  gitq(mk, 'init', '-q', '-b', 'main');
+  writeFileSync(join(mk, 'CHANGELOG.md'), PLANTILLA + remoto.map((v) => SECCION(v, v === '2.3.0' ? TEXTO_230 : v === '2.2.0' ? TEXTO_220 : 'otra cosa')).join(''));
+  gitq(mk, 'add', '.');
+  gitq(mk, 'commit', '-q', '-m', 'x');
+  spawnSync('git', ['init', '-q', '--bare', '-b', 'main', bare]);
+  gitq(mk, 'remote', 'add', 'origin', bare);
+  gitq(mk, 'push', '-q', '-u', 'origin', 'main');
+  const k = leer(join(w.conf, 'plugins/known_marketplaces.json'));
+  k['setup-ceo'].installLocation = mk;
+  writeFileSync(join(w.conf, 'plugins/known_marketplaces.json'), JSON.stringify(k));
+  writeFileSync(join(w.conf, 'plugins/installed_plugins.json'), JSON.stringify({ version: 2, plugins: { 'actualizaciones@setup-ceo': [{ installPath: '/y', version: instalada }] } }));
+  const raizPlugin = join(mkdtempSync(join(tmpdir(), 'plug-')), 'actualizaciones');
+  mkdirSync(join(raizPlugin, '.claude-plugin'), { recursive: true });
+  writeFileSync(join(raizPlugin, '.claude-plugin/plugin.json'), JSON.stringify({ name: 'actualizaciones', version: propia }));
+  const datos = mkdtempSync(join(tmpdir(), 'datos-'));
+  if (visto) writeFileSync(join(datos, 'version-vista'), visto + '\n');
+  if (ultimaRevision) writeFileSync(join(datos, 'ultima-revision'), ultimaRevision + '\n');
+  if (pendiente) writeFileSync(join(datos, 'pendiente-desde'), pendiente + '\n');
+  w.datos = datos;
+  w.env = { ...w.env, CLAUDE_PLUGIN_ROOT: aPosix(raizPlugin), CLAUDE_PLUGIN_DATA: aPosix(datos) };
+  return w;
+}
+const correrGancho = (w) => spawnSync(BASH, [aPosix(gancho)], { encoding: 'utf8', env: w.env });
+const fecha = (dias) => { const d = new Date(Date.now() - dias * 86400000); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+const VIEJA = 'No instales nada sin su sí';
+
+test('gancho: primera vez en instalación nueva', () => {
+  const w = mundoGancho();
+  const r = correrGancho(w);
+  assert.equal(r.status, 0);
+  assert.ok(r.stdout.includes('Desde ahora el setup-ceo se actualiza solo, solo con versiones revisadas.'), r.stdout);
+  assert.ok(!r.stdout.includes('se actualizó solo'), r.stdout);
+  assert.ok(!r.stdout.includes(VIEJA));
+  assert.equal(readFileSync(join(w.datos, 'version-vista'), 'utf8').trim(), '2.3.0');
+});
+
+test('gancho: después de actualizar resume y no repite', () => {
+  const w = mundoGancho({ visto: '2.2.0', ultimaRevision: fecha(0) });
+  const r = correrGancho(w);
+  assert.ok(r.stdout.includes('El setup-ceo se actualizó solo (de 2.2.0 a 2.3.0).'), r.stdout);
+  assert.ok(r.stdout.includes(TEXTO_230));
+  assert.ok(!r.stdout.includes(TEXTO_220));
+  assert.ok(!r.stdout.includes('AAAA-MM-DD'));
+  assert.ok(!r.stdout.includes(VIEJA));
+  assert.ok(!correrGancho(w).stdout.includes('se actualizó'));
+});
+
+test('gancho: viene de 2.0 sin version-vista', () => {
+  const w = mundoGancho({ ultimaRevision: fecha(3) });
+  const r = correrGancho(w);
+  assert.ok(r.stdout.includes('se actualizó solo (de la anterior a 2.3.0)'), r.stdout);
+  assert.ok(r.stdout.includes(TEXTO_230));
+  assert.ok(!r.stdout.includes(TEXTO_220));
+});
+
+test('gancho: volvió atrás', () => {
+  const w = mundoGancho({ visto: '2.4.0', ultimaRevision: fecha(0) });
+  const r = correrGancho(w);
+  assert.ok(r.stdout.includes('volvió a la versión 2.3.0'), r.stdout);
+  assert.ok(!r.stdout.includes('se actualizó solo'));
+});
+
+test('gancho: respaldo después de un día, no antes', () => {
+  const frase = 'Hay una versión nueva del setup-ceo (2.4.0; el dueño tiene 2.2.0) que no se instaló sola.';
+  const base = { propia: '2.2.0', visto: '2.2.0', remoto: ['2.4.0', '2.2.0'], ultimaRevision: fecha(0) };
+  const ayer = mundoGancho({ ...base, pendiente: `${fecha(1)}|2.4.0` });
+  const r = correrGancho(ayer);
+  assert.ok(r.stdout.includes(frase), r.stdout);
+  assert.ok(r.stdout.includes('Instálala ahora'));
+  assert.ok(!r.stdout.includes(VIEJA));
+  const hoy = mundoGancho({ ...base, pendiente: `${fecha(0)}|2.4.0` });
+  assert.ok(!correrGancho(hoy).stdout.includes(frase));
+  const nuevo = mundoGancho(base);
+  assert.ok(!correrGancho(nuevo).stdout.includes(frase));
+  assert.equal(readFileSync(join(nuevo.datos, 'pendiente-desde'), 'utf8').trim(), `${fecha(0)}|2.4.0`);
+});
+
+test('gancho: pendiente de otra versión se reinicia; al igualar se borra', () => {
+  const w = mundoGancho({ propia: '2.2.0', visto: '2.2.0', remoto: ['2.4.0', '2.2.0'], ultimaRevision: fecha(0), pendiente: `${fecha(5)}|2.3.0` });
+  const r = correrGancho(w);
+  assert.ok(!r.stdout.includes('no se instaló sola'), r.stdout);
+  assert.equal(readFileSync(join(w.datos, 'pendiente-desde'), 'utf8').trim(), `${fecha(0)}|2.4.0`);
+  const ok = mundoGancho({ ultimaRevision: fecha(0), visto: '2.3.0', pendiente: `${fecha(5)}|2.3.0` });
+  correrGancho(ok);
+  assert.equal(existsSync(join(ok.datos, 'pendiente-desde')), false);
+});
+
+test('gancho: fuente fijada no avisa', () => {
+  const w = mundoGancho({ propia: '2.2.0', visto: '2.2.0', remoto: ['2.4.0', '2.2.0'], ultimaRevision: fecha(0), pendiente: `${fecha(2)}|2.4.0`, known: { source: { ...GIT, ref: 'v2.2.0' } } });
+  const r = correrGancho(w);
+  assert.ok(!r.stdout.includes('no se instaló sola'), r.stdout);
+  assert.ok(!r.stdout.toLowerCase().includes('hay una versión nueva'), r.stdout);
+});
+
+test('gancho: apagado avisa sin instalar', () => {
+  const w = mundoGancho({ propia: '2.2.0', visto: '2.2.0', remoto: ['2.4.0', '2.2.0'], ultimaRevision: fecha(0), known: { source: GIT, autoUpdate: false } });
+  const r = correrGancho(w);
+  assert.ok(r.stdout.includes('Novedades del setup-ceo: hay una versión nueva (2.4.0; el dueño tiene 2.2.0).'), r.stdout);
+  assert.ok(r.stdout.includes('Las actualizaciones solas están apagadas'), r.stdout);
+  assert.ok(!r.stdout.includes('Instálala ahora'));
+  assert.ok(!r.stdout.includes(VIEJA));
+  assert.ok(!r.stdout.includes('Desde ahora'), 'no lo vuelve a prender');
+  assert.equal(readFileSync(join(w.conf, 'settings.json'), 'utf8').includes('"autoUpdate": true'), false);
+});
+
+test('gancho: nada por stderr y exit 0 con settings inválido', () => {
+  const w = mundoGancho({ crudo: '{ "a": 1, }' });
+  const r = correrGancho(w);
+  assert.equal(r.status, 0);
+  assert.equal(r.stderr, '');
+});
+
+test('gancho: sin catálogo ni known sale 0 en silencio', () => {
+  const w = mundo({});
+  w.env = { ...w.env, CLAUDE_PLUGIN_DATA: aPosix(mkdtempSync(join(tmpdir(), 'datos-'))) };
+  const r = correrGancho(w);
+  assert.equal(r.status, 0);
+  assert.equal(r.stderr, '');
+});
