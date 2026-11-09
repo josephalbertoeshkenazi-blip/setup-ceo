@@ -7,12 +7,16 @@ exec 2>/dev/null
 . "$(dirname "$0")/comun.sh"
 . "$(dirname "$0")/ajustes.sh"
 
-datos="${CLAUDE_PLUGIN_DATA:-$CONF/plugins/data/actualizaciones-$MERCADO}"
+datos="$(ruta_unix "${CLAUDE_PLUGIN_DATA:-$CONF/plugins/data/actualizaciones-$MERCADO}")"
 mkdir -p "$datos"
 hoy=$(date +%Y-%m-%d)
 
+# Si el dueño apagó las actualizaciones con una variable de entorno, no tocamos settings ni ordenamos instalar.
+apagado_por_entorno=""
+[ -n "${DISABLE_AUTOUPDATER:-}${DISABLE_UPDATES:-}${CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC:-}" ] && apagado_por_entorno=1
+
 # 1. Auto-update puesto
-if [ "$(asegurar_auto)" = "CAMBIO: activado" ]; then
+if [ -z "$apagado_por_entorno" ] && [ "$(asegurar_auto)" = "CAMBIO: activado" ]; then
   echo "Desde ahora el setup-ceo se actualiza solo, solo con versiones revisadas. Díselo al dueño en una línea y que si no lo quiere, diga \"no te actualices solo\"."
 fi
 
@@ -51,22 +55,30 @@ if es_mayor "$ultima" "$inst"; then
     *"REF: ninguno"*) ;;
     *) exit 0 ;;  # fuente fijada a propósito
   esac
-  case "$estado" in
-    *"AUTO: no"*)
-      echo "Novedades del setup-ceo: hay una versión nueva ($ultima; el dueño tiene $inst)."
-      echo "Las actualizaciones solas están apagadas: ofrécele instalarla con /actualizaciones:novedades."
-      ;;
-    *)
-      desde=$(cat "$datos/pendiente-desde" 2>/dev/null)
-      if [ -z "$desde" ] || [ "${desde#*|}" != "$ultima" ]; then
-        desde="$hoy|$ultima"
-        echo "$desde" > "$datos/pendiente-desde"
-      fi
-      if [ "${desde%%|*}" \< "$hoy" ]; then
-        echo "Hay una versión nueva del setup-ceo ($ultima; el dueño tiene $inst) que no se instaló sola. Instálala ahora sin preguntar con el paso \"Actualizar\" de /actualizaciones:novedades y después cuéntale al dueño en 2 o 3 líneas qué cambió."
-      fi
-      ;;
-  esac
+  ofrecer() {
+    echo "Novedades del setup-ceo: hay una versión nueva ($ultima; el dueño tiene $inst)."
+    echo "Las actualizaciones solas están apagadas: ofrécele instalarla con /actualizaciones:novedades."
+  }
+  # Solo se guarda la primera vez: si salen versiones seguidas, el plazo de un día no se reinicia.
+  [ -f "$datos/pendiente-desde" ] || echo "$hoy|$ultima" > "$datos/pendiente-desde"
+  desde=$(cat "$datos/pendiente-desde" 2>/dev/null)
+  if [ -n "$apagado_por_entorno" ]; then
+    ofrecer
+  else
+    case "$estado" in
+      *"AUTO: no"*) ofrecer ;;
+      *)
+        if [ "${desde%%|*}" \< "$hoy" ]; then
+          case "$estado" in
+            *"FUENTE: oficial"*)
+              echo "Hay una versión nueva del setup-ceo ($ultima; el dueño tiene $inst) que no se instaló sola. Instálala ahora sin preguntar con el paso \"Actualizar\" de /actualizaciones:novedades y después cuéntale al dueño en 2 o 3 líneas qué cambió."
+              ;;
+            *) ofrecer ;;
+          esac
+        fi
+        ;;
+    esac
+  fi
 else
   [ -e "$datos/pendiente-desde" ] && unlink "$datos/pendiente-desde"
 fi

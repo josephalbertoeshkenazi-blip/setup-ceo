@@ -348,6 +348,7 @@ test('gancho: viene de 2.0 sin version-vista', () => {
   const w = mundoGancho({ ultimaRevision: fecha(3) });
   const r = correrGancho(w);
   assert.ok(r.stdout.includes('se actualizó solo (de la anterior a 2.3.0)'), r.stdout);
+  assert.ok(!r.stdout.includes(VIEJA));
   assert.ok(r.stdout.includes(TEXTO_230));
   assert.ok(!r.stdout.includes(TEXTO_220));
 });
@@ -356,6 +357,7 @@ test('gancho: volvió atrás', () => {
   const w = mundoGancho({ visto: '2.4.0', ultimaRevision: fecha(0) });
   const r = correrGancho(w);
   assert.ok(r.stdout.includes('volvió a la versión 2.3.0'), r.stdout);
+  assert.ok(!r.stdout.includes(VIEJA));
   assert.ok(!r.stdout.includes('se actualizó solo'));
 });
 
@@ -374,14 +376,64 @@ test('gancho: respaldo después de un día, no antes', () => {
   assert.equal(readFileSync(join(nuevo.datos, 'pendiente-desde'), 'utf8').trim(), `${fecha(0)}|2.4.0`);
 });
 
-test('gancho: pendiente de otra versión se reinicia; al igualar se borra', () => {
-  const w = mundoGancho({ propia: '2.2.0', visto: '2.2.0', remoto: ['2.4.0', '2.2.0'], ultimaRevision: fecha(0), pendiente: `${fecha(5)}|2.3.0` });
+test('gancho: pendiente no se reinicia cuando sale otra versión; al igualar se borra', () => {
+  // 2.3.0 instalada, pendiente desde hace 2 días por 2.3.1, y ahora la última es 2.3.2: la orden sigue saliendo.
+  const w = mundoGancho({ propia: '2.3.0', visto: '2.3.0', remoto: ['2.3.2', '2.3.0'], ultimaRevision: fecha(0), pendiente: `${fecha(2)}|2.3.1` });
   const r = correrGancho(w);
-  assert.ok(!r.stdout.includes('no se instaló sola'), r.stdout);
-  assert.equal(readFileSync(join(w.datos, 'pendiente-desde'), 'utf8').trim(), `${fecha(0)}|2.4.0`);
+  assert.ok(r.stdout.includes('Instálala ahora'), r.stdout);
+  assert.equal(readFileSync(join(w.datos, 'pendiente-desde'), 'utf8').trim(), `${fecha(2)}|2.3.1`);
   const ok = mundoGancho({ ultimaRevision: fecha(0), visto: '2.3.0', pendiente: `${fecha(5)}|2.3.0` });
   correrGancho(ok);
   assert.equal(existsSync(join(ok.datos, 'pendiente-desde')), false);
+});
+
+const PENDIENTE_AYER = { propia: '2.2.0', visto: '2.2.0', remoto: ['2.4.0', '2.2.0'] };
+const sinOrden = (r) => { assert.ok(!r.stdout.includes('Instálala ahora'), r.stdout); assert.ok(!r.stdout.includes(VIEJA)); };
+
+test('gancho: control, fuente oficial y AUTO si ordena instalar', () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0` });
+  assert.ok(correrGancho(w).stdout.includes('Instálala ahora'));
+});
+
+test('gancho: sin perl y con autoUpdate:false conocido no ordena instalar', () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0`, known: { source: GIT, autoUpdate: false } });
+  w.env = { ...w.env, JSON_SIN_PERL: '1' };
+  const r = correrGancho(w);
+  sinOrden(r);
+  assert.ok(r.stdout.includes('ofrécele instalarla con /actualizaciones:novedades'), r.stdout);
+});
+
+test('gancho: una fuente que no es la oficial no ordena instalar', () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0`, known: { source: { source: 'git', url: 'https://github.com/otro/setup-ceo.git' } } });
+  const r = correrGancho(w);
+  sinOrden(r);
+  assert.ok(r.stdout.includes('ofrécele instalarla con /actualizaciones:novedades'), r.stdout);
+});
+
+for (const variable of ['DISABLE_AUTOUPDATER', 'DISABLE_UPDATES', 'CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC']) {
+  test(`gancho: ${variable} no toca settings ni ordena instalar`, () => {
+    const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0` });
+    w.env = { ...w.env, [variable]: '1' };
+    const r = correrGancho(w);
+    assert.ok(!r.stdout.includes('Desde ahora el setup-ceo se actualiza solo'), r.stdout);
+    sinOrden(r);
+    assert.ok(r.stdout.includes('ofrécele instalarla con /actualizaciones:novedades'), r.stdout);
+    assert.equal(existsSync(w.sf), false, 'settings.json no se crea');
+  });
+}
+
+test('gancho: Windows con rutas C:\\ ordena instalar por el camino normal', { skip: esWindows && 'usa un cygpath falso' }, () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0` });
+  const bin = mkdtempSync(join(tmpdir(), 'cyg-'));
+  const raizUnix = w.env.CLAUDE_PLUGIN_ROOT;
+  const datosUnix = w.env.CLAUDE_PLUGIN_DATA;
+  writeFileSync(join(bin, 'cygpath'), `#!/bin/sh\ncase "$2" in\n'C:\\Claude\\plugin') echo "${raizUnix}";;\n'C:\\Claude\\datos') echo "${datosUnix}";;\n*) echo "$2";;\nesac\n`);
+  chmodSync(join(bin, 'cygpath'), 0o755);
+  const e = fingirWindows({ ...w.env, CLAUDE_PLUGIN_ROOT: 'C:\\Claude\\plugin', CLAUDE_PLUGIN_DATA: 'C:\\Claude\\datos' });
+  const r = spawnSync(BASH, [aPosix(gancho)], { encoding: 'utf8', env: { ...e, PATH: `${bin}:${e.PATH}` } });
+  assert.equal(r.status, 0);
+  assert.ok(r.stdout.includes('Instálala ahora'), r.stdout + r.stderr);
+  assert.ok(existsSync(join(w.datos, 'pendiente-desde')));
 });
 
 test('gancho: fuente fijada no avisa', () => {
@@ -389,6 +441,7 @@ test('gancho: fuente fijada no avisa', () => {
   const r = correrGancho(w);
   assert.ok(!r.stdout.includes('no se instaló sola'), r.stdout);
   assert.ok(!r.stdout.toLowerCase().includes('hay una versión nueva'), r.stdout);
+  assert.ok(!r.stdout.includes(VIEJA));
 });
 
 test('gancho: apagado avisa sin instalar', () => {
