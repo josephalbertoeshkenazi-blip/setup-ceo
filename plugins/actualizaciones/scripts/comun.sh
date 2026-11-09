@@ -1,8 +1,6 @@
 #!/bin/bash
 # Funciones compartidas. No instala nada: solo mira.
 MERCADO="setup-ceo"
-REG="$HOME/.claude/plugins/installed_plugins.json"
-KNOWN="$HOME/.claude/plugins/known_marketplaces.json"
 . "$(dirname "${BASH_SOURCE[0]}")/json.sh"
 
 es_windows() { case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) return 0 ;; esac; return 1; }
@@ -12,11 +10,16 @@ ruta_unix() {
   if es_windows && [[ "$1" == *\\* ]] && command -v cygpath >/dev/null 2>&1; then cygpath -u "$1"; else printf '%s\n' "$1"; fi
 }
 
+# Carpeta de configuración de Claude Code (CLAUDE_CONFIG_DIR la cambia).
+CONF="$(ruta_unix "${CLAUDE_CONFIG_DIR:-$HOME/.claude}")"
+REG="$CONF/plugins/installed_plugins.json"
+KNOWN="$CONF/plugins/known_marketplaces.json"
+
 carpeta_mercado() {
   local d=""
   [ -f "$KNOWN" ] && d=$(json_get "$KNOWN" "$MERCADO.installLocation")
   [ -n "$d" ] && d=$(ruta_unix "$d")
-  [ -n "$d" ] || d="$HOME/.claude/plugins/marketplaces/$MERCADO"
+  [ -n "$d" ] || d="$CONF/plugins/marketplaces/$MERCADO"
   echo "$d"
 }
 
