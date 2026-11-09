@@ -76,6 +76,14 @@ jobs:
         if: github.event_name == 'push'
         run: bash scripts/probar-instalacion.sh "$GITHUB_SHA" "ci-inst-$GITHUB_RUN_ID-$RUNNER_OS"
 
+      - name: Actualización real desde 1.0.0
+        if: github.event_name == 'push'
+        run: bash scripts/probar-actualizacion.sh v1.0.0 "$GITHUB_SHA" "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-100"
+
+      - name: Actualización real desde 1.1.0
+        if: github.event_name == 'push'
+        run: bash scripts/probar-actualizacion.sh v1.1.0 "$GITHUB_SHA" "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-110"
+
       - name: Actualización real desde 2.0.0
         if: github.event_name == 'push'
         run: bash scripts/probar-actualizacion.sh v2.0.0 "$GITHUB_SHA" "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-200"
@@ -92,6 +100,8 @@ jobs:
         if: always() && github.event_name == 'push'
         run: |
           git push origin --delete "ci-inst-$GITHUB_RUN_ID-$RUNNER_OS" || true
+          git push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-100" || true
+          git push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-110" || true
           git push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-200" || true
           git push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-210" || true
           git push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-220" || true

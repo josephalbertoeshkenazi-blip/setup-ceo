@@ -29,6 +29,19 @@ avisar "casa temporal en $CASA; rama $RAMA en $REPO"
 SUBIDA=1
 subir_rama "$VIEJO" "$RAMA"
 
+# Capa personal del dueño: la actualización no la puede tocar ni un byte.
+PERFIL="$CASA/.claude/mi-perfil/ceo.md"
+mkdir -p "$(dirname "$PERFIL")"
+printf '%s\n' '# Mi perfil' 'Me llamo Pepe Núñez y mando en español.' 'Prefiero las respuestas cortas, sin jerga.' > "$PERFIL"
+SUMA_PERFIL=$(suma_de "$PERFIL") || fallar "no pude calcular la suma del perfil"
+
+# Un dueño de la versión vieja solo tiene los plugins que esa versión publicaba.
+PLUGINS_TODOS="$PLUGINS_BASE"
+PLUGINS_BASE=$(plugins_base_en "$VIEJO")
+PLUGINS_BASE="${PLUGINS_BASE% }"
+case " $PLUGINS_BASE " in *" ceo-base "*) ;; *) fallar "$VIEJO no publicaba ceo-base en su marketplace.json (salió: '$PLUGINS_BASE')" ;; esac
+avisar "plugins que existían en $VIEJO: $PLUGINS_BASE (de $PLUGINS_TODOS)"
+
 agregar_mercado "$RAMA"
 instalar_base
 avisar "--- instalado el viejo ($VIEJO)"
@@ -72,4 +85,7 @@ if [ -n "$salida" ] && ! printf '%s' "$salida" | grep -qi 'se actualizó solo'; 
 fi
 salida=$(salida_novedades) || exit 1
 [ -z "$salida" ] || fallar "la segunda corrida del aviso debía salir vacía y dijo: $salida"
+[ -f "$PERFIL" ] || fallar "la actualización borró mi-perfil/ceo.md"
+[ "$(suma_de "$PERFIL")" = "$SUMA_PERFIL" ] || fallar "la actualización cambió mi-perfil/ceo.md"
+avisar "mi-perfil/ceo.md intacto"
 avisar "ACTUALIZACION OK ($VIEJO -> $NUEVO)"

@@ -41,7 +41,7 @@ v=$(version_changelog "$SHA")
 [ "$v" = "$VERSION" ] || fallar "el CHANGELOG de v$VERSION dice '$v' y debía decir $VERSION"
 
 # 4. Las pruebas de ese commit terminaron en success
-concl=$(gh run list --commit "$SHA" --workflow pruebas.yml --json conclusion --jq '.[].conclusion' 2>/dev/null) || fallar "gh no pudo leer las pruebas de $SHA"
+concl=$(gh run list --commit "$SHA" --workflow pruebas.yml --event push --json conclusion --jq '.[].conclusion' 2>/dev/null) || fallar "gh no pudo leer las pruebas de $SHA"
 [ -n "$concl" ] || fallar "no hay corrida de pruebas para ${SHA:0:7}"
 [ "$(printf '%s\n' "$concl" | grep -vc '^success$')" = 0 ] || fallar "las pruebas de ${SHA:0:7} no están todas en success: $(printf '%s' "$concl" | tr '\n' ' ')"
 
@@ -57,10 +57,14 @@ if [ -n "$ACTUAL_SHA" ]; then
       :
     else
       [ -n "$VOLVER" ] || fallar "main ya está en $ACTUAL; $VERSION no es mayor. Para volver atrás usa --volver"
-      FORZAR="+"
+      FORZAR=1
     fi
   fi
 fi
 
-git push -q origin "${FORZAR}${SHA}:refs/heads/main" || fallar "no pude mover main (si no es un avance normal, usa --volver)"
+if [ -n "$FORZAR" ]; then
+  git push -q origin --force-with-lease="refs/heads/main:$ACTUAL_SHA" "$SHA:refs/heads/main" || fallar "no pude volver main atrás (¿alguien lo movió mientras tanto?)"
+else
+  git push -q origin "$SHA:refs/heads/main" || fallar "no pude mover main (si no es un avance normal, usa --volver)"
+fi
 echo "PUBLICADA: v$VERSION (${SHA:0:7})"
