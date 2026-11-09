@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, writeFileSync, readFileSync, existsSync, statSync, symlinkSync, lstatSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, writeFileSync, readFileSync, existsSync, statSync, symlinkSync, lstatSync, chmodSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -170,13 +170,114 @@ test('CLAUDE_CONFIG_DIR manda sobre HOME/.claude', () => {
 });
 
 test('CLAUDE_CONFIG_DIR con ruta C:\\ pasa por ruta_unix (Windows fingido)', { skip: esWindows ? 'solo con Windows fingido' : false }, () => {
+  const mapeada = mkdtempSync(join(tmpdir(), 'mapeado-'));
+  mkdirSync(join(mapeada, 'plugins'), { recursive: true });
+  writeFileSync(join(mapeada, 'plugins/known_marketplaces.json'), JSON.stringify({ 'setup-ceo': { source: GIT } }));
   const w = mundo({});
   w.env = fingirWindows({ ...w.env, CLAUDE_CONFIG_DIR: 'C:\\Users\\José Pérez\\.claude' });
   const cyg = mkdtempSync(join(tmpdir(), 'cyg-'));
-  writeFileSync(join(cyg, 'cygpath'), '#!/bin/sh\necho /conf-falso\n', { mode: 0o755 });
+  writeFileSync(join(cyg, 'cygpath'), `#!/bin/sh\ncase "$2" in 'C:\\'*) echo '${mapeada}' ;; *) echo "$2" ;; esac\n`, { mode: 0o755 });
   w.env.PATH = `${cyg}:${w.env.PATH}`;
-  const r = correr(w, 'archivo_ajustes');
-  assert.equal(r.stdout, '/conf-falso/settings.json\n');
+  assert.equal(correr(w, 'archivo_ajustes').stdout, `${mapeada}/settings.json\n`);
+  assert.equal(correr(w, 'asegurar_auto').stdout, 'CAMBIO: activado\n');
+  assert.deepEqual(leer(join(mapeada, 'settings.json')).extraKnownMarketplaces['setup-ceo'], { source: GIT, autoUpdate: true });
+  assert.equal(existsSync(w.sf), false);
+});
+
+const sinTmp = (dir) => readdirSync(dir).filter((n) => n.includes('.setup-ceo-tmp.'));
+const esRoot = typeof process.getuid === 'function' && process.getuid() === 0;
+
+test('entrada sin autoUpdate y known en false: copiado y queda apagado', () => {
+  const w = mundo({ known: { source: GIT, autoUpdate: false }, settings: { extraKnownMarketplaces: { 'setup-ceo': { source: GIT } } } });
+  assert.equal(correr(w, 'asegurar_auto').stdout, 'CAMBIO: copiado\n');
+  assert.equal(entrada(w).autoUpdate, false);
+  assert.equal(correr(w, 'estado_auto').stdout.split('\n')[0], 'AUTO: no');
+  assert.equal(correr(w, 'asegurar_auto').stdout, 'SIN-CAMBIO\n');
+});
+
+test('el respaldo conserva el modo 0600', { skip: esWindows ? 'modos en Windows' : false }, () => {
+  const w = mundo({ known: { source: GIT }, crudo: '{"token":"x"}' });
+  chmodSync(w.sf, 0o600);
+  assert.equal(correr(w, 'asegurar_auto').stdout, 'CAMBIO: activado\n');
+  assert.equal(statSync(w.sf + '.antes-de-setup-ceo').mode & 0o777, 0o600);
+  assert.equal(statSync(w.sf).mode & 0o777, 0o600);
+});
+
+test('poner_auto rechaza valores que no son si/no', () => {
+  const texto = JSON.stringify({ a: 1 });
+  const w = mundo({ known: { source: GIT }, crudo: texto });
+  assert.equal(correr(w, 'poner_auto', 'yes').stdout, 'OMITIDO: valor-invalido\n');
+  assert.equal(correr(w, 'poner_auto', '').stdout, 'OMITIDO: valor-invalido\n');
+  assert.equal(readFileSync(w.sf, 'utf8'), texto);
+  assert.equal(existsSync(w.sf + '.antes-de-setup-ceo'), false);
+});
+
+test('enlace roto: no se reemplaza por un archivo', { skip: esWindows ? 'enlaces simbólicos en Windows' : false }, () => {
+  const w = mundo({ known: { source: GIT } });
+  symlinkSync(join(w.home, 'no-existe.json'), w.sf);
+  assert.equal(correr(w, 'asegurar_auto').stdout, 'OMITIDO: settings-invalido\n');
+  assert.equal(lstatSync(w.sf).isSymbolicLink(), true);
+  assert.equal(existsSync(join(w.home, 'no-existe.json')), false);
+});
+
+test('carpeta de solo lectura: no-se-pudo-escribir y sin restos', { skip: esWindows || esRoot ? 'Windows o root' : false }, () => {
+  const texto = JSON.stringify({ a: 1 });
+  const w = mundo({ known: { source: GIT }, crudo: texto });
+  chmodSync(w.conf, 0o555);
+  try {
+    assert.equal(correr(w, 'asegurar_auto').stdout, 'OMITIDO: no-se-pudo-escribir\n');
+    assert.equal(readFileSync(w.sf, 'utf8'), texto);
+    assert.deepEqual(sinTmp(w.conf), []);
+  } finally { chmodSync(w.conf, 0o755); }
+});
+
+test('formato como Claude Code: "clave": valor y salto final', () => {
+  const w = mundo({ known: { source: GIT } });
+  correr(w, 'asegurar_auto');
+  const t = readFileSync(w.sf, 'utf8');
+  assert.ok(t.includes('"autoUpdate": true'), t);
+  assert.ok(t.endsWith('\n'));
+});
+
+test('el respaldo se escribe una sola vez y no quedan temporales', () => {
+  const orig = JSON.stringify({ a: 1 }, null, 2);
+  const w = mundo({ known: { source: GIT }, crudo: orig });
+  correr(w, 'asegurar_auto');
+  correr(w, 'poner_auto', 'no');
+  correr(w, 'poner_auto', 'si');
+  assert.equal(readFileSync(w.sf + '.antes-de-setup-ceo', 'utf8'), orig);
+  assert.deepEqual(sinTmp(w.conf), []);
+});
+
+test('forks en forma github y URL parecida: no-oficial', () => {
+  for (const src of [
+    { source: 'github', repo: 'otro/setup-ceo' },
+    { source: 'git', url: 'https://github.com/josephalbertoeshkenazi-blip/setup-ceo-fork.git' },
+  ]) {
+    const w = mundo({ known: { source: src } });
+    assert.equal(correr(w, 'asegurar_auto').stdout, 'OMITIDO: no-oficial\n');
+    assert.equal(existsSync(w.sf), false);
+  }
+});
+
+test('poner_auto si respeta fuente distinta y ref propio', () => {
+  const t1 = JSON.stringify({ extraKnownMarketplaces: { 'setup-ceo': { source: { ...GIT, ref: 'estable' }, autoUpdate: false } } });
+  const a = mundo({ known: { source: GIT }, crudo: t1 });
+  assert.equal(correr(a, 'poner_auto', 'si').stdout, 'OMITIDO: fuente-distinta\n');
+  assert.equal(readFileSync(a.sf, 'utf8'), t1);
+  assert.equal(existsSync(a.sf + '.antes-de-setup-ceo'), false);
+  const t2 = JSON.stringify({ a: 1 });
+  const b = mundo({ known: { source: { ...GIT, ref: 'x' } }, crudo: t2 });
+  assert.equal(correr(b, 'poner_auto', 'si').stdout, 'OMITIDO: ref-propio\n');
+  assert.equal(readFileSync(b.sf, 'utf8'), t2);
+  assert.equal(existsSync(b.sf + '.antes-de-setup-ceo'), false);
+});
+
+test('settings con comentario //: settings-invalido', () => {
+  const texto = '{\n  // hola\n  "a": 1\n}\n';
+  const w = mundo({ known: { source: GIT }, crudo: texto });
+  assert.equal(correr(w, 'asegurar_auto').stdout, 'OMITIDO: settings-invalido\n');
+  assert.equal(readFileSync(w.sf, 'utf8'), texto);
 });
 
 // ---- revisar-novedades.sh (gancho de inicio) ----

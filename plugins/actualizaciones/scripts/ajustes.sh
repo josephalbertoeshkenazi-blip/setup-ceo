@@ -6,6 +6,8 @@
 #   archivo_ajustes   imprime la ruta de settings.json
 #   asegurar_auto     CAMBIO: activado | CAMBIO: copiado | SIN-CAMBIO | OMITIDO: <razón>
 #   poner_auto si|no  AUTO: si | AUTO: no | OMITIDO: <razón>
+#   Razones de OMITIDO: sin-perl, sin-fuente, no-oficial, ref-propio, fuente-distinta, valor-invalido,
+#   settings-invalido (JSON malo o enlace roto), no-se-pudo-escribir (falló el respaldo, el temporal o el renombrado).
 #   estado_auto       AUTO: si|no|sin-dato, REF: <ref|ninguno>, FUENTE: oficial|otra|ninguna
 # Siempre salen 0.
 REPO_OFICIAL="josephalbertoeshkenazi-blip/setup-ceo"
@@ -77,10 +79,12 @@ if ($modo eq "estado") {
   exit 0;
 }
 
+fin("OMITIDO: valor-invalido") if $modo eq "auto" && $valor ne "si" && $valor ne "no";
 fin("OMITIDO: sin-fuente") unless $K;
 fin("OMITIDO: no-oficial") unless oficial($K);
 fin("OMITIDO: ref-propio") if exists $K->{ref} && defined $K->{ref} && length texto($K->{ref});
 fin("OMITIDO: settings-invalido") unless $settings_ok;
+fin("OMITIDO: settings-invalido") if -l $sf && !-e $sf;
 my $quiere = $valor eq "si" ? JSON::PP::true : JSON::PP::false;
 
 my ($mensaje,$cambia)=("SIN-CAMBIO",0);
@@ -89,7 +93,10 @@ if (ref $E eq "HASH") {
   if ($modo eq "auto") {
     my $actual=bool_de($E->{autoUpdate});
     if (!defined $actual || $actual ne $valor) { $E->{autoUpdate}=$quiere; $cambia=1; }
-  } elsif (!exists $E->{autoUpdate}) { $E->{autoUpdate}=JSON::PP::true; ($mensaje,$cambia)=("CAMBIO: activado",1); }
+  } elsif (!exists $E->{autoUpdate}) {
+    my $b=$ke->{autoUpdate}; my $x=(defined $b && JSON::PP::is_bool($b)) ? $b : JSON::PP::true;
+    $E->{autoUpdate}=$x; ($mensaje,$cambia)=($x ? "CAMBIO: activado" : "CAMBIO: copiado",1);
+  }
 } else {
   my $x=JSON::PP::true;
   if ($modo eq "auto") { $x=$quiere; }
@@ -103,19 +110,23 @@ $mensaje="AUTO: $valor" if $modo eq "auto";
 
 if ($cambia) {
   my $real=-l $sf ? (Cwd::abs_path($sf) // $sf) : $sf;
-  my $json=JSON::PP->new->utf8->canonical->pretty->indent_length(2);
+  my $json=JSON::PP->new->utf8->canonical->pretty->indent_length(2)->space_before(0);
   my $antes=$real.".antes-de-setup-ceo";
-  if (-f $real && !-e $antes) { File::Copy::copy($real,$antes) or fin("OMITIDO: settings-invalido"); }
   my $tmp="$real.setup-ceo-tmp.$$";
+  umask 077;
   my $ok=eval {
+    if (-f $real && !-e $antes) {
+      File::Copy::copy($real,$antes) or die;
+      my $m=(stat $real)[2]; chmod($m & 07777,$antes) if defined $m;
+    }
     open(my $o,">:raw",$tmp) or die;
-    print $o $json->encode($S); close $o or die;
+    my $t=$json->encode($S); $t.="\n" unless $t =~ /\n\z/; print $o $t; close $o or die;
     my $v=leer($tmp); die unless ref $v eq "HASH" && igual($v,$S);
     my $modo_orig=(stat $real)[2]; chmod($modo_orig & 07777,$tmp) if defined $modo_orig;
     rename($tmp,$real) or die;
     1;
   };
-  unless ($ok) { unlink $tmp; fin("OMITIDO: settings-invalido"); }
+  unless ($ok) { unlink $tmp; fin("OMITIDO: no-se-pudo-escribir"); }
 }
 fin($mensaje);'
 
