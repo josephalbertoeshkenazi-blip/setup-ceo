@@ -1,8 +1,6 @@
 #!/bin/bash
 # Funciones compartidas. No instala nada: solo mira.
 MERCADO="setup-ceo"
-REG="$HOME/.claude/plugins/installed_plugins.json"
-KNOWN="$HOME/.claude/plugins/known_marketplaces.json"
 . "$(dirname "${BASH_SOURCE[0]}")/json.sh"
 
 es_windows() { case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) return 0 ;; esac; return 1; }
@@ -12,11 +10,16 @@ ruta_unix() {
   if es_windows && [[ "$1" == *\\* ]] && command -v cygpath >/dev/null 2>&1; then cygpath -u "$1"; else printf '%s\n' "$1"; fi
 }
 
+# Carpeta de configuración de Claude Code (CLAUDE_CONFIG_DIR la cambia).
+CONF="$(ruta_unix "${CLAUDE_CONFIG_DIR:-$HOME/.claude}")"
+REG="$CONF/plugins/installed_plugins.json"
+KNOWN="$CONF/plugins/known_marketplaces.json"
+
 carpeta_mercado() {
   local d=""
   [ -f "$KNOWN" ] && d=$(json_get "$KNOWN" "$MERCADO.installLocation")
   [ -n "$d" ] && d=$(ruta_unix "$d")
-  [ -n "$d" ] || d="$HOME/.claude/plugins/marketplaces/$MERCADO"
+  [ -n "$d" ] || d="$CONF/plugins/marketplaces/$MERCADO"
   echo "$d"
 }
 
@@ -63,3 +66,26 @@ es_mayor() {
 }
 
 ultima_del_changelog() { archivo_ultimo "CHANGELOG.md" | grep -m1 -E '^## [0-9]+\.[0-9]+\.[0-9]+' | awk '{print $2}'; }
+
+# Versión de este plugin (la que está cargada ahora). CLAUDE_PLUGIN_ROOT la pone Claude Code; sin ella, la carpeta del script.
+version_propia() {
+  local raiz; raiz="$(ruta_unix "${CLAUDE_PLUGIN_ROOT:-$(dirname "${BASH_SOURCE[0]}")/..}")"
+  version_de_json < "$raiz/.claude-plugin/plugin.json" 2>/dev/null
+}
+
+# Imprime del CHANGELOG en disco las secciones "## X.Y.Z" con $1 < X.Y.Z <= $2 (máximo 40 líneas).
+# Con $1 vacío, solo la sección $2. La plantilla "## X.Y.Z (AAAA-MM-DD)" no calza.
+changelog_entre() {
+  local f; f="$(carpeta_mercado)/CHANGELOG.md"
+  [ -f "$f" ] || return 0
+  awk -v d="$1" -v h="$2" '
+    function cmp(a,b,  x,y,i){split(a,x,".");split(b,y,".");for(i=1;i<=3;i++){if((x[i]+0)>(y[i]+0))return 1;if((x[i]+0)<(y[i]+0))return -1}return 0}
+    /^## /{
+      imp=0
+      if ($2 ~ /^[0-9]+\.[0-9]+\.[0-9]+$/) {
+        if (d=="") imp=(cmp($2,h)==0); else imp=(cmp($2,d)>0 && cmp($2,h)<=0)
+      }
+    }
+    imp{print}
+  ' "$f" | tr -d '\r' | head -40
+}

@@ -143,10 +143,14 @@ test('revisar-novedades avisa en Windows', () => {
   git(mk, 'commit', '-q', '-m', 'x');
   json(join(home, '.claude/plugins/installed_plugins.json'), registro({
     'actualizaciones@setup-ceo': [{ installPath: '/y', version: '2.1.0' }] }));
+  // Con las actualizaciones solas apagadas el aviso sale de inmediato (con ellas prendidas espera un día).
+  json(join(home, '.claude/plugins/known_marketplaces.json'), { 'setup-ceo': { autoUpdate: false, installLocation: mk,
+    source: { source: 'git', url: 'https://github.com/josephalbertoeshkenazi-blip/setup-ceo.git' } } });
   const e = fingirWindows({ ...env, JSON_SIN_PLUTIL: '1' });
   const r = bash([join(act, 'revisar-novedades.sh')], e);
   assert.equal(r.status, 0);
-  assert.ok(r.stdout.includes('hay una versión nueva (2.2.0; el dueño tiene 2.1.0)'), r.stdout + r.stderr);
+  assert.ok(r.stdout.includes('Novedades del setup-ceo: hay una versión nueva (2.2.0; el dueño tiene 2.1.0)'), r.stdout + r.stderr);
+  assert.ok(r.stdout.includes('Las actualizaciones solas están apagadas'), r.stdout);
 });
 
 test('buscar-claude sin claude en PATH', () => {
