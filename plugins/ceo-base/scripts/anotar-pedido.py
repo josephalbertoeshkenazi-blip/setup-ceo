@@ -34,7 +34,7 @@ def main():
         except OSError:
             pass
     fd = os.open(os.path.join(carpeta, ahora.strftime("%Y-%m") + ".jsonl"), os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
-    with os.fdopen(fd, "a") as f:
+    with os.fdopen(fd, "a", encoding="utf-8") as f:
         f.write(json.dumps(linea, ensure_ascii=False) + "\n")
 
 

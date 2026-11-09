@@ -8,6 +8,11 @@ CAMBIOS="$SEG/cambios.md"
 RESP="$SEG/respaldos"
 CARPETAS="${SEG_CARPETAS:-$HOME/Desktop:$HOME/Documents:$HOME/Projects:$HOME/Developer}"
 
+# Se mira una sola vez (uname solo se llama aquí).
+case "$(uname -s 2>/dev/null)" in MINGW*|MSYS*|CYGWIN*) SEG_WINDOWS=1 ;; *) SEG_WINDOWS=0 ;; esac
+es_windows() { [ "$SEG_WINDOWS" = 1 ]; }
+if es_windows; then . "$AQUI/windows.sh"; fi
+
 ahora() { date '+%Y-%m-%d %H:%M'; }
 sello() { date '+%Y%m%d-%H%M%S'; }
 rel() { local p="$1"; printf '%s' "${p#"$HOME"/}"; }

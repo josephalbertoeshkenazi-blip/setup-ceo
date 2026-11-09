@@ -4,7 +4,7 @@ English | [Español](problemas.md)
 
 ## "claude: command not found"
 
-Terminal cannot find Claude. Most of the time it is fixed by closing the window and opening a **new Terminal**. If it still fails, install again on macOS:
+Terminal cannot find Claude. Most of the time it is fixed by closing the window and opening a **new Terminal**. If it still fails, install again on macOS (on Windows see the "Windows" section below):
 
 ```
 curl -fsSL https://claude.ai/install.sh | bash
@@ -52,6 +52,15 @@ It is not an error: you already have it. Go on with `claude plugin install ceo-b
 ## Updating
 
 Inside Claude type `/actualizaciones:novedades`. It tells you in plain words what is new and only installs if you say yes. Your profile and memory are not lost.
+
+If you use Windows and were already on version 2.0 or 2.1, run `claude plugin marketplace update setup-ceo` and `claude plugin update <plugin>@setup-ceo` (one per installed plugin) once by hand, or ask Claude "actualiza el setup-ceo". From 2.2.0 on, the notice works by itself.
+
+## Windows
+
+- **Notices or checks fail or do not show.** Claude Code runs hooks (commands that fire by themselves when something starts or ends) through Git Bash, the terminal that comes with Git for Windows. Without Git they do not run. Check with `git --version`; if it is missing, install with `winget install --id Git.Git -e`, then close and reopen Claude.
+- **Python is optional.** `py -3 --version` tells you if you have it. Without Python everything works; you only lose a few extra memory saves. If typing `python` opens the Microsoft Store, that "python" is an empty shortcut, not a real Python: close it, do not install anything because of it.
+- **Avisos is Mac only.** If you ask for it on Windows, Claude tells you so and changes nothing.
+- **"claude: command not found" (PowerShell says "is not recognized as the name of a cmdlet") right after installing.** Close PowerShell and open a new one; if it still fails, use `"$HOME/.local/bin/claude.exe"`.
 
 ## Remove everything
 

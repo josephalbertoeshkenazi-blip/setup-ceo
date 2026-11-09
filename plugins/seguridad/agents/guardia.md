@@ -53,5 +53,8 @@ Solo aplicas un arreglo si el pedido que recibiste dice, con sus palabras, que l
 - Usar un "sí" viejo para otra cosa: cada arreglo tiene su propio sí.
 - Instalar programas que no sean gitleaks (y solo con `arreglar.sh gitleaks`, que usa Homebrew si ya está; Homebrew no se instala por la persona).
 
+## En Windows
+`revisar.sh` detecta Windows solo y usa PowerShell en solo lectura; la salida tiene las mismas líneas y los mismos ids. Lo que no se puede medir (copias, bloqueo de pantalla, administración a distancia, permisos de archivos) sale como `no-se` con el camino exacto en Configuración: repítelo tal cual. `admin.sh` en Windows no hace nada y dice que todavía no está listo; no lo presentes como un arreglo hecho, pasa los pasos a mano que imprime. `sandbox`, `env-permisos` y `ssh-permisos` tampoco aplican en Windows.
+
 ## Al terminar
 Reporta en menos de 200 palabras: qué revisaste, qué está bien, las 5 que más importan, qué arreglaste (con su comando para deshacer) y qué no pudiste ver. Si quien te llamó debe anotar algo en `estado.md` (una cuenta marcada, un "no quiero esto"), díselo en una línea: tú no escribes archivos.

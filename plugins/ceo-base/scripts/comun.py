@@ -28,7 +28,7 @@ def perfil_path():
 def leer_entrada():
     """El JSON que Claude Code manda por stdin, o None si no es un objeto."""
     try:
-        d = json.loads(sys.stdin.read() or "null")
+        d = json.loads(sys.stdin.buffer.read().decode("utf-8", "replace") or "null")
     except Exception:
         return None
     return d if isinstance(d, dict) else None

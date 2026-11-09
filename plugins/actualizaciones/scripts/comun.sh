@@ -3,10 +3,19 @@
 MERCADO="setup-ceo"
 REG="$HOME/.claude/plugins/installed_plugins.json"
 KNOWN="$HOME/.claude/plugins/known_marketplaces.json"
+. "$(dirname "${BASH_SOURCE[0]}")/json.sh"
+
+es_windows() { case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) return 0 ;; esac; return 1; }
+
+# En Windows el registro guarda rutas como C:\Users\...; las pasamos a la forma de Git Bash.
+ruta_unix() {
+  if es_windows && [[ "$1" == *\\* ]] && command -v cygpath >/dev/null 2>&1; then cygpath -u "$1"; else printf '%s\n' "$1"; fi
+}
 
 carpeta_mercado() {
   local d=""
-  [ -f "$KNOWN" ] && d=$(plutil -extract "$MERCADO.installLocation" raw -o - "$KNOWN" 2>/dev/null)
+  [ -f "$KNOWN" ] && d=$(json_get "$KNOWN" "$MERCADO.installLocation")
+  [ -n "$d" ] && d=$(ruta_unix "$d")
   [ -n "$d" ] || d="$HOME/.claude/plugins/marketplaces/$MERCADO"
   echo "$d"
 }
@@ -15,8 +24,17 @@ carpeta_mercado() {
 traer_ultimo() {
   local mk; mk=$(carpeta_mercado)
   [ -d "$mk/.git" ] || return 2
-  GIT_TERMINAL_PROMPT=0 GIT_ASKPASS=/usr/bin/false \
-    perl -e 'alarm shift; exec @ARGV' "${1:-20}" git -C "$mk" fetch --quiet origin 2>/dev/null
+  if [ "$(uname -s)" = "Darwin" ]; then
+    GIT_TERMINAL_PROMPT=0 GIT_ASKPASS=/usr/bin/false \
+      perl -e 'alarm shift; exec @ARGV' "${1:-20}" git -C "$mk" fetch --quiet origin 2>/dev/null
+  else
+    # Windows y Linux: el timeout de System32 no sirve; solo se usa uno que de verdad corra.
+    local t="" tb="${SETUP_CEO_TIMEOUT_BIN:-/usr/bin/timeout}"  # SETUP_CEO_TIMEOUT_BIN: solo para pruebas
+    if [ -x "$tb" ]; then t="$tb"
+    elif command -v timeout >/dev/null 2>&1 && timeout --version >/dev/null 2>&1; then t=timeout; fi
+    GIT_TERMINAL_PROMPT=0 GIT_ASKPASS=/usr/bin/false \
+      ${t:+"$t" "${1:-20}"} git -c credential.helper= -C "$mk" fetch --quiet origin 2>/dev/null
+  fi
 }
 
 rama_remota() {
@@ -31,7 +49,7 @@ version_de_json() { grep -m1 '"version"' | sed -E 's/.*"version"[^"]*"([^"]+)".*
 
 version_instalada() {
   [ -f "$REG" ] || return 0
-  plutil -extract "plugins.$1@$MERCADO.0.version" raw -o - "$REG" 2>/dev/null
+  json_get "$REG" "plugins.$1@$MERCADO.0.version"
 }
 
 plugins_del_mercado() {

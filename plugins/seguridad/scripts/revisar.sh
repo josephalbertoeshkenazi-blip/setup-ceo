@@ -11,12 +11,20 @@ SEG_TIMEOUT="${SEG_TIMEOUT:-120}"
 CARPETAS="${SEG_CARPETAS:-$HOME/Desktop:$HOME/Documents:$HOME/Projects:$HOME/Developer}"
 SOLO=""
 
+# Se mira una sola vez (uname solo se llama aquí).
+case "$(uname -s 2>/dev/null)" in MINGW*|MSYS*|CYGWIN*) SEG_WINDOWS=1 ;; *) SEG_WINDOWS=0 ;; esac
+es_windows() { [ "$SEG_WINDOWS" = 1 ]; }
+sin_permiso() {
+  if es_windows; then echo "Windows no me dejó leer alguna carpeta; ábrela una vez en el Explorador o revisa que la carpeta sea tuya"
+  else echo "macOS no me dejó leer alguna carpeta; da permiso en Ajustes > Privacidad y seguridad"; fi
+}
+
 IDS="secretos-disco secretos-historial env-archivos env-en-git filevault actualizaciones copias bloqueo firewall admins env-permisos ssh-permisos claude-deny claude-extras invitado mdm sistema transcripciones"
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --solo) SOLO="$2"; shift 2 ;;
-    --carpetas) CARPETAS="$2"; shift 2 ;;
+    --carpetas) CARPETAS="$2"; CARPETAS_A_MANO=1; shift 2 ;;
     *) echo "Uso: revisar.sh [--solo <id>] [--carpetas <ruta:ruta>]" >&2; exit 2 ;;
   esac
 done
@@ -71,14 +79,34 @@ escanear() { # ruta nombre
   [ "$rc" -ne 0 ] && return 1
   [ -f "$TMP/rep-$n.json" ] || return 1
   if command -v jq >/dev/null 2>&1; then
-    jq -r '.[]? | "\(.File)\t\(.RuleID)"' "$TMP/rep-$n.json" >>"$TMP/hallazgos" 2>/dev/null
+    jq -r '.[]? | "\(.File)\t\(.RuleID)"' "$TMP/rep-$n.json" 2>/dev/null | rutas_unix >>"$TMP/hallazgos"
   else
+    # gitleaks escribe RuleID antes que File; se junta el par de cada hallazgo sin importar el orden ni las líneas.
     awk '
-      /"File":/   { s=$0; sub(/^[^:]*:[ ]*"/, "", s); sub(/",?[ ]*$/, "", s); f=s }
-      /"RuleID":/ { s=$0; sub(/^[^:]*:[ ]*"/, "", s); sub(/",?[ ]*$/, "", s); print f "\t" s }
-    ' "$TMP/rep-$n.json" >>"$TMP/hallazgos"
+      function valor(k,   s) {
+        if (!match($0, "\"" k "\":[ ]*\"([^\"\\\\]|\\\\.)*\"")) return ""
+        s = substr($0, RSTART, RLENGTH); sub(/^"[^"]*":[ ]*"/, "", s); sub(/"$/, "", s); return s
+      }
+      { v = valor("RuleID"); if (v != "") r = v; v = valor("File"); if (v != "") f = v
+        if (r != "" && f != "") { print f "\t" r; r = ""; f = "" } }
+    ' "$TMP/rep-$n.json" | rutas_unix >>"$TMP/hallazgos"
   fi
   return 0
+}
+
+# gitleaks.exe en Windows reporta C:\Users\... (y el JSON dobla las barras): se pasa a /c/Users/...
+# para que quitar $HOME funcione y nunca salga la ruta completa con el nombre de la persona.
+rutas_unix() { # lee líneas "archivo, tabulador, regla"
+  local f r
+  while IFS=$'\t' read -r f r; do
+    case "$f" in
+      [A-Za-z]:[\\/]*)
+        f=$(printf '%s' "$f" | sed 's/\\\\/\\/g')
+        command -v cygpath >/dev/null 2>&1 && f=$(cygpath -u "$f")
+        ;;
+    esac
+    printf '%s\t%s\n' "$f" "$r"
+  done
 }
 
 reportar_hallazgos() { # id sobre_que
@@ -103,7 +131,7 @@ EOF2
   if [ "$n" -eq 0 ]; then emit secretos-disco bien "no hay carpetas de trabajo que revisar"; return; fi
   if [ -s "$TMP/hallazgos" ]; then reportar_hallazgos secretos-disco "tus carpetas"; return; fi
   if [ "$fallo" -gt 0 ]; then emit secretos-disco no-se "no pude terminar el escaneo en $fallo de $n carpetas (tardó mucho o falló)"; return; fi
-  if [ "$permiso" = 1 ]; then emit secretos-disco no-se "macOS no me dejó leer alguna carpeta; da permiso en Ajustes > Privacidad y seguridad"; return; fi
+  if [ "$permiso" = 1 ]; then emit secretos-disco no-se "$(sin_permiso)"; return; fi
   emit secretos-disco bien "no encontré claves guardadas en texto plano en $n carpetas"
 }
 
@@ -127,7 +155,7 @@ c_env_archivos() {
   local n; n=$(wc -l <"$TMP/envs" | tr -d ' ')
   if [ "$n" -eq 0 ]; then
     if grep -qiE 'not permitted|permission denied' "$TMP/envs.err" 2>/dev/null; then
-      emit env-archivos no-se "macOS no me dejó leer alguna carpeta; da permiso en Ajustes > Privacidad y seguridad"
+      emit env-archivos no-se "$(sin_permiso)"
     else
       emit env-archivos bien "no encontré archivos .env"
     fi
@@ -141,7 +169,7 @@ c_env_en_git() {
   if [ ! -s "$TMP/envs" ]; then emit env-en-git bien "no hay archivos .env que revisar"; return; fi
   if ! command -v git >/dev/null 2>&1; then emit env-en-git no-se "git no está disponible"; return; fi
   # Sin las herramientas de desarrollador, llamar a git abre la ventana de instalación de Apple: no se llama.
-  if ! command -v xcode-select >/dev/null 2>&1 || ! xcode-select -p >/dev/null 2>&1; then emit env-en-git no-se "faltan las herramientas de desarrollador de Apple (xcode-select --install); no uso git para no abrir su ventana de instalación"; return; fi
+  if ! es_windows && { ! command -v xcode-select >/dev/null 2>&1 || ! xcode-select -p >/dev/null 2>&1; }; then emit env-en-git no-se "faltan las herramientas de desarrollador de Apple (xcode-select --install); no uso git para no abrir su ventana de instalación"; return; fi
   : >"$TMP/subidos"; : >"$TMP/sinignorar"
   local f d b
   while IFS= read -r f; do
@@ -331,8 +359,13 @@ c_transcripciones() {
   else emit transcripciones bien "tus conversaciones guardadas ocupan ${h:-?} (por defecto se borran a los 30 días)"; fi
 }
 
+# En Windows se cargan las versiones de Windows y cada chequeo usa la suya (c_<id>_win) si existe.
+if es_windows; then . "$(dirname "$0")/windows.sh"; fi
+
 for id in $IDS; do
   [ -n "$SOLO" ] && [ "$SOLO" != "$id" ] && continue
-  "c_$(printf '%s' "$id" | tr '-' '_')"
+  fn="c_$(printf '%s' "$id" | tr '-' '_')"
+  if es_windows && type "${fn}_win" >/dev/null 2>&1; then fn="${fn}_win"; fi
+  "$fn"
 done
 exit 0

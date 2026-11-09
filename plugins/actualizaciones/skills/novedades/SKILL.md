@@ -24,21 +24,29 @@ Con el CHANGELOG nuevo, escríbele:
 - **Qué cambia para él** en el día a día, si algo.
 - **Qué no se toca**: su perfil (`~/.claude/mi-perfil/`) y su memoria quedan igual.
 - Plugins nuevos que no tiene instalados: menciónalos aparte, con una línea de qué hacen, y pregunta si los quiere.
-- Si la novedad trae un plugin nuevo que no tiene, como `seguridad` (revisa tu Mac y tus cuentas) o `programar` (caza de bugs y CLAUDE.md más corto), ofrécelo en una línea con su comando (`claude plugin install seguridad@setup-ceo`, `claude plugin install programar@setup-ceo`), solo con su sí.
+- Si la novedad trae un plugin nuevo que no tiene, como `seguridad` (revisa tu computadora y tus cuentas) o `programar` (caza de bugs y CLAUDE.md más corto), ofrécelo en una línea con su comando (`claude plugin install seguridad@setup-ceo`, `claude plugin install programar@setup-ceo`), solo con su sí.
 
 Cierra con: "¿Lo instalo?" y espera.
 
 ## Paso 3. Solo con su sí
-Para cada plugin marcado `[ACTUALIZAR]`:
+Primero busca el programa `claude`:
 
 ```bash
-claude plugin marketplace update setup-ceo
-claude plugin update <plugin>@setup-ceo
+bash "${CLAUDE_PLUGIN_ROOT}/scripts/buscar-claude.sh"
 ```
 
-Para un plugin nuevo que dijo que quiere: `claude plugin install <plugin>@setup-ceo`.
+Si imprime una ruta, úsala entre comillas en lugar de `claude`. Para cada plugin marcado `[ACTUALIZAR]`:
 
-Después corre otra vez `estado.sh` y confirma que todo quedó "al día". Dile que escriba `/reload-plugins` (o que cierre y abra Claude) para que los cambios entren.
+```bash
+"<ruta>" plugin marketplace update setup-ceo
+"<ruta>" plugin update <plugin>@setup-ceo
+```
+
+Para un plugin nuevo que dijo que quiere: `"<ruta>" plugin install <plugin>@setup-ceo`.
+
+Si no imprime nada, dile en una línea que actualice desde la app (Claude Desktop: el **+** junto a la caja de mensaje, Plugins, Manage plugins) o que abra una terminal y corra los dos comandos. No instales el programa `claude` sin su sí.
+
+Después corre otra vez `estado.sh` y confirma que todo quedó "al día". Dile que cierre esta sesión y abra una nueva para que los cambios entren (sirve en Desktop y en Terminal). En Terminal, `/reload-plugins` es el atajo.
 
 Si dice que no, no insistas. Dile que cuando quiera, le pregunte "¿hay novedades?".
 

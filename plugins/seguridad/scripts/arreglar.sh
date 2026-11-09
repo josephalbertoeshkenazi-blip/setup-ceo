@@ -28,8 +28,16 @@ ya_hecho() { echo "Este arreglo ya está aplicado ($1). Para volver atrás: $(co
 nada_que_deshacer() { echo "No hay nada que deshacer para '$1': no lo apliqué o ya lo deshice."; }
 
 # Sin las herramientas de desarrollador de Apple, llamar a git abre la ventana de instalación: no se llama.
-git_disponible() { command -v git >/dev/null 2>&1 && command -v xcode-select >/dev/null 2>&1 && xcode-select -p >/dev/null 2>&1; }
+git_disponible() {
+  if es_windows; then command -v git >/dev/null 2>&1; return; fi
+  command -v git >/dev/null 2>&1 && command -v xcode-select >/dev/null 2>&1 && xcode-select -p >/dev/null 2>&1
+}
 sin_git() {
+  if es_windows; then
+    echo "Esta computadora no tiene git instalado, así que no lo uso y no toqué nada."
+    echo "Cuando quieras: instala Git for Windows desde git-scm.com y vuelve a pedirme este arreglo."
+    return
+  fi
   echo "Este Mac no tiene las herramientas de desarrollador de Apple, así que no uso git (abriría una ventana de instalación) y no toqué nada."
   echo "Cuando quieras instalarlas: xcode-select --install. Después vuelve a pedirme este arreglo."
 }
@@ -369,6 +377,10 @@ gitleaks_hacer() {
   if [ "$#" -gt 0 ] && ! git_disponible; then sin_git; cerrar_respaldo gitleaks; return 0; fi
   mkdir -p "$d"
   if ! command -v gitleaks >/dev/null 2>&1; then
+    if es_windows; then
+      echo "En Windows no instalo gitleaks por ti. Si quieres seguir: instálalo tú (por ejemplo con winget install gitleaks) y vuelve a pedirme este arreglo."
+      cerrar_respaldo gitleaks; return 0
+    fi
     if ! command -v brew >/dev/null 2>&1; then
       cat <<'MSG'
 No tienes Homebrew, el instalador de programas que uso para gitleaks. No lo instalo por ti
@@ -533,10 +545,10 @@ reglas_ia_deshacer() {
 case "$ID" in
   reglas-ia)      "reglas_ia_$ACCION" ;;
   env-gitignore)  "env_gitignore_$ACCION" ;;
-  env-permisos)   "env_permisos_$ACCION" ;;
-  ssh-permisos)   "ssh_permisos_$ACCION" ;;
-  claude-deny)    "claude_deny_$ACCION" ;;
-  sandbox)        "sandbox_$ACCION" ;;
+  env-permisos)   if es_windows; then permisos_win; else "env_permisos_$ACCION"; fi ;;
+  ssh-permisos)   if es_windows; then permisos_win; else "ssh_permisos_$ACCION"; fi ;;
+  claude-deny)    if es_windows; then "claude_deny_${ACCION}_win"; else "claude_deny_$ACCION"; fi ;;
+  sandbox)        if es_windows; then sandbox_win; else "sandbox_$ACCION"; fi ;;
   gitleaks)       "gitleaks_$ACCION" "$@" ;;
   quitar-plugin)  "quitar_plugin_$ACCION" "$@" ;;
   quitar-mcp)     "quitar_mcp_$ACCION" "$@" ;;

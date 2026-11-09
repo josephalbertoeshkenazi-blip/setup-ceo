@@ -8,6 +8,10 @@ Licencia: estas skills y los ganchos son código MIT; solo el arte dentro del zi
 
 Este archivo es para ti, Claude. Sigue los pasos en orden y usa los comandos tal cual.
 
+## Antes de todo: Windows
+
+Si `uname -s` empieza con `MINGW`, `MSYS` o `CYGWIN` (Windows), di en una línea: "Avisos es solo para Mac; en Windows no se instala." y **detente sin cambiar nada**.
+
 ## Qué es Avisos (explícaselo al dueño en estas palabras si pregunta)
 - Una app de la barra de menú de la Mac. Es gratis, no manda nada a internet y no necesita cuenta.
 - Muestra una tarjeta grande en el centro de la pantalla 10 minutos antes de cada evento del calendario y otra vez a la hora exacta.

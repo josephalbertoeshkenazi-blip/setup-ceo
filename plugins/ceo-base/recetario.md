@@ -22,7 +22,7 @@ Las skills vienen de estos complementos (opcionales, se instalan con `/complemen
 | Plan de arquitectura | `plan-eng-review` | revisar datos, bordes y pruebas antes de construir |
 | Busca todos los bugs de mi proyecto | `bug-hunt` | revisar todo el código con varios agentes, descartar falsas alarmas y dejar un plan de arreglos |
 | Mi CLAUDE.md es muy largo | `rules-migrate` | separar las reglas que solo valen para ciertas carpetas, para que carguen solo cuando hacen falta |
-| ¿Estoy seguro? / revisar mi seguridad | `seguridad:revisar-mi-seguridad` | revisar tu Mac y tus cuentas con un informe simple, sin cambiar nada sin tu sí |
+| ¿Estoy seguro? / revisar mi seguridad | `seguridad:revisar-mi-seguridad` | revisar tu computadora y tus cuentas con un informe simple, sin cambiar nada sin tu sí |
 | Seguridad, pagos, datos de usuarios | `cso` | auditoría de secretos, accesos y fugas |
 | Publicar | `review` → `ship` → `land-and-deploy` → `canary` | revisar, subir, desplegar y vigilar |
 | "Mejor forma de hacer X hoy" | `last30days` | qué dice la gente en los últimos 30 días |

@@ -32,6 +32,39 @@ mostrar_a_mano() {
   echo "----- COPIA HASTA AQUI -----"
 }
 
+es_windows() { case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) return 0 ;; esac; return 1; }
+
+# Windows (Git Bash): el portapapeles y el navegador se manejan con powershell.exe.
+if es_windows; then
+  if ! command -v powershell.exe >/dev/null 2>&1; then
+    mostrar_a_mano "No pude copiarlo solo. Cópialo tú del recuadro y pégalo en $nombre."
+    [ -n "$url" ] && echo "Abre $nombre aquí: $url"
+    exit 0
+  fi
+  carpeta=$(mktemp -d "${TMPDIR:-/tmp}/memoria.XXXXXX") || { echo "No pude preparar el texto." >&2; exit 1; }
+  trap 'rm -f "$carpeta/memoria.txt"; rmdir "$carpeta" 2>/dev/null' EXIT
+  cp "$archivo" "$carpeta/memoria.txt"
+  ruta="$carpeta/memoria.txt"
+  command -v cygpath >/dev/null 2>&1 && ruta=$(cygpath -w "$ruta")
+  ruta=${ruta//\'/\'\'}
+  if ! powershell.exe -NoProfile -Command "Get-Content -Raw -Encoding UTF8 -LiteralPath '$ruta' | Set-Clipboard" >/dev/null 2>&1; then
+    mostrar_a_mano "No pude copiarlo solo. Cópialo tú del recuadro y pégalo en $nombre."
+    [ -n "$url" ] && echo "Abre $nombre aquí: $url"
+    exit 0
+  fi
+  if [ -z "$url" ]; then
+    echo "Listo: copié el texto. Abre $nombre tú, pégalo en un chat nuevo (Ctrl+V) y envíalo."
+  else
+    u=${url//\'/\'\'}
+    if powershell.exe -NoProfile -Command "Start-Process '$u'" >/dev/null 2>&1; then
+      echo "Listo: copié el texto y abrí $nombre en tu navegador. Pégalo en un chat nuevo (Ctrl+V) y envíalo."
+    else
+      echo "No pude abrir el navegador. El texto ya está copiado: abre $url tú, pégalo en un chat nuevo (Ctrl+V) y envíalo."
+    fi
+  fi
+  exit 0
+fi
+
 if ! command -v pbcopy >/dev/null 2>&1; then
   mostrar_a_mano "No pude copiarlo solo (esta computadora no tiene pbcopy). Cópialo tú del recuadro y pégalo en $nombre."
   [ -n "$url" ] && echo "Abre $nombre aquí: $url"

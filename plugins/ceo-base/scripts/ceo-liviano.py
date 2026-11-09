@@ -20,11 +20,11 @@ def en_compact(d):
     os.makedirs(carpeta, exist_ok=True)
     p = os.path.join(carpeta, (comun.sid_seguro(d.get("session_id")) or "sin-sesion") + ".json")
     try:
-        n = json.load(open(p)).get("n", 0)
+        n = json.load(open(p, encoding="utf-8")).get("n", 0)
     except Exception:
         n = 0
     n += 1
-    with open(p, "w") as f:
+    with open(p, "w", encoding="utf-8") as f:
         json.dump({"n": n}, f)
     if n >= CADA and n % CADA == 0:
         comun.imprimir_contexto("SessionStart", (

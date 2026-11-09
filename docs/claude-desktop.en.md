@@ -10,14 +10,14 @@ Terminal, Desktop local sessions and the VS Code extension on one computer read 
 
 1. Download the app from [claude.com/download](https://claude.com/download) and install it.
 2. Open it and sign in. Claude Code needs a Pro, Max, Ultra, Team or Enterprise plan (or a Console account); the free plan does not include Claude Code. Source: [Claude Code setup](https://code.claude.com/docs/en/setup)
-3. Go to the **Code** tab, start a **local** session and pick an empty folder you create for this (for example `Documents/mi-claude`). Local means it runs on your Mac, not in the cloud.
+3. Go to the **Code** tab, start a **local** session and pick an empty folder you create for this (for example `Documents/mi-claude`). Local means it runs on your computer, not in the cloud.
 4. Paste this and press Enter:
 
    ```
    Instala https://github.com/josephalbertoeshkenazi-blip/setup-ceo siguiendo su README.
    ```
 
-   (That sentence is in Spanish on purpose; Claude understands it and answers in your language.) Claude will ask permission for commands. Say yes only to these: `claude --version`, `curl -fsSL https://claude.ai/install.sh | bash` (only if Claude Code is missing), `claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo` and the six `claude plugin install ...@setup-ceo`. If it asks for anything else, say no and ask what it is for. This registers the repository on your computer under the name `setup-ceo` and installs the plugins.
+   (That sentence is in Spanish on purpose; Claude understands it and answers in your language.) Claude will ask permission for commands. Say yes only to these: `claude --version`, `curl -fsSL https://claude.ai/install.sh | bash` (only if Claude Code is missing), `claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo` and the six `claude plugin install ...@setup-ceo`. On Windows, instead of `curl`, it may also ask for these: `git --version`, `winget install --id Git.Git -e` (only if Git is missing), `irm https://claude.ai/install.ps1 | iex` (only if Claude Code is missing) and `"$HOME/.local/bin/claude.exe"` (if it can't find `claude`). If it asks for anything else, say no and ask what it is for. This registers the repository on your computer under the name `setup-ceo` and installs the plugins.
 5. Open a **new** session (do not continue in the same one) and type `/adaptar:adaptar-a-mi`. The 10-minute interview starts.
 
 ### Why I do not type `/plugin` here
@@ -41,7 +41,9 @@ Installing only through your claude.ai account (the path below) is not enough fo
 
 ### One session per project
 
-Open each project once in the Code tab, with its folder, and pin that session. From the main session, Claude can list and read your other local sessions (the 20 most recent, not archived) and message them; if one is busy, it gets the message when it finishes. According to the documentation, Claude Desktop cannot see Terminal sessions, and it shows no way for Claude to open a new session by itself. If the project's session is not open, the main one tells you in one line "open a new session in folder X and paste this" and gives you the text ready. Use one surface only, Desktop or Terminal. Source: [Claude Code on Desktop](https://code.claude.com/docs/en/desktop.md)
+Open each project once in the Code tab, with its folder. From the main session, Claude can open a project's session itself: in the app version we tested (Claude Code 2.1.309 inside Desktop) it has the `start_session` tool, which opens a new session in the project's folder with the request already written. The app may ask you to trust that folder; say yes. Claude then messages that session, finds it in the session list and, when it finishes, the app tells Claude; you do not need to ask. It can also list and read your other local sessions (the 20 most recent, not archived). Background agents show in the app's tasks pane; "agent teams" do not exist in Desktop.
+
+If your version does not have that tool, the main session tells you in one line "open a new session in folder X and paste this" and gives you the text ready. Desktop cannot see Terminal sessions, so use one surface only, Desktop or Terminal. On Windows it works the same (you need Git for Windows); the only difference is that, if you use the Terminal, the shortcut for opening a new window uses `wt.exe` instead of `osascript` (and it is not used if the folder has `;` or ends in `\`: then you open the terminal yourself). Source: [Claude Code on Desktop](https://code.claude.com/docs/en/desktop.md)
 
 ## Secondary path: Chat and Cowork
 
@@ -55,7 +57,7 @@ Mind the real limits (source: [Plugin support by platform](https://claude.com/do
 | Commands | Yes (as a skill) | Yes | Yes |
 | Agents (advisors) | No, ignored | Yes | Yes |
 | Hooks (load your rules at start, including the "envíalo" one) | No, ignored | Yes | Yes |
-| Where scripts run | In a separate Linux box, not your Mac | On your Mac | On your Mac |
+| Where scripts run | In a separate Linux box, not your computer | On your computer | On your computer |
 
 That is why the interview and the updates need the local registration: do the Code tab path first, and use Chat or Cowork as an extra. In Chat, the `ceo-base` rules do not load on their own, so the promise of sending nothing without your "envíalo" is not guaranteed there. For anything that reaches another person, use the Code tab.
 

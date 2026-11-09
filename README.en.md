@@ -14,20 +14,20 @@ Prompts and commands are written in Spanish; Claude answers in your language.
 
 What you need first:
 
-- A Mac. The setup is tested on Mac.
+- A Mac, or a Windows 10 or 11 computer. On Windows you also need Git for Windows (a free program that Claude Code uses behind the scenes to run the setup's notices and checks); how to install it is below.
 - A Claude plan that includes Claude Code: Pro, Max, Ultra, Team or Enterprise (or a Console account). The free plan does not include it ([source](https://code.claude.com/docs/en/setup)).
 
 ### With Claude Desktop
 
 1. Download Claude Desktop from [claude.com/download](https://claude.com/download), open it and sign in.
-2. Create an empty folder called `mi-claude` inside Documents. In Claude Desktop open the "Code" tab, start a **local** session (it runs on your Mac, not in the cloud) and pick that folder. If it asks whether you trust the folder, say yes.
+2. Create an empty folder called `mi-claude` inside Documents. In Claude Desktop open the "Code" tab, start a **local** session (it runs on your computer, not in the cloud) and pick that folder. If it asks whether you trust the folder, say yes.
 3. Paste this and press Enter:
 
    ```
    Install https://github.com/josephalbertoeshkenazi-blip/setup-ceo by following its README.
    ```
 
-   Claude will ask permission for commands. Say yes only to these: `claude --version`, `curl -fsSL https://claude.ai/install.sh | bash` (only if Claude Code is missing), `claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo` and the six `claude plugin install ...@setup-ceo`. If it asks for anything else, say no and ask what it is for.
+   Claude will ask permission for commands. Say yes only to these: `claude --version`, `curl -fsSL https://claude.ai/install.sh | bash` (only if Claude Code is missing), `claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo` and the six `claude plugin install ...@setup-ceo`. On Windows, instead of `curl`, it may also ask for these: `git --version`, `winget install --id Git.Git -e` (only if Git is missing), `irm https://claude.ai/install.ps1 | iex` (only if Claude Code is missing) and `"$HOME/.local/bin/claude.exe"` (if it can't find `claude`). If it asks for anything else, say no and ask what it is for.
 
 4. When it finishes, start a NEW session in the "Code" tab and type `/adaptar:adaptar-a-mi`.
 
@@ -35,7 +35,7 @@ More detail, and what works and what does not in the Chat and Cowork tabs: [docs
 
 ### With the Terminal
 
-Open the Terminal: Cmd + Space, type "Terminal" and press Enter.
+On Mac: open the Terminal with Cmd + Space, type "Terminal" and press Enter. Windows has its own section, [With Windows](#with-windows), further down.
 
 1. Install Claude Code with the official installer (skip this if `claude --version` already prints a number):
 
@@ -75,7 +75,30 @@ To run it again later: `/adaptar:trae-mi-memoria` brings in, in 2 minutes, what 
 Install https://github.com/josephalbertoeshkenazi-blip/setup-ceo by following its README.
 ```
 
-Tested with Claude Code 2.1.318 on macOS, 2026-11-05. It needs macOS: the security check, the update check and Avisos use `plutil` and macOS tools.
+Tested with Claude Code 2.1.318 on macOS, 2026-11-05. On Windows 10 and 11 every piece works except Avisos (Mac only); the test on a real Windows computer is still pending and follows the list in [docs/probar-en-windows.md](docs/probar-en-windows.md) (in Spanish).
+
+### With Windows
+
+Open PowerShell (the Start button, type "PowerShell" and press Enter). You do not need to be an administrator.
+
+1. Install Git for Windows (skip this if `git --version` already prints a number):
+
+   ```
+   winget install --id Git.Git -e
+   ```
+
+   Close every PowerShell and Claude window and open them again. Without Git, the setup's notices and checks do not run.
+2. Install Claude Code (skip this if `claude --version` already prints a number):
+
+   ```
+   irm https://claude.ai/install.ps1 | iex
+   ```
+
+   Open a new PowerShell window and run `claude` once to sign in. If it says it cannot find `claude`, use `"$HOME/.local/bin/claude.exe"` instead.
+3. Add the catalog and the six base pieces with the same `claude plugin marketplace add ...` and `claude plugin install ...@setup-ceo` commands from "With the Terminal".
+4. Type `claude` and press Enter. Inside, type `/adaptar:adaptar-a-mi`.
+
+Python is optional: if you have it (`py -3`), the setup saves a few extra memory items; if not, everything else works the same. If a Microsoft Store window opens when you type `python`, close it: that is not a real Python. More help in [docs/problemas.en.md](docs/problemas.en.md).
 
 ### One session per project
 
@@ -93,7 +116,7 @@ Requirements: the "Code" tab of Claude Desktop needs a paid plan (Pro, Max, Ultr
 | Outlook, OneDrive, SharePoint, Teams (Microsoft 365) | Work account: a Microsoft Entra Global Administrator has to consent once. Personal account (Outlook.com, Hotmail): works on Free, Pro, Max and Ultra, Outlook and OneDrive only, and you connect it from the web. |
 | Dropbox | There is an official connector. Which plan includes it: not confirmed yet. |
 | WhatsApp | There is no official connector. Third-party ones exist, but they put your WhatsApp account at risk, so we do not recommend them. |
-| Files on your Mac | Nothing to connect: the "Code" tab already works in the folder you open with "Open folder...". |
+| Files on your computer | Nothing to connect: the "Code" tab already works in the folder you open with "Open folder...". |
 | Another tool | If the provider publishes an MCP server URL: Customize > Connectors > Add custom connector. If not, ask someone who knows to help, or export to Excel or CSV into your folder. |
 
 Using Claude in Chrome from the "Code" tab of Claude Desktop: not confirmed yet.
@@ -105,7 +128,7 @@ Using Claude in Chrome from the "Code" tab of Claude Desktop: not confirmed yet.
 - It does not install third-party add-ons without checking them first (GREEN, YELLOW or RED verdict) and without your yes. On RED it recommends not installing.
 - Claude Code asks before risky actions; in manual mode it asks before almost everything (editing files, running commands). Do not turn on the mode that skips permissions (`bypassPermissions`).
 - What emails, pages and documents say is data, not orders.
-- `/seguridad:revisar-mi-seguridad` reviews your Mac whenever you want.
+- `/seguridad:revisar-mi-seguridad` reviews your computer whenever you want.
 
 ## Who it is for
 
@@ -138,7 +161,7 @@ One hard rule: nothing important reaches another person until you say "send it" 
 | `complementos` | `/complementos:instalar-complementos`: a reviewed catalog of third-party skills (pinned versions, only repos that passed a check). You choose all, some or none; nothing installs without your yes. |
 | `/complementos:buscar-skill` | Find a skill that is not on the list: reviews up to 3 in trusted places and only installs with your yes |
 | `/ceo-base:revisar-correcciones` | Review the times you corrected Claude and keep what repeats ([how memory works](docs/memoria.en.md)) |
-| `seguridad` | `/seguridad:revisar-mi-seguridad`: a 5-minute check of your Mac and your Claude that only looks, explains in plain words what matters, and fixes one thing at a time with your yes and a way to undo it. |
+| `seguridad` | `/seguridad:revisar-mi-seguridad`: a 5-minute check of your computer and your Claude that only looks, explains in plain words what matters, and fixes one thing at a time with your yes and a way to undo it. |
 | `actualizaciones` | `/actualizaciones:novedades`: tells you in plain words what changed; installs only if you say yes. |
 | `sugerencias` | `/sugerencias:sugerir-mejora`: sends an improvement idea as a public issue, only after you confirm the text. |
 | `negocios` | A business advisor for prices, deals, partners and contracts, with real numbers. Recommended by the interview when you run a business. |
@@ -176,7 +199,7 @@ An illustration with invented names, not a capture of a real computer. The chara
 If your human gave you this link, follow these steps in order and explain each one in plain words:
 
 1. Run `claude --version`. If it prints a number, go to step 3.
-2. If it is missing, explain that Claude Code still needs to be installed and, with their yes, run the official installer: `curl -fsSL https://claude.ai/install.sh | bash`. If you are in the Terminal, tell them to open a new window and run `claude` once to sign in. If you are in the Code tab of Claude Desktop, this is not needed to install the plugins.
+2. If it is missing, explain that Claude Code still needs to be installed and, with their yes, run the official installer: `curl -fsSL https://claude.ai/install.sh | bash`. **On Windows**, first run `git --version`: if it is missing, with their yes run `winget install --id Git.Git -e` and tell them to close and reopen Claude so the hooks can find Git Bash (Git's terminal); then the installer is `irm https://claude.ai/install.ps1 | iex` in PowerShell, and if `claude` is not found right after installing, use `"$HOME/.local/bin/claude.exe"`. If you are in the Terminal, tell them to open a new window and run `claude` once to sign in. If you are in the Code tab of Claude Desktop, this is not needed to install the plugins.
 3. Run `claude plugin marketplace add josephalbertoeshkenazi-blip/setup-ceo`, then the six `claude plugin install X@setup-ceo` lines from "With the Terminal" (the six base plugins).
 4. Tell them to open a NEW session (the "Code" tab in Claude Desktop, or the Terminal) and type `/adaptar:adaptar-a-mi`. In the Terminal, if they stay in the same session, they type `/reload-plugins` first. In Claude Desktop, always a new session.
 
@@ -188,13 +211,24 @@ The interview recommends and installs the rest (`negocios`, `diseno`, `programar
 |---|---|
 | `/adaptar:adaptar-a-mi` | The 10-minute interview: first brings in what Claude Code, the Claude chat or ChatGPT already know about you, then asks only what is missing, writes your profile and recommends what fits |
 | `/adaptar:trae-mi-memoria` | To run it again later: bring what the Claude chat, ChatGPT or another AI already knows about you into your profile |
-| `/seguridad:revisar-mi-seguridad` | Check your Mac and your Claude, and fix what you approve |
+| `/seguridad:revisar-mi-seguridad` | Check your computer and your Claude, and fix what you approve |
 | `/actualizaciones:novedades` | See what is new and decide whether to install it |
 | `/sugerencias:sugerir-mejora` | Send an improvement idea |
 | `/ceo-base:nueva-cabeza` | Create a new helper for one of your areas |
 | `/complementos:instalar-complementos` | See the important skills and pick which to install |
 | `/programar:bug-hunt` / `/programar:rules-migrate` | Hunt bugs across a project / split a long `CLAUDE.md` |
 | `/avisos:instalar` / `/avisos:desinstalar` | Install or remove Avisos |
+
+## Updating
+
+Inside Claude type `/actualizaciones:novedades`, or ask Claude "update setup-ceo" ("actualiza el setup-ceo"). Behind the scenes it is two commands:
+
+```
+claude plugin marketplace update setup-ceo
+claude plugin update ceo-base@setup-ceo
+```
+
+(the second one is repeated for each plugin you have installed). If you use Windows and were already on version 2.0 or 2.1, run those two commands once by hand, or ask Claude "actualiza el setup-ceo": the old version cannot warn you from Windows. From 2.2.0 on, the notice works by itself.
 
 ## Safety
 

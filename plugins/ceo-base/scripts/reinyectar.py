@@ -32,7 +32,7 @@ def ultimos(d):
                 pass
         for _, v in sorted(cand, reverse=True):
             try:
-                dv = json.load(open(v))
+                dv = json.load(open(v, encoding="utf-8", errors="replace"))
                 cerrado = datetime.datetime.fromisoformat(dv.get("cerrado_por_clear", ""))
                 reciente = (datetime.datetime.now().astimezone() - cerrado).total_seconds() < 180
                 if reciente and dv.get("cwd") == comun.carpeta_proyecto(d):
@@ -42,7 +42,7 @@ def ultimos(d):
                 continue
     if not (f and os.path.isfile(f)) or time.time() - os.path.getmtime(f) > 6 * 3600:
         return ""
-    ms = json.load(open(f)).get("mensajes", [])
+    ms = json.load(open(f, encoding="utf-8", errors="replace")).get("mensajes", [])
     if not ms:
         return ""
     cuerpo = "\n".join("- [%s] %s" % (m.get("ts", "")[:16], " ".join(m.get("texto", "").split())[:700]) for m in ms)

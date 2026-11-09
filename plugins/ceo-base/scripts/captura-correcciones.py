@@ -6,7 +6,6 @@ Los secretos se tapan antes de guardar. No imprime nada, nunca bloquea y siempre
 línea 'Capturar correcciones: no' en ~/.claude/mi-perfil/ceo.md. La revisión semanal la hace
 revisar-correcciones.py. Solo biblioteca estándar; compatible con Python 3.9.
 """
-import fcntl
 import json
 import os
 import re
@@ -15,6 +14,15 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import comun  # noqa: E402
+
+try:
+    import fcntl
+except ImportError:  # Windows
+    fcntl = None
+try:
+    import msvcrt
+except ImportError:
+    msvcrt = None
 
 COLA = os.environ.get("COLA_CORRECCIONES") or os.path.join(comun.estado_dir(), "cola-correcciones.jsonl")
 MAX_PROMPT = 20000
@@ -164,8 +172,21 @@ def guardar(linea, ruta=None):
     data = (json.dumps(linea, ensure_ascii=False) + "\n").encode("utf-8")
     fd = os.open(ruta, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
     try:
-        fcntl.flock(fd, fcntl.LOCK_EX)
-        os.write(fd, data)
+        if fcntl:
+            fcntl.flock(fd, fcntl.LOCK_EX)
+            os.write(fd, data)
+        elif msvcrt:
+            msvcrt.locking(fd, msvcrt.LK_LOCK, 1)
+            try:
+                os.write(fd, data)
+            finally:
+                try:
+                    os.lseek(fd, 0, os.SEEK_SET)
+                    msvcrt.locking(fd, msvcrt.LK_UNLCK, 1)
+                except OSError:
+                    pass
+        else:
+            os.write(fd, data)
     finally:
         os.close(fd)
 
@@ -174,7 +195,7 @@ def main():
     try:
         if comun.es_no(comun.linea_perfil("Capturar correcciones")):
             return 0
-        datos = json.loads(sys.stdin.read() or "null")
+        datos = json.loads(sys.stdin.buffer.read().decode("utf-8", "replace") or "null")
         linea = registro(datos)
         if linea:
             guardar(linea)

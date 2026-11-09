@@ -22,6 +22,18 @@ uso() {
 case "$ACCION" in hacer|deshacer) ;; *) uso ;; esac
 case "$ID" in actualizaciones|firewall|ssh-remoto|invitado) ;; *) uso ;; esac
 
+# En Windows estos arreglos todavía no están listos: no se abre nada ni se pide clave; se dice cómo hacerlo a mano.
+if es_windows; then
+  case "$ID" in
+    actualizaciones) a_mano="en Configuración > Windows Update revisa que no esté en pausa y deja prendidas las actualizaciones automáticas." ;;
+    firewall) a_mano="en Configuración > Privacidad y seguridad > Seguridad de Windows > Firewall y protección de red, prende el firewall en las tres redes (Dominio, Privada y Pública)." ;;
+    ssh-remoto) a_mano="en Configuración > Aplicaciones > Características opcionales, busca OpenSSH Server y quítalo si no lo usas." ;;
+    invitado) a_mano="en Configuración > Cuentas > Otros usuarios, revisa que no haya una cuenta de invitado o de otra persona que no uses; la de invitado de Windows ya viene apagada." ;;
+  esac
+  echo "Este arreglo todavía no está listo para Windows. Te digo cómo hacerlo a mano: $a_mano"
+  exit 0
+fi
+
 como_deshacer() { como_deshacer_texto admin.sh "$1"; }
 
 negarse() { echo "No sigo: $1. No abrí la ventana de la clave y no cambié nada." >&2; exit 3; }

@@ -11,6 +11,14 @@ Esta skill la haces tú, en esta conversación, porque cada arreglo necesita el 
 
 Los scripts viven en `${CLAUDE_PLUGIN_ROOT}/scripts/`: `revisar.sh` (solo mira), `arreglar.sh` (arreglos sin clave de administrador) y `admin.sh` (arreglos con clave, en la ventana de macOS). Los tres guardan todo en `~/.claude/mi-perfil/seguridad/`. Habla en el idioma del dueño, sin jerga.
 
+## En Windows
+Si la computadora es Windows (los scripts lo detectan solos y hacen falta Git for Windows), todo funciona igual, con estas diferencias. Díselas al dueño en palabras simples, sin jerga:
+- **Se revisa de verdad (solo lectura, con PowerShell):** si el disco está cifrado (BitLocker), el firewall en las tres redes (Dominio, Privada y Pública), si una política apaga las actualizaciones, quién es administrador, la cuenta de invitado, si hay antivirus (Microsoft Defender u otro), las reglas de Claude para no leer `.env`, `~/.ssh` y `~/.aws`, las claves guardadas en texto (también en OneDrive y en el historial de PowerShell) y las conversaciones guardadas.
+- **Solo se explica, no se puede medir desde aquí:** copias de seguridad (`Configuración > Cuentas > Copia de seguridad de Windows`), bloqueo de pantalla (`Configuración > Personalización > Pantalla de bloqueo`), administración a distancia (`Configuración > Cuentas > Obtener acceso a trabajo o escuela`) y los permisos de archivos (en Windows se manejan distinto; la carpeta de usuario normalmente solo la abre su cuenta). Estos salen como "no sé" con el camino exacto en Configuración.
+- **Arreglos que sí se hacen:** `env-gitignore`, `claude-deny` y `reglas-ia`, con respaldo y forma de deshacer igual que siempre. `sandbox`, `env-permisos` y `ssh-permisos` no aplican en Windows: el script lo dice y no toca nada. `gitleaks` no se instala por él: se le dice cómo (por ejemplo `winget install gitleaks`).
+- **Arreglos con clave de administrador (`admin.sh`):** todavía no están listos en Windows. El script no abre nada, dice "Este arreglo todavía no está listo para Windows" y explica cómo hacerlo a mano desde Configuración. Pásale esos pasos al dueño tal cual.
+- La tabla de pantallas de abajo es de Mac. En Windows no uses `open`: di el camino en palabras (`Configuración > Privacidad y seguridad > Seguridad de Windows`).
+
 ## Antes de empezar
 Si existe `~/.claude/mi-perfil/seguridad/estado.md`, léelo. Dice qué cuentas ya marcó y qué dijo que no quiere ("No quiero esto", con fecha). Lo que rechazó no se vuelve a ofrecer: como mucho, una línea al final del reporte ("Sigue apagado X, como pediste el <fecha>; si cambias de idea, dime").
 

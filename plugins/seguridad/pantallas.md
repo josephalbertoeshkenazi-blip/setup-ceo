@@ -25,3 +25,12 @@ En Latinoamérica la app se llama "Configuración del Sistema"; en España, "Aju
 | invitado | `x-apple.systempreferences:com.apple.Users-Groups-Settings.extension` | sí | Ajustes del Sistema > Usuarios y grupos > Usuario invitado | ventana "Users & Groups" (el usuario invitado está en esa lista) |
 
 Si Apple cambia un identificador en otra versión de macOS, `open` no da error: abre Ajustes en la última pantalla vista. Por eso la skill siempre dice también el camino en palabras.
+
+## En Windows
+Estas URL son solo de Mac. En Windows la skill no abre pantallas: dice el camino en palabras, que son los de Configuración:
+- Seguridad de Windows (antivirus, firewall): `Configuración > Privacidad y seguridad > Seguridad de Windows`
+- Actualizaciones: `Configuración > Windows Update`
+- Copia de seguridad: `Configuración > Cuentas > Copia de seguridad de Windows`
+- Bloqueo de pantalla: `Configuración > Personalización > Pantalla de bloqueo`
+- Cuenta de invitado y otras personas: `Configuración > Cuentas > Otros usuarios`
+- Administración a distancia (trabajo o escuela): `Configuración > Cuentas > Obtener acceso a trabajo o escuela`

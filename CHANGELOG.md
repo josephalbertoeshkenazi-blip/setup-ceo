@@ -9,6 +9,18 @@ Agentes que cambiaron: <agentes, o "ninguno">
 - Qué cambió, en palabras simples.
 ```
 
+## 2.2.0 (2026-11-08)
+Cambió: ceo-base, actualizaciones, adaptar, seguridad, avisos, más documentación y revisiones
+Agentes que cambiaron: guardia
+- Funciona en Windows (10 y 11) con Git para Windows instalado. Los pasos para instalarlo están en el README, en la sección "Con Windows", y hay una lista para probarlo en una PC de verdad (docs/probar-en-windows.md).
+- Si ya lo tienes en Windows con la versión 2.0 o 2.1: el aviso de novedades no te va a salir esta vez. Corre una sola vez los dos comandos de "Actualizar" del README, o pídele a Claude "actualiza el setup-ceo". Desde la 2.2.0 el aviso sale solo.
+- `ceo-base`: los ganchos buscan Python solos en Windows (`py -3`, sin el atajo falso de la Tienda de Microsoft) y aguantan acentos y la ñ. En Linux ahora usan `python3`. Si no hay Python, no corren y nada se rompe.
+- `ceo-base`, delegar en Claude Desktop: en la pestaña Code, Claude puede abrir él mismo una sesión nueva en la carpeta del proyecto, pasarle el pedido completo y esperar la nota de que terminó, sin estar revisándola a cada rato. Si esa herramienta no está, te dice en una línea qué abrir y qué pegar. En Windows usa Windows Terminal cuando se puede.
+- `actualizaciones` y `adaptar`: ya no necesitan herramientas que solo trae la Mac. Los pasos para actualizar sirven para Desktop y para la Terminal, y encuentran el programa de Claude aunque no esté donde se busca normalmente. `/adaptar:trae-mi-memoria` copia y abre el navegador también en Windows.
+- `seguridad`: `/seguridad:revisar-mi-seguridad` revisa también una PC con Windows (BitLocker, firewall, antivirus, actualizaciones, cuentas de administrador, claves sueltas en el disco, OneDrive y el historial de PowerShell), solo mirando. Lo que no se puede comprobar desde ahí te lo dice claro y con la ruta en Configuración. Los arreglos que sí aplican en Windows funcionan con su forma de deshacer.
+- `avisos` sigue siendo solo para Mac; en Windows te lo dice en una línea y no instala nada.
+- Revisión automática en GitHub con Windows y Mac: en cada cambio se prueba una instalación limpia y la actualización desde 2.0.0 y 2.1.0.
+
 ## 2.1.0 (2026-11-06)
 Cambió: ceo-base, adaptar, complementos, más documentación y revisiones
 Agentes que cambiaron: ninguno

@@ -1,0 +1,91 @@
+name: pruebas
+
+on:
+  push:
+    branches-ignore: ['ci-*', 'prueba-*']
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  pruebas:
+    name: pruebas (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pruebas de node
+        run: node --test tests/*.test.mjs
+
+      - name: Validar plugins, versiones, enlaces y emojis
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then python -I scripts/validar.py .; else python3 -I scripts/validar.py .; fi
+
+      # Las pruebas de node usan un PowerShell falso; aquí la revisión corre con el PowerShell de verdad.
+      - name: Revisión de seguridad real (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          o="$RUNNER_TEMP/seg.out"; e="$RUNNER_TEMP/seg.err"
+          rc=0; bash plugins/seguridad/scripts/revisar.sh >"$o" 2>"$e" || rc=$?
+          cat "$o"
+          [ "$rc" = 0 ] || { echo "revisar.sh salió con $rc"; cat "$e"; exit 1; }
+          [ ! -s "$e" ] || { echo "salió algo por el canal de errores:"; cat "$e"; exit 1; }
+          n=$(grep -c '^CHEQUEO ' "$o" || true)
+          [ "$n" = 18 ] || { echo "esperaba 18 chequeos y salieron $n"; exit 1; }
+          if grep -E '^CHEQUEO id=(firewall|invitado|sistema|admins|actualizaciones) estado=no-se detalle=.*no pude leer|Windows \?' "$o"; then
+            echo "una consulta de PowerShell no pudo leer"; exit 1
+          fi
+
+      - name: Instalar Claude Code (instalador oficial)
+        if: github.event_name == 'push'
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            powershell -NoProfile -Command "irm https://claude.ai/install.ps1 | iex"
+            cygpath -w "$USERPROFILE/.local/bin" >> "$GITHUB_PATH"
+          else
+            curl -fsSL https://claude.ai/install.sh | bash
+            echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          fi
+
+      - name: Versión de Claude Code
+        if: github.event_name == 'push'
+        run: claude --version
+
+      - name: Git para subir ramas temporales
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "pruebas"
+          git config user.email "pruebas@users.noreply.github.com"
+
+      - name: Instalación real
+        if: github.event_name == 'push'
+        run: bash scripts/probar-instalacion.sh "$GITHUB_SHA" "ci-inst-$GITHUB_RUN_ID-$RUNNER_OS"
+
+      - name: Actualización real desde 2.0.0
+        if: github.event_name == 'push'
+        run: bash scripts/probar-actualizacion.sh 11f73ca "$GITHUB_SHA" "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-200"
+
+      - name: Actualización real desde 2.1.0
+        if: github.event_name == 'push'
+        run: bash scripts/probar-actualizacion.sh 170e5e3 "$GITHUB_SHA" "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-210"
+
+      - name: Borrar ramas temporales (por si se canceló)
+        if: always() && github.event_name == 'push'
+        run: |
+          git push origin --delete "ci-inst-$GITHUB_RUN_ID-$RUNNER_OS" || true
+          git push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-200" || true
+          git push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-210" || true

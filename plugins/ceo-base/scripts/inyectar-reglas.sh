@@ -13,14 +13,22 @@ if [ "$modo" != perfil ]; then
   fi
 fi
 [ "$modo" = reglas ] && exit 0
+# Quita bytes que no son UTF-8; si iconv no existe o falla, deja el texto como está.
+limpiar_utf8() {
+  if iconv -f UTF-8 -t UTF-8 -c </dev/null >/dev/null 2>&1; then
+    iconv -f UTF-8 -t UTF-8 -c
+  else
+    cat
+  fi
+}
 perfil="$HOME/.claude/mi-perfil/ceo.md"
 if [ -f "$perfil" ]; then
   printf '\n---\n# Perfil del dueño (manda sobre las reglas de arriba)\n\n'
-  head -c 7000 "$perfil" | iconv -f UTF-8 -t UTF-8 -c
+  head -c 7000 "$perfil" | limpiar_utf8
 fi
 lecciones="$HOME/.claude/mi-perfil/lecciones-globales.md"
 if [ -f "$lecciones" ]; then
   printf '\n---\n# Lecciones globales del dueño (correcciones que se repitieron en varios proyectos)\n\n'
-  head -c 2500 "$lecciones" | iconv -f UTF-8 -t UTF-8 -c
+  head -c 2500 "$lecciones" | limpiar_utf8
 fi
 exit 0

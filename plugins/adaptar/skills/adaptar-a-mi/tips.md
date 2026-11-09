@@ -4,7 +4,7 @@ Un tip es una o dos oraciones que salen justo cuando la persona acaba de necesit
 
 | # | Momento exacto | Tip (texto para la persona) | Niveles |
 |---|---|---|---|
-| 1 | En la apertura, cuando le pides que hable libre (es el único tip antes de las preguntas base) | Puedes hablarme en vez de escribir: escribe `/voice` una vez y después mantén apretada la barra espaciadora mientras hablas. Si no te aparece, usa el dictado de la Mac: aprieta la tecla del micrófono o fn dos veces. | principiante |
+| 1 | En la apertura, cuando le pides que hable libre (es el único tip antes de las preguntas base) | Puedes hablarme en vez de escribir: escribe `/voice` una vez y después mantén apretada la barra espaciadora mientras hablas. Si no te aparece, usa el dictado de la computadora: en Mac, aprieta la tecla del micrófono o fn dos veces; en Windows, la tecla de Windows + H. | principiante |
 | 2 | Cuando dice "no sé cómo pedirlo" o da una respuesta vaga y luego te da un ejemplo real | Mira lo que acabas de hacer: me diste un ejemplo real y te entendí mejor. Cuando pidas algo, di para quién es, cómo lo quieres y da un ejemplo. | principiante |
 | 3 | Cuando le muestras "Lo que entendí de ti" | Si algo está mal, dímelo normal, como a una persona. No hace falta ningún comando: Claude entiende cuando lo corriges. | principiante |
 | 4 | Cuando se guarda su perfil | Esto quedó en un archivo tuyo, en tu computadora. Si algún día quieres cambiarlo, ábrelo en `~/.claude/mi-perfil/` o dime "actualiza mi perfil". | principiante, intermedio |

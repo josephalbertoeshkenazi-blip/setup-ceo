@@ -40,17 +40,17 @@ def main():
     p = os.path.join(carpeta, re.sub(r"[^A-Za-z0-9_.-]", "_", d.get("session_id") or "sin-sesion") + ".json")
     ev = d.get("hook_event_name", "")
     if ev == "UserPromptSubmit":
-        with open(p, "w") as f:
+        with open(p, "w", encoding="utf-8") as f:
             json.dump({"n": 0}, f)
         return
     if ev != "PostToolUse" or es_subagente(d) or not es_trabajo(d, comun.memoria_dir(d)):
         return
     try:
-        n = json.load(open(p)).get("n", 0)
+        n = json.load(open(p, encoding="utf-8")).get("n", 0)
     except Exception:
         n = 0
     n += 1
-    with open(p, "w") as f:
+    with open(p, "w", encoding="utf-8") as f:
         json.dump({"n": n}, f)
     if n >= 3 and n % 3 == 0:
         comun.imprimir_contexto("PostToolUse", (

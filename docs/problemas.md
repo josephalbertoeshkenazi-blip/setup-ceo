@@ -4,7 +4,7 @@
 
 ## "claude: command not found"
 
-La Terminal no encuentra Claude. Casi siempre se arregla cerrando la ventana y abriendo una **Terminal nueva**. Si sigue igual, instala de nuevo en macOS:
+La Terminal no encuentra Claude. Casi siempre se arregla cerrando la ventana y abriendo una **Terminal nueva**. Si sigue igual, instala de nuevo en macOS (en Windows mira la sección "Windows", más abajo):
 
 ```
 curl -fsSL https://claude.ai/install.sh | bash
@@ -52,6 +52,15 @@ No es un error: ya lo tienes. Sigue con `claude plugin install ceo-base@setup-ce
 ## Actualizar
 
 Dentro de Claude escribe `/actualizaciones:novedades`. Te cuenta en palabras simples qué hay de nuevo y solo instala si dices que sí. Tu perfil y tu memoria no se pierden.
+
+Si usas Windows y ya tenías la versión 2.0 o 2.1, corre una vez a mano `claude plugin marketplace update setup-ceo` y `claude plugin update <plugin>@setup-ceo` (uno por cada plugin instalado), o pídele a Claude "actualiza el setup-ceo". Desde la 2.2.0 el aviso funciona solo.
+
+## Windows
+
+- **Los avisos o revisiones fallan o no aparecen.** Claude Code corre los ganchos (comandos que se disparan solos al empezar o terminar algo) con Git Bash, la terminal que viene con Git for Windows. Si no tienes Git, no corren. Revisa con `git --version`; si falta, instala con `winget install --id Git.Git -e`, cierra y vuelve a abrir Claude.
+- **Python es opcional.** Con `py -3 --version` ves si lo tienes. Sin Python, todo funciona; solo se pierden algunos guardados extra de memoria. Si al escribir `python` se abre la Microsoft Store, ese "python" es un atajo vacío, no Python de verdad: ciérralo, no lo instales por eso.
+- **Avisos es solo para Mac.** Si lo pides en Windows, Claude te lo dice y no cambia nada.
+- **"claude: command not found" (en PowerShell sale como "no se reconoce como nombre de un cmdlet" o "is not recognized") justo después de instalar.** Cierra PowerShell y abre uno nuevo; si sigue, usa `"$HOME/.local/bin/claude.exe"`.
 
 ## Quitar todo
 

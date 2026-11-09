@@ -118,7 +118,7 @@ def main(argv=None):
         for k, v in rep:
             print("- %s: %s" % (k, ", ".join(v)))
     print("\nLo que se repite en 2 o más proyectos va a %s; lo de un solo proyecto, a la memoria de ese proyecto." % GLOBALES)
-    print("Al terminar: python3 -I %s --marcar" % os.path.abspath(__file__))
+    print('Al terminar: %s -I "%s" --marcar' % ("py -3 -X utf8" if os.name == "nt" else "python3", os.path.abspath(__file__)))
     return 0
 
 

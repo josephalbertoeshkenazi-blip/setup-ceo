@@ -61,14 +61,14 @@ def escribir(sid, out):
     f = archivo(sid)
     tmp = f + ".tmp"
     fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-    with os.fdopen(fd, "w") as fh:
+    with os.fdopen(fd, "w", encoding="utf-8") as fh:
         json.dump(out, fh, ensure_ascii=False)
     os.replace(tmp, f)
 
 
 def cargar(sid):
     try:
-        with open(archivo(sid)) as fh:
+        with open(archivo(sid), encoding="utf-8", errors="replace") as fh:
             d = json.load(fh)
         return d if isinstance(d, dict) else {}
     except Exception:

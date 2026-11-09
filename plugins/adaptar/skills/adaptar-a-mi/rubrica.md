@@ -59,7 +59,7 @@ Una sola línea con partes `clave=valor` separadas por `; `, sin paréntesis ani
 - `chats=` `pendiente` | `ninguno` | una lista separada por comas de `<IA> hecho` o `<IA> falta` (por ejemplo `Claude hecho, ChatGPT falta`); Claude siempre antes que ChatGPT
 - `resumen=` `pendiente` | `sin confirmar` | `confirmado`
 
-`Historial:` (arriba) solo habla de si se leyó el historial de la Mac; no repite lo del arranque. La línea `Memoria traída de ...` del Historial de `ceo.md` se escribe solo después de guardar, nunca en este archivo.
+`Historial:` (arriba) solo habla de si se leyó el historial de la computadora; no repite lo del arranque. La línea `Memoria traída de ...` del Historial de `ceo.md` se escribe solo después de guardar, nunca en este archivo.
 
 ## El archivo de pausa
 Después de **cada** respuesta guardas (con la herramienta de escribir archivos) `~/.claude/mi-perfil/.entrevista.md`. Sirve para que la persona pueda decir "después" y seguir otro día sin repetir nada.
