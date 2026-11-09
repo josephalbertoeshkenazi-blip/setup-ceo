@@ -26,6 +26,9 @@ for p in $(plugins_del_mercado); do
     echo "PLUGIN $p: no instalado (disponible $nueva)"
   elif es_mayor "$nueva" "$inst"; then
     echo "PLUGIN $p: instalado $inst -> hay $nueva  [ACTUALIZAR]"
+  elif es_mayor "$inst" "$nueva"; then
+    # La fuente son solo versiones oficiales: si el repo va más atrás, el autor volvió a propósito.
+    echo "PLUGIN $p: instalado $inst -> el autor volvió a $nueva  [ACTUALIZAR]"
   else
     echo "PLUGIN $p: instalado $inst (al día)"
   fi

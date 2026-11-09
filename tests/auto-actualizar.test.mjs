@@ -507,3 +507,134 @@ test('novedades: actualízate no pregunta', () => {
   assert.ok(t.includes('Instálala ahora'));
   assert.ok(t.includes('buscar-claude.sh'));
 });
+
+// ---- ronda de arreglos 1: skills por sección, estado.sh, nombre del paso del gancho ----
+const seccion = (t, inicio) => {
+  const partes = t.split(/^(?=## )/m);
+  const s = partes.find((p) => p.startsWith(`## ${inicio}`));
+  assert.ok(s, `falta la sección "${inicio}"`);
+  return s;
+};
+const cabecera = (t) => t.split(/^## /m)[0];
+const SOLO = () => skill('actualizar-solo');
+const NOV = () => skill('novedades');
+
+test('volver atrás deja las actualizaciones prendidas', () => {
+  const s = seccion(SOLO(), 'Vuelve a la versión anterior');
+  assert.ok(s.includes('auto.sh prender'), 'debe prender');
+  assert.ok(!s.includes('auto.sh apagar'), 'no debe apagar');
+  assert.ok(s.includes('/sugerencias:sugerir-mejora'));
+  assert.ok(s.includes('no te actualices solo'));
+  assert.ok(s.includes('no llegará solo'));
+  assert.ok(s.includes('actualízate'));
+  assert.ok(s.includes('No intentes instalar una versión vieja con comandos'));
+  for (const l of s.split('\n').filter((x) => x.includes('publicar.sh'))) assert.ok(l.includes('para ti, no se lo digas al dueño'), l);
+});
+
+test('apagar/prender omitido: dice que siguen prendidas y da dos salidas', () => {
+  const s = seccion(SOLO(), 'Si no se pudo cambiar');
+  assert.ok(s.includes('Siguen prendidas'));
+  assert.ok(s.includes('/plugin') && s.includes('Marketplaces') && s.includes('setup-ceo'));
+  assert.ok(s.includes('con su sí'));
+  assert.ok(s.includes('Siguen apagadas'));
+  assert.ok(s.includes('viene de otro lugar'));
+});
+
+test('sin-dato y FUENTE ninguna se explican como pide el contrato', () => {
+  const s = seccion(SOLO(), 'Qué correr');
+  assert.ok(s.includes('todavía no hay ninguna decisión guardada; el setup-ceo lo trata como prendido y la guarda al abrir una sesión nueva. Si tu archivo de ajustes tiene un error, no puede guardarla'));
+  assert.ok(s.includes('FUENTE: ninguna'));
+  assert.ok(s.includes('esta computadora no tiene agregado el mercado del setup-ceo; no se toca nada'));
+});
+
+test('actualizar-solo: la sesión nueva con las mismas palabras que novedades', () => {
+  const s = seccion(SOLO(), 'Qué decirle');
+  assert.ok(s.includes('cierre esta sesión y abra una nueva para que entre (sirve en Desktop y en Terminal). En Terminal, `/reload-plugins` es el atajo.'));
+});
+
+test('novedades: la línea vieja de su CLAUDE.md se ofrece cambiar', () => {
+  const s = seccion(NOV(), 'Regla para su CLAUDE.md');
+  assert.ok(s.includes('Cuando haya novedades del setup-ceo, muéstramelas en palabras simples y espera mi sí antes de instalarlas.'));
+  assert.ok(s.includes('solo con su sí'));
+  assert.ok(s.includes('mientras esa línea siga'));
+  assert.ok(s.includes('te voy a preguntar antes de instalar'));
+  assert.ok(s.includes('si dice que no'));
+});
+
+test('novedades: regla de oro con caso por defecto', () => {
+  assert.ok(cabecera(NOV()).includes('En cualquier otro caso, se muestra y se ofrece.'));
+});
+
+test('novedades: Paso 2 cubre "el autor volvió a" y la ruta sin preguntar no repite el resumen', () => {
+  const s = seccion(NOV(), 'Paso 2');
+  assert.ok(s.includes('el autor volvió a'));
+  assert.ok(s.includes('quien mantiene el setup-ceo'));
+  assert.ok(s.includes('sin preguntar: salta esta explicación larga'));
+  assert.ok(s.includes('Contarle qué cambió'));
+});
+
+test('novedades: Paso 1 con mercado no agregado dice una línea y para, sin agregarlo', () => {
+  const s = seccion(NOV(), 'Paso 1');
+  assert.ok(s.includes('ESTADO: el mercado'));
+  assert.ok(s.includes('no está agregado'));
+  assert.ok(s.includes('Nunca corras `claude plugin marketplace add`'));
+});
+
+test('las dos descripciones separan sus frases y cada cuerpo manda la otra a la otra skill', () => {
+  const d = (t) => t.match(/^description: (.*)$/m)[1];
+  const dn = d(NOV()), ds = d(SOLO());
+  assert.ok(dn.includes('"actualízate"') && dn.includes('"actualiza el setup"'));
+  assert.ok(!dn.includes('actualízate solo') || /no\b.*actualízate solo/.test(dn));
+  assert.ok(ds.includes('"actualízate solo"') && ds.includes('"no te actualices solo"'));
+  assert.ok(!/"actualízate"/.test(ds), 'actualizar-solo no debe reclamar "actualízate" a secas');
+  assert.ok(cabecera(NOV()).includes('actualizar-solo'));
+  assert.ok(cabecera(SOLO()).includes('novedades'));
+});
+
+test('mismo nombre para quien mantiene el setup en las dos skills', () => {
+  for (const t of [NOV(), SOLO()]) {
+    assert.ok(!/quien mantiene el setup(?!-ceo)/.test(t));
+    assert.ok(!/(^|[^\w`])el autor(?! volvió a)/m.test(t), 'usa "quien mantiene el setup-ceo"');
+  }
+  assert.ok(SOLO().includes('quien mantiene el setup-ceo'));
+});
+
+test('el paso que cita el gancho existe como encabezado de novedades', () => {
+  const g = readFileSync(gancho, 'utf8');
+  const nombre = g.match(/paso \\"([^"\\]+)\\"/)[1];
+  assert.match(NOV(), new RegExp(`^## ${nombre}$`, 'm'));
+});
+
+// ---- estado.sh: versión del repo más baja que la instalada ----
+function mundoEstado({ instalada, repo }) {
+  const w = mundo({ known: { source: GIT } });
+  const mk = join(w.conf, 'plugins/marketplaces/setup-ceo');
+  const bare = join(mkdtempSync(join(tmpdir(), 'bare-')), 'origin.git');
+  mkdirSync(join(mk, '.claude-plugin'), { recursive: true });
+  mkdirSync(join(mk, 'plugins/actualizaciones/.claude-plugin'), { recursive: true });
+  gitq(mk, 'init', '-q', '-b', 'main');
+  writeFileSync(join(mk, '.claude-plugin/marketplace.json'), JSON.stringify({ name: 'setup-ceo', plugins: [{ name: 'actualizaciones', source: './plugins/actualizaciones' }] }));
+  writeFileSync(join(mk, 'plugins/actualizaciones/.claude-plugin/plugin.json'), JSON.stringify({ name: 'actualizaciones', version: repo }, null, 2));
+  writeFileSync(join(mk, 'CHANGELOG.md'), PLANTILLA + SECCION(repo, 'algo'));
+  gitq(mk, 'add', '.');
+  gitq(mk, 'commit', '-q', '-m', 'x');
+  spawnSync('git', ['init', '-q', '--bare', '-b', 'main', bare]);
+  gitq(mk, 'remote', 'add', 'origin', bare);
+  gitq(mk, 'push', '-q', '-u', 'origin', 'main');
+  const k = leer(join(w.conf, 'plugins/known_marketplaces.json'));
+  k['setup-ceo'].installLocation = mk;
+  writeFileSync(join(w.conf, 'plugins/known_marketplaces.json'), JSON.stringify(k));
+  writeFileSync(join(w.conf, 'plugins/installed_plugins.json'), JSON.stringify({ version: 2, plugins: { 'actualizaciones@setup-ceo': [{ installPath: '/y', version: instalada }] } }));
+  return w;
+}
+const estadoSh = (w) => spawnSync(BASH, [`${aPosix(scripts)}/estado.sh`], { encoding: 'utf8', env: w.env });
+
+test('estado.sh: repo más bajo que lo instalado es ACTUALIZAR (el autor volvió)', () => {
+  const r = estadoSh(mundoEstado({ instalada: '2.3.0', repo: '2.2.0' }));
+  assert.ok(r.stdout.includes('PLUGIN actualizaciones: instalado 2.3.0 -> el autor volvió a 2.2.0  [ACTUALIZAR]'), r.stdout);
+});
+test('estado.sh: repo más alto y repo igual', () => {
+  assert.ok(estadoSh(mundoEstado({ instalada: '2.2.0', repo: '2.3.0' })).stdout.includes('PLUGIN actualizaciones: instalado 2.2.0 -> hay 2.3.0  [ACTUALIZAR]'));
+  const r = estadoSh(mundoEstado({ instalada: '2.2.0', repo: '2.2.0' }));
+  assert.ok(r.stdout.includes('PLUGIN actualizaciones: instalado 2.2.0 (al día)'), r.stdout);
+});
