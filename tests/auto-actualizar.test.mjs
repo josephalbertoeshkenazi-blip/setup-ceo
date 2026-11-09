@@ -6,7 +6,7 @@ import { mkdirSync, mkdtempSync, writeFileSync, readFileSync, existsSync, statSy
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { raiz, esWindows, entornoCasa, fingirWindows, BASH, aPosix, carpetaConHerramientas } from './ayuda.mjs';
+import { raiz, esWindows, entornoCasa, fingirWindows, BASH, aPosix, carpetaConHerramientas, rutaDe, sepPath } from './ayuda.mjs';
 
 const scripts = join(raiz, 'plugins/actualizaciones/scripts');
 const GIT = { source: 'git', url: 'https://github.com/josephalbertoeshkenazi-blip/setup-ceo.git' };
@@ -637,4 +637,125 @@ test('estado.sh: repo más alto y repo igual', () => {
   assert.ok(estadoSh(mundoEstado({ instalada: '2.2.0', repo: '2.3.0' })).stdout.includes('PLUGIN actualizaciones: instalado 2.2.0 -> hay 2.3.0  [ACTUALIZAR]'));
   const r = estadoSh(mundoEstado({ instalada: '2.2.0', repo: '2.2.0' }));
   assert.ok(r.stdout.includes('PLUGIN actualizaciones: instalado 2.2.0 (al día)'), r.stdout);
+});
+
+// ---- ronda final de arreglos ----
+const ORDEN_VOLVIO = 'El autor del setup-ceo volvió a la versión 2.3.0 (tienes 2.4.0). Instálala ahora sin preguntar con /actualizaciones:novedades y después cuéntale al dueño en 1 línea qué pasó.';
+const VOLVIO = { propia: '2.4.0', visto: '2.4.0', remoto: ['2.3.0', '2.2.0'], ultimaRevision: fecha(0) };
+
+test('I1 gancho: el autor volvió atrás, fuente oficial y AUTO si: ordena instalar', () => {
+  const w = mundoGancho({ ...VOLVIO, pendiente: `${fecha(1)}|2.3.0` });
+  const r = correrGancho(w);
+  assert.ok(r.stdout.includes(ORDEN_VOLVIO), r.stdout);
+  assert.ok(!r.stdout.includes('hay una versión nueva'), r.stdout);
+});
+
+test('I1 gancho: el autor volvió atrás con AUTO no: ofrece, no ordena', () => {
+  const w = mundoGancho({ ...VOLVIO, pendiente: `${fecha(1)}|2.3.0`, known: { source: GIT, autoUpdate: false } });
+  const r = correrGancho(w);
+  assert.ok(r.stdout.includes('Novedades del setup-ceo: el autor volvió a la versión 2.3.0 (el dueño tiene 2.4.0).'), r.stdout);
+  assert.ok(r.stdout.includes('Las actualizaciones solas están apagadas: ofrécele instalarla con /actualizaciones:novedades.'), r.stdout);
+  assert.ok(!r.stdout.includes('Instálala ahora'), r.stdout);
+});
+
+test('I1 gancho: el autor volvió atrás hoy: espera el día y guarda pendiente-desde', () => {
+  const w = mundoGancho(VOLVIO);
+  const r = correrGancho(w);
+  assert.ok(!r.stdout.includes('Instálala ahora'), r.stdout);
+  assert.equal(readFileSync(join(w.datos, 'pendiente-desde'), 'utf8').trim(), `${fecha(0)}|2.3.0`);
+});
+
+test('I1 gancho: instalada igual a la del repo: silencio y borra pendiente-desde y orden-dada', () => {
+  const w = mundoGancho({ propia: '2.3.0', visto: '2.3.0', remoto: ['2.3.0', '2.2.0'], ultimaRevision: fecha(0), pendiente: `${fecha(3)}|2.3.0` });
+  writeFileSync(join(w.datos, 'orden-dada'), '2.3.0\n');
+  writeFileSync(w.sf, JSON.stringify({ extraKnownMarketplaces: { 'setup-ceo': { source: GIT, autoUpdate: true } } }));
+  const r = correrGancho(w);
+  assert.equal(r.stdout, '');
+  assert.equal(existsSync(join(w.datos, 'pendiente-desde')), false);
+  assert.equal(existsSync(join(w.datos, 'orden-dada')), false);
+});
+
+test('Minor 6 gancho: "Instálala ahora" una sola vez por versión; después ofrece', () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0` });
+  const r1 = correrGancho(w);
+  assert.ok(r1.stdout.includes('Instálala ahora'), r1.stdout);
+  assert.equal(readFileSync(join(w.datos, 'orden-dada'), 'utf8').trim(), '2.4.0');
+  const r2 = correrGancho(w);
+  assert.ok(!r2.stdout.includes('Instálala ahora'), r2.stdout);
+  assert.ok(r2.stdout.includes('Novedades del setup-ceo: hay una versión nueva (2.4.0; el dueño tiene 2.2.0).'), r2.stdout);
+  assert.ok(r2.stdout.includes('ofrécele instalarla con /actualizaciones:novedades'), r2.stdout);
+  assert.ok(!r2.stdout.includes('Las actualizaciones solas están apagadas'), 'siguen prendidas: no decir apagadas');
+});
+
+test('Minor 6 gancho: sale otra versión después de la orden: se ordena de nuevo', () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(2)}|2.3.1` });
+  writeFileSync(join(w.datos, 'orden-dada'), '2.3.1\n');
+  const r = correrGancho(w);
+  assert.ok(r.stdout.includes('Instálala ahora'), r.stdout);
+  assert.equal(readFileSync(join(w.datos, 'orden-dada'), 'utf8').trim(), '2.4.0');
+});
+
+test('Minor 8 carpeta_datos: CLAUDE_PLUGIN_DATA o la carpeta de datos del plugin', () => {
+  const w = mundo({});
+  assert.ok(correr(w, 'carpeta_datos').stdout.endsWith('/.claude/plugins/data/actualizaciones-setup-ceo\n'));
+  const otra = mkdtempSync(join(tmpdir(), 'datos-'));
+  w.env = { ...w.env, CLAUDE_PLUGIN_DATA: aPosix(otra) };
+  assert.equal(correr(w, 'carpeta_datos').stdout, `${aPosix(otra)}\n`);
+});
+
+test('Minor 8: apagado se queda apagado aunque se borre autoUpdate de settings', () => {
+  const w = mundoGancho({ ultimaRevision: fecha(0), visto: '2.3.0' });
+  assert.equal(autoSh(w, 'apagar').stdout, 'AUTO: no\n');
+  assert.ok(existsSync(join(w.datos, 'auto-apagado')), 'falta la marca auto-apagado');
+  const s = leer(w.sf);
+  delete s.extraKnownMarketplaces['setup-ceo'].autoUpdate;
+  writeFileSync(w.sf, JSON.stringify(s));
+  const r = correrGancho(w);
+  assert.ok(!r.stdout.includes('Desde ahora el setup-ceo se actualiza solo'), r.stdout);
+  assert.equal(entrada(w).autoUpdate, false);
+  delete s.extraKnownMarketplaces['setup-ceo'];
+  writeFileSync(w.sf, JSON.stringify(s));
+  assert.ok(!correrGancho(w).stdout.includes('Desde ahora'));
+  assert.equal(entrada(w).autoUpdate, false);
+});
+
+test('Minor 8: prender borra la marca y vuelve a prender', () => {
+  const w = mundoGancho({ ultimaRevision: fecha(0), visto: '2.3.0' });
+  autoSh(w, 'apagar');
+  assert.equal(autoSh(w, 'prender').stdout, 'AUTO: si\n');
+  assert.equal(existsSync(join(w.datos, 'auto-apagado')), false);
+  assert.equal(entrada(w).autoUpdate, true);
+});
+
+test('Minor 8: apagar que no se pudo no deja la marca', () => {
+  const w = mundoGancho({ ultimaRevision: fecha(0), visto: '2.3.0', crudo: '{ "a": 1, }' });
+  assert.equal(autoSh(w, 'apagar').stdout, 'OMITIDO: settings-invalido\n');
+  assert.equal(existsSync(join(w.datos, 'auto-apagado')), false);
+});
+
+// Perl sin JSON::PP: un perl que falla solo cuando se le pide JSON::PP.
+function perlSinJson() {
+  const bin = mkdtempSync(join(tmpdir(), 'perl-'));
+  const real = rutaDe('perl');
+  writeFileSync(join(bin, 'perl'), `#!/bin/sh\ncase "$*" in *JSON::PP*) echo "Can't locate JSON/PP.pm in @INC" >&2; exit 2 ;; esac\nexec "${real}" "$@"\n`);
+  chmodSync(join(bin, 'perl'), 0o755);
+  return bin;
+}
+
+test('Minor 4: perl sin JSON::PP es sin-perl-json, no settings-invalido', () => {
+  const w = mundo({ known: { source: GIT } });
+  w.env = { ...w.env, PATH: `${perlSinJson()}${sepPath}${w.env.PATH}` };
+  assert.equal(correr(w, 'asegurar_auto').stdout, 'OMITIDO: sin-perl-json\n');
+  assert.equal(correr(w, 'poner_auto', 'no').stdout, 'OMITIDO: sin-perl-json\n');
+  assert.equal(correr(w, 'estado_auto').stdout, 'AUTO: sin-dato\nREF: ninguno\nFUENTE: ninguna\n');
+  assert.equal(existsSync(w.sf), false);
+});
+
+test('Minor 4 gancho: perl sin JSON::PP se trata como sin perl (ofrece)', () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0` });
+  w.env = { ...w.env, PATH: `${perlSinJson()}${sepPath}${w.env.PATH}` };
+  const r = correrGancho(w);
+  assert.equal(r.status, 0);
+  sinOrden(r);
+  assert.ok(r.stdout.includes('ofrécele instalarla con /actualizaciones:novedades'), r.stdout);
 });

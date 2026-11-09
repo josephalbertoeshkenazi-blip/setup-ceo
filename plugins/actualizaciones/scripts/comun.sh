@@ -15,6 +15,9 @@ CONF="$(ruta_unix "${CLAUDE_CONFIG_DIR:-$HOME/.claude}")"
 REG="$CONF/plugins/installed_plugins.json"
 KNOWN="$CONF/plugins/known_marketplaces.json"
 
+# Carpeta de datos del plugin: la pone Claude Code en CLAUDE_PLUGIN_DATA; sin ella (por ejemplo desde una skill), la misma de siempre.
+carpeta_datos() { ruta_unix "${CLAUDE_PLUGIN_DATA:-$CONF/plugins/data/actualizaciones-$MERCADO}"; }
+
 carpeta_mercado() {
   local d=""
   [ -f "$KNOWN" ] && d=$(json_get "$KNOWN" "$MERCADO.installLocation")

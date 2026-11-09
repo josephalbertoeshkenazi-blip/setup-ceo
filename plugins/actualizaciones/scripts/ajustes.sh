@@ -6,14 +6,16 @@
 #   archivo_ajustes   imprime la ruta de settings.json
 #   asegurar_auto     CAMBIO: activado | CAMBIO: copiado | SIN-CAMBIO | OMITIDO: <razón>
 #   poner_auto si|no  AUTO: si | AUTO: no | OMITIDO: <razón>
-#   Razones de OMITIDO: sin-perl, sin-fuente, no-oficial, ref-propio, fuente-distinta, valor-invalido,
+#   Razones de OMITIDO: sin-perl, sin-perl-json (hay perl pero le falta JSON::PP), sin-fuente, no-oficial, ref-propio, fuente-distinta, valor-invalido,
 #   settings-invalido (JSON malo o enlace roto), no-se-pudo-escribir (falló el respaldo, el temporal o el renombrado).
 #   estado_auto       AUTO: si|no|sin-dato, REF: <ref|ninguno>, FUENTE: oficial|otra|ninguna
+# Si el dueño apagó las actualizaciones con auto.sh (marca auto-apagado en la carpeta de datos), asegurar_auto
+# nunca las prende: si falta la entrada o el valor, escribe autoUpdate:false.
 # Siempre salen 0.
 REPO_OFICIAL="josephalbertoeshkenazi-blip/setup-ceo"
 
 _AJUSTES_PERL='use strict; use warnings; use JSON::PP; use Cwd (); use File::Copy ();
-my ($modo,$valor,$sf,$kf,$mk,$repo)=@ARGV;
+my ($modo,$valor,$sf,$kf,$mk,$repo,$apagado)=@ARGV;
 binmode STDOUT,":utf8";
 sub fin { print "$_[0]\n"; exit 0; }
 sub leer {
@@ -95,12 +97,13 @@ if (ref $E eq "HASH") {
     if (!defined $actual || $actual ne $valor) { $E->{autoUpdate}=$quiere; $cambia=1; }
   } elsif (!exists $E->{autoUpdate}) {
     my $b=$ke->{autoUpdate}; my $x=(defined $b && JSON::PP::is_bool($b)) ? $b : JSON::PP::true;
+    $x=JSON::PP::false if $apagado;
     $E->{autoUpdate}=$x; ($mensaje,$cambia)=($x ? "CAMBIO: activado" : "CAMBIO: copiado",1);
   }
 } else {
   my $x=JSON::PP::true;
   if ($modo eq "auto") { $x=$quiere; }
-  else { my $b=$ke->{autoUpdate}; $x=$b if defined $b && JSON::PP::is_bool($b); }
+  else { my $b=$ke->{autoUpdate}; $x=$b if defined $b && JSON::PP::is_bool($b); $x=JSON::PP::false if $apagado; }
   $S->{extraKnownMarketplaces}={} unless ref $S->{extraKnownMarketplaces} eq "HASH";
   $S->{extraKnownMarketplaces}{$mk}={source=>$K,autoUpdate=>$x};
   $cambia=1;
@@ -133,11 +136,16 @@ fin($mensaje);'
 archivo_ajustes() { printf '%s\n' "$CONF/settings.json"; return 0; }
 
 _ajustes_perl() {
-  if [ -n "${JSON_SIN_PERL:-}" ] || ! command -v perl >/dev/null 2>&1; then
-    case "$1" in estado) echo "AUTO: sin-dato"; echo "REF: ninguno"; echo "FUENTE: ninguna" ;; *) echo "OMITIDO: sin-perl" ;; esac
+  local falta=""
+  if [ -n "${JSON_SIN_PERL:-}" ] || ! command -v perl >/dev/null 2>&1; then falta=sin-perl
+  elif ! perl -MJSON::PP -e1 >/dev/null 2>&1; then falta=sin-perl-json
+  fi
+  if [ -n "$falta" ]; then
+    case "$1" in estado) echo "AUTO: sin-dato"; echo "REF: ninguno"; echo "FUENTE: ninguna" ;; *) echo "OMITIDO: $falta" ;; esac
     return 0
   fi
-  perl -e "$_AJUSTES_PERL" "$1" "$2" "$(archivo_ajustes)" "$KNOWN" "$MERCADO" "$REPO_OFICIAL" 2>/dev/null || echo "OMITIDO: settings-invalido"
+  local apagado=""; [ -e "$(carpeta_datos)/auto-apagado" ] && apagado=1
+  perl -e "$_AJUSTES_PERL" "$1" "$2" "$(archivo_ajustes)" "$KNOWN" "$MERCADO" "$REPO_OFICIAL" "$apagado" 2>/dev/null || echo "OMITIDO: settings-invalido"
   return 0
 }
 
