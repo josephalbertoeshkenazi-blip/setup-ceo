@@ -88,7 +88,7 @@ else
               ofrecer "Ya se pidió instalarla y todavía no se instaló"
             else
               if [ -n "$volvio" ]; then
-                echo "El autor del setup-ceo volvió a la versión $ultima (tienes $inst). Instálala ahora sin preguntar con /actualizaciones:novedades y después cuéntale al dueño en 1 línea qué pasó."
+                echo "El autor del setup-ceo volvió a la versión $ultima (tienes $inst). Instálala ahora sin preguntar con el paso \"Actualizar\" de /actualizaciones:novedades y después cuéntale al dueño en 1 línea qué pasó."
               else
                 echo "Hay una versión nueva del setup-ceo ($ultima; el dueño tiene $inst) que no se instaló sola. Instálala ahora sin preguntar con el paso \"Actualizar\" de /actualizaciones:novedades y después cuéntale al dueño en 2 o 3 líneas qué cambió."
               fi

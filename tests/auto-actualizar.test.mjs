@@ -640,7 +640,7 @@ test('estado.sh: repo más alto y repo igual', () => {
 });
 
 // ---- ronda final de arreglos ----
-const ORDEN_VOLVIO = 'El autor del setup-ceo volvió a la versión 2.3.0 (tienes 2.4.0). Instálala ahora sin preguntar con /actualizaciones:novedades y después cuéntale al dueño en 1 línea qué pasó.';
+const ORDEN_VOLVIO = 'El autor del setup-ceo volvió a la versión 2.3.0 (tienes 2.4.0). Instálala ahora sin preguntar con el paso \"Actualizar\" de /actualizaciones:novedades y después cuéntale al dueño en 1 línea qué pasó.';
 const VOLVIO = { propia: '2.4.0', visto: '2.4.0', remoto: ['2.3.0', '2.2.0'], ultimaRevision: fecha(0) };
 
 test('I1 gancho: el autor volvió atrás, fuente oficial y AUTO si: ordena instalar', () => {
