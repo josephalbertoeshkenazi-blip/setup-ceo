@@ -88,7 +88,8 @@ else
           *"FUENTE: oficial"*)
             # La orden de instalar sale una sola vez por versión; si no se instaló, después solo se ofrece.
             # El candado (mkdir es atómico) evita que dos sesiones abiertas a la vez den la orden las dos.
-            # Si quedó de una sesión cortada, solo se ofrece hasta que se instale; ahí se borra.
+            # Uno de hace más de un minuto quedó de una sesión cortada: no cuenta.
+            [ -d "$datos/orden.lock" ] && tiene_mas_de_un_minuto "$datos/orden.lock" && rmdir "$datos/orden.lock"
             if ! mkdir "$datos/orden.lock" 2>/dev/null; then
               ofrecer "Ya se pidió instalarla y todavía no se instaló"
             else

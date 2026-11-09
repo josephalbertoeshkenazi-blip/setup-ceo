@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, writeFileSync, readFileSync, existsSync, statSync, symlinkSync, lstatSync, chmodSync, readdirSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, writeFileSync, readFileSync, existsSync, statSync, symlinkSync, lstatSync, chmodSync, readdirSync, utimesSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -829,6 +829,18 @@ test('gancho: si otra sesión tiene el candado, ofrece y no ordena', () => {
   const r = correrGancho(w);
   assert.ok(!r.stdout.includes('Instálala ahora'), r.stdout);
   assert.ok(r.stdout.includes('ofrécele instalarla con /actualizaciones:novedades'), r.stdout);
+});
+
+test('gancho: un candado de hace más de un minuto (sesión cortada) no traba la orden', () => {
+  const w = mundoGancho({ ...PENDIENTE_AYER, ultimaRevision: fecha(0), pendiente: `${fecha(1)}|2.4.0` });
+  const candado = join(w.datos, 'orden.lock');
+  mkdirSync(candado);
+  const antes = new Date(Date.now() - 5 * 60 * 1000);
+  utimesSync(candado, antes, antes);
+  const r = correrGancho(w);
+  assert.ok(r.stdout.includes('Instálala ahora'), r.stdout);
+  assert.equal(existsSync(candado), false);
+  assert.equal(readFileSync(join(w.datos, 'orden-dada'), 'utf8').trim(), '2.4.0');
 });
 
 test('gancho: la orden suelta el candado y al quedar al día se limpia uno viejo', () => {

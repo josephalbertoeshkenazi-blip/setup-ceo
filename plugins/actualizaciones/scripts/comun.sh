@@ -16,6 +16,11 @@ REG="$CONF/plugins/installed_plugins.json"
 KNOWN="$CONF/plugins/known_marketplaces.json"
 
 # Carpeta de datos del plugin: la pone Claude Code en CLAUDE_PLUGIN_DATA; sin ella (por ejemplo desde una skill), la misma de siempre.
+# En Windows, el find de System32 puede tapar al de Git Bash.
+tiene_mas_de_un_minuto() {
+  local f=find; [ -x /usr/bin/find ] && f=/usr/bin/find
+  [ -n "$("$f" "$1" -maxdepth 0 -mmin +1 2>/dev/null)" ]
+}
 carpeta_datos() { ruta_unix "${CLAUDE_PLUGIN_DATA:-$CONF/plugins/data/actualizaciones-$MERCADO}"; }
 
 carpeta_mercado() {
