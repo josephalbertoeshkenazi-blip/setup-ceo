@@ -19,7 +19,8 @@ Agentes que cambiaron: ninguno
 - "Esta carpeta es mi CEO": dilo en la carpeta que quieres como tu CEO y queda marcada desde la próxima sesión, con copia de tu perfil antes.
 - Si en tu computadora falta Python, la sesión te lo dice en una línea. Antes se apagaban en silencio la guardia de delegar y la memoria.
 - En Windows, la sesión principal se reconoce aunque la ruta cambie de mayúsculas o de barras.
-- Guía para la app de escritorio (`ceo-base:usar-la-app`): cómo abrir una sesión por proyecto y cómo hablarle a tu CEO; dile "enséñame a usar la app". Para equipos: hojas de instalación para Windows y Mac con los errores comunes, la hoja "tu CEO en 10 minutos" y un archivo para que el administrador del plan Team active los plugins para todos (carpeta `docs/equipo/`).
+- Guía para la app de escritorio (`ceo-base:usar-la-app`): cómo entrar a un proyecto si quieres verlo y cómo hablarle a tu CEO; dile "enséñame a usar la app". Para equipos: hojas de instalación para Windows y Mac con los errores comunes, la hoja "tu CEO en 10 minutos" y un archivo para que el administrador del plan Team active los plugins para todos (carpeta `docs/equipo/`).
+- Tus proyectos los lleva tu CEO: dile «empieza el proyecto X» y él crea la carpeta, reparte el trabajo y te cuenta cuando preguntes. Puedes entrar al proyecto si quieres, pero no hace falta (regla 13).
 
 ## 2.3.1 (2026-11-12)
 Cambió: ningún plugin (solo las pruebas internas del autor)

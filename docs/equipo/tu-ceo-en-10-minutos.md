@@ -11,8 +11,8 @@ Escríbele como a una persona, con tus palabras. Puedes interrumpirlo cuando qui
 ## 3. Él delega
 Para tareas largas llama a ayudantes que trabajan por detrás. Cuando terminan, te lo cuenta cuando le preguntes («¿qué tienes pendiente?»). Solo te interrumpe si es urgente.
 
-## 4. Una sesión por proyecto
-Cada proyecto va en su propia sesión: **Ctrl+N** en Windows o **Cmd+N** en Mac, elige **Local** y **Open folder**. Para aprender la app, pídele: «enséñame a usar la app».
+## 4. Tus proyectos
+Tu CEO abre y lleva tus proyectos. Puedes entrar si quieres, pero no hace falta. Dile «empieza el proyecto X» y él lo arma, reparte el trabajo y te cuenta. Si quieres verlo tú, pídele: «enséñame a usar la app».
 
 ## 5. Lo que nunca
 Nunca escribas contraseñas en el chat. Y él no envía nada importante a otras personas sin tu «envíalo».

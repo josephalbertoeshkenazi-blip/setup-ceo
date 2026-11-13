@@ -1,6 +1,6 @@
 ---
 name: usar-la-app
-description: Enseña lo básico de la app de escritorio de Claude (pestaña Code): qué es una sesión, cómo abrir una sesión nueva para un proyecto y cómo hablarle al CEO. Úsala cuando el dueño diga "enséñame a usar la app", "¿cómo uso esto?", "cómo abro otra sesión", "proyecto nuevo", "cómo le hablo", "qué hace el CEO" o "esta carpeta es mi CEO".
+description: Enseña lo básico de la app de escritorio de Claude (pestaña Code): qué es una sesión, cómo entrar a un proyecto si quieres verlo y cómo hablarle al CEO. Úsala cuando el dueño diga "enséñame a usar la app", "¿cómo uso esto?", "cómo abro otra sesión", "proyecto nuevo", "cómo le hablo", "qué hace el CEO" o "esta carpeta es mi CEO".
 ---
 # Usar la app de escritorio
 
@@ -11,8 +11,10 @@ Guía en vivo: da **un paso**, espera a que la persona diga "listo" y recién ah
 ## 1. Qué es una sesión
 Una sesión es como un cuaderno aparte para un tema: tiene su propia conversación y su propia carpeta. Un cuaderno por tema, así nada se mezcla.
 
-## 2. Una sesión nueva por proyecto
-Los botones se llaman como los muestra la app (en inglés); al lado va lo que significan.
+## 2. Tus proyectos
+Tu CEO abre y lleva tus proyectos. Puedes entrar si quieres, pero no hace falta.
+Para empezar uno, dile «empieza el proyecto X» y él lo crea y lo lleva.
+Si quieres verlo tú: los botones se llaman como los muestra la app (en inglés); al lado va lo que significan.
 1. En la app, pestaña **Code** (donde trabajas con proyectos, barra de la izquierda).
 2. **+ New** (nueva), o el atajo: **Ctrl+N** en Windows, **Cmd+N** en Mac.
 3. Debajo de la caja de texto, abre el selector de entorno y elige el primero del grupo **Local** (en tu computadora).
@@ -20,7 +22,7 @@ Los botones se llaman como los muestra la app (en inglés); al lado va lo que si
 5. Escribe tu primer mensaje. Esa sesión queda ligada a esa carpeta.
 
 ## 3. Tu CEO es la carpeta "Mi CEO"
-Lo del trabajo y lo personal se lo hablas a tu CEO, en la sesión de la carpeta **Mi CEO**. Cada proyecto grande se abre en su propia sesión, con su propia carpeta; el CEO te ayuda a decidir cuándo conviene.
+Lo del trabajo y lo personal se lo hablas a tu CEO, en la sesión de la carpeta **Mi CEO**. El CEO abre y lleva cada proyecto en su propia carpeta, sin que tengas que hacer nada.
 
 **Si la persona dice "esta carpeta es mi CEO"** (así activa el modo CEO en una carpeta que ya usa):
 1. Mira si existe `~/.claude/mi-perfil/ceo.md`. Si no existe, dilo y ofrece crear el perfil con `/adaptar:adaptar-a-mi`; no inventes uno ni sigas.

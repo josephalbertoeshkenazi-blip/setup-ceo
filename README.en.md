@@ -100,9 +100,9 @@ Open PowerShell (the Start button, type "PowerShell" and press Enter). You do no
 
 Python is optional: if you have it (`py -3`), the setup saves a few extra memory items; if not, everything else works the same. If a Microsoft Store window opens when you type `python`, close it: that is not a real Python. More help in [docs/problemas.en.md](docs/problemas.en.md).
 
-### One session per project
+### Your CEO runs your projects
 
-Open each project once, in its own Claude session (in its folder), and pin it so it is at hand. The main session hands out work: when a task belongs to one project, it sends it to that project's session. In Claude Desktop (Code tab) it can talk to the other open local sessions; if the project's session is not open, it tells you in one line which folder to open and what to paste. In the Terminal, if your version of Claude Code has `ListAgents` and `SendMessage`, it can message another open session; if not, it leaves the request in a file in the project folder and tells you. Pick one: Desktop (recommended) or Terminal, because they cannot see each other. Sources: [messaging between sessions](https://code.claude.com/docs/en/cross-session-messaging.md) and [Claude Code on Desktop](https://code.claude.com/docs/en/desktop.md).
+Tell it "empieza el proyecto X" (start project X). Your CEO creates the folder (`Proyectos/<name>`, next to the CEO folder, with `CLAUDE.md` and `notas.md`), opens its session itself if the app has the tool and otherwise hands the work to background helpers. It tells you when you ask. You can go into the project if you want, but you do not have to. Pick one surface: Desktop (recommended) or Terminal, because they cannot see each other. Sources: [messaging between sessions](https://code.claude.com/docs/en/cross-session-messaging.md) and [Claude Code on Desktop](https://code.claude.com/docs/en/desktop.md).
 
 ## Connect your mail, calendar and files
 

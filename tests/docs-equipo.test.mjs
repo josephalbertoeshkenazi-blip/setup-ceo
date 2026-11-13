@@ -154,6 +154,6 @@ test('admin dice qué no se probó y cómo seguir', () => {
 test('clase de 10 minutos: 6 bloques y 5 frases', () => {
   const t = leer('docs/equipo/tu-ceo-en-10-minutos.md');
   assert.ok((t.match(/^## /gm) || []).length >= 6);
-  for (const s of ['actualízate', '¿qué tienes pendiente?', 'no molestar', 'acuérdate de esto', 'enséñame a usar la app', 'envíalo', 'Ctrl+N', 'Cmd+N'])
+  for (const s of ['actualízate', '¿qué tienes pendiente?', 'no molestar', 'acuérdate de esto', 'enséñame a usar la app', 'envíalo', 'Tu CEO abre y lleva tus proyectos. Puedes entrar si quieres, pero no hace falta.', 'empieza el proyecto X'])
     assert.ok(t.includes(s), `falta: ${s}`);
 });
