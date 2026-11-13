@@ -7,7 +7,7 @@ import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 
-import { raiz, python, aPosix, BASH, baseWindows } from './ayuda.mjs';
+import { raiz, python, BASH, baseWindows } from './ayuda.mjs';
 
 const py = python();
 const test = (n, o, f) => {
@@ -192,7 +192,13 @@ test('Sesión principal en Windows: /c/..., mayúsculas y barras', { skip: proce
   const comparable = (r) => spawnSync(py.cmd, [...py.args, '-I', '-c',
     'import sys; sys.path.insert(0, sys.argv[1]); import comun; print(ascii(comun.ruta_comparable(sys.argv[2])))', S, r],
   { encoding: 'utf8' }).stdout.trim();
-  for (const [nombre, forma] of [['/c/...', (h) => aPosix(h)], ['MAYÚSCULAS', (h) => h.toUpperCase()]]) {
+  // /c/... armado a mano: cygpath convierte la carpeta temporal en /tmp/..., un alias de Git Bash que Python no conoce.
+  const formas = [
+    ['/c/...', (h) => h.replace(/^([A-Za-z]):\\/, (_, d) => `/${d.toLowerCase()}/`).replaceAll('\\', '/')],
+    ['C:/ con barras', (h) => h.replaceAll('\\', '/')],
+    ['MAYÚSCULAS', (h) => h.toUpperCase()],
+  ];
+  for (const [nombre, forma] of formas) {
     const e = entorno();
     const ruta = join(e.home, 'Mis Cosas', 'Mi CEO José');
     const linea = forma(ruta);
