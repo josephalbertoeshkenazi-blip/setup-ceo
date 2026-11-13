@@ -53,13 +53,22 @@ subir_rama "$NUEVO" "$RAMA"
 V_VIEJO=$(version_en "$VIEJO" actualizaciones)
 V_NUEVO=$(version_en "$NUEVO" actualizaciones)
 
+# $1 es menor que 2.3.0 (antes de que el setup se actualizara solo).
+antes_de_230() { [ "$(printf '%s\n2.3.0\n' "$1" | sort -t. -k1,1n -k2,2n -k3,3n | head -1)" != "2.3.0" ]; }
+
 # El aviso viejo necesita plutil: en Windows solo se exige en Mac.
 if [ "$V_VIEJO" != "$V_NUEVO" ] && ! es_windows; then
   salida=$(salida_novedades) || exit 1
-  case "$salida" in
-    *"hay una versión nueva"*) avisar "el aviso viejo habla de una versión nueva, bien" ;;
-    *) fallar "el aviso viejo no dijo 'hay una versión nueva'; dijo: $salida" ;;
-  esac
+  if antes_de_230 "$V_VIEJO"; then
+    case "$salida" in
+      *"hay una versión nueva"*) avisar "el aviso viejo habla de una versión nueva, bien" ;;
+      *) fallar "el aviso viejo no dijo 'hay una versión nueva'; dijo: $salida" ;;
+    esac
+  else
+    # Desde 2.3.0 la instala Claude Code solo; el aviso recién la pide desde el día siguiente.
+    [ -z "$salida" ] || fallar "el aviso de $V_VIEJO el primer día debía callar y dijo: $salida"
+    avisar "el aviso de $V_VIEJO calla el primer día, bien"
+  fi
 fi
 
 n=0

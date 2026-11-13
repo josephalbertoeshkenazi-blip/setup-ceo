@@ -122,6 +122,20 @@ test('pruebas.yml prueba desde 2.2.0 y 2.0.0 con etiquetas', () => {
   assert.ok(y.includes('push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-220"'));
 });
 
+test('pruebas.yml prueba desde 2.3.0, el salto que hacen los dueños que ya se actualizan solos', () => {
+  const y = flujo();
+  assert.match(y, /Actualización real desde 2\.3\.0/);
+  assert.match(y, /probar-actualizacion\.sh v2\.3\.0 "\$GITHUB_SHA" "ci-act-\$GITHUB_RUN_ID-\$RUNNER_OS-230"/);
+  assert.ok(y.includes('push origin --delete "ci-act-$GITHUB_RUN_ID-$RUNNER_OS-230"'));
+});
+
+test('probar-actualizacion.sh: desde 2.3.0 el aviso viejo calla el primer día', () => {
+  const t = leer('scripts/probar-actualizacion.sh');
+  assert.match(t, /antes_de_230 "\$V_VIEJO"/);
+  assert.match(t, /antes_de_230\(\) \{/);
+  assert.match(t, /el primer día debía callar/);
+});
+
 test('pruebas.yml corre en desarrollo', () => {
   const m = flujo().match(/branches-ignore:\s*\[([^\]]*)\]/);
   assert.ok(m, 'falta branches-ignore');
