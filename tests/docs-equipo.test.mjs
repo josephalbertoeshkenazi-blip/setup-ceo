@@ -109,6 +109,13 @@ test('Mac: cada comando va en su bloque, con licencia, .dmg y Gatekeeper al día
   assert.doesNotMatch(t, /pide al dueño/);
 });
 
+test('Mac: la ventana "Reset To Defaults" del llavero se cancela, nunca se acepta', () => {
+  const fila = filasDeErrores(leer('docs/equipo/instalar-mac.md')).find((f) => f.includes('Reset To Defaults'));
+  assert.ok(fila, 'falta la fila de Reset To Defaults');
+  assert.match(fila, /Cancel/);
+  assert.match(fila, /contraseñas/);
+});
+
 test('las tres hojas explican "enséñame a usar la app"', () => {
   for (const f of ['instalar-windows', 'instalar-mac', 'actualizar'])
     assert.ok(leer(`docs/equipo/${f}.md`).includes('enséñame a usar la app'), f);

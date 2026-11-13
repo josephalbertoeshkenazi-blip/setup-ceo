@@ -34,4 +34,5 @@ adaptar, actualizaciones y seguridad de ese marketplace.
 | No hay pestaña Code, o la app es vieja | Menú Claude, Check for Updates. |
 | No salen los plugins | Usa la frase del paso 5. |
 | "Usage limit reached" | Espera, o pide más crédito al administrador. |
+| Una ventana del llavero con "Reset To Defaults" | Pulsa **Cancel**. Nunca aceptes: borra las contraseñas guardadas de la Mac. |
 | macOS no deja abrir la app | Pulsa Abrir en el aviso; si no sale, Ajustes del Sistema > Privacidad y seguridad > Abrir igualmente. |
