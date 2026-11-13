@@ -13,7 +13,7 @@ Una sesión es como un cuaderno aparte para un tema: tiene su propia conversaci�
 
 ## 2. Una sesión nueva por proyecto
 Los botones se llaman como los muestra la app (en inglés); al lado va lo que significan.
-1. En la app, pestaña **Code** (barra de la izquierda).
+1. En la app, pestaña **Code** (donde trabajas con proyectos, barra de la izquierda).
 2. **+ New** (nueva), o el atajo: **Ctrl+N** en Windows, **Cmd+N** en Mac.
 3. Debajo de la caja de texto, abre el selector de entorno y elige el primero del grupo **Local** (en tu computadora).
 4. Junto a él, el control de carpeta, luego **Open folder…** (abrir carpeta) y elige la carpeta del proyecto.
@@ -23,11 +23,12 @@ Los botones se llaman como los muestra la app (en inglés); al lado va lo que si
 Lo del trabajo y lo personal se lo hablas a tu CEO, en la sesión de la carpeta **Mi CEO**. Cada proyecto grande se abre en su propia sesión, con su propia carpeta; el CEO te ayuda a decidir cuándo conviene.
 
 **Si la persona dice "esta carpeta es mi CEO"** (así activa el modo CEO en una carpeta que ya usa):
-1. Respaldo primero, sin preguntar: `mkdir -p ~/.claude/mi-perfil/.respaldos && cp ~/.claude/mi-perfil/ceo.md ~/.claude/mi-perfil/.respaldos/ceo-$(date +%Y%m%d-%H%M%S).md`
-2. Saca la ruta de esta carpeta con `pwd -W 2>/dev/null || pwd` (Windows con Git Bash da la ruta de Windows; Mac, la normal).
-3. Busca en `ceo.md` la línea `Sesión principal: <ruta>`. Si no existe, agrégala. Si existe con la misma ruta, no hagas nada. Si existe con otra ruta, muestra las dos y pregunta cuál gana; nunca la pises en silencio.
-4. Toca solo esa línea, una sola línea, y no borres nada más del archivo. Si `ceo.md` no existe, dilo y ofrece crear el perfil con `/adaptar:adaptar-a-mi`; no inventes uno.
-5. Dile: "Listo, esta carpeta es tu CEO. Queda activo desde la próxima sesión: cierra esta y abre una nueva en la misma carpeta."
+1. Mira si existe `~/.claude/mi-perfil/ceo.md`. Si no existe, dilo y ofrece crear el perfil con `/adaptar:adaptar-a-mi`; no inventes uno ni sigas.
+2. Respaldo primero, sin preguntar: `mkdir -p ~/.claude/mi-perfil/.respaldos && cp ~/.claude/mi-perfil/ceo.md ~/.claude/mi-perfil/.respaldos/ceo-$(date +%Y%m%d-%H%M%S).md`
+   Si no se pudo hacer el respaldo, para y no toques `ceo.md`. Si estos comandos no corren (no hay Git Bash), para también y mándala a la hoja de instalación: setup-ceo necesita Git for Windows.
+3. Saca la ruta de esta carpeta con `pwd -W 2>/dev/null || pwd` (Windows con Git Bash da la ruta de Windows; Mac, la normal). Muéstrasela y pregunta "¿es esta carpeta?" antes de escribir nada.
+4. Busca en `ceo.md` la línea `Sesión principal: <ruta>` (también cuenta `Sesion principal` o `Main session`: es la misma línea). Si no existe, agrégala. Si existe con la misma ruta, no cambies nada. Si existe con otra ruta, muestra las dos y pregunta cuál gana; nunca la pises en silencio. Al escribir, déjala como `Sesión principal: <ruta>`, una sola línea, y no borres nada más del archivo.
+5. Si agregaste o cambiaste la línea, dile: "Listo, esta carpeta es tu CEO. Queda activo desde la próxima sesión: cierra esta y abre una nueva en la misma carpeta." Si ya estaba marcada, dile "ya estaba marcada" y nada más.
 
 ## 4. Cómo hablarle
 - Háblale normal, como a una persona. No hay palabras mágicas.

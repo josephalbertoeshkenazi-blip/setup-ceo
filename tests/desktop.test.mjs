@@ -114,7 +114,8 @@ test('usar-la-app: pasos de sesión nueva en Windows y Mac', () => {
 });
 
 test('usar-la-app: marcar mi CEO con respaldo', () => {
-  for (const t of ['.respaldos', 'Sesión principal:', 'pwd -W', 'cuál gana', 'próxima sesión'])
+  for (const t of ['.respaldos', 'Sesión principal:', 'pwd -W', 'cuál gana', 'próxima sesión', 'no borres nada más', 'nunca la pises', 'Si no se pudo hacer el respaldo, para y no toques `ceo.md`', 'Git for Windows', '¿es esta carpeta?', 'Sesion principal', 'Main session', 'ya estaba marcada', 'donde trabajas con proyectos'])
     assert.ok(usar.includes(t), t);
+  assert.ok(usar.indexOf('no existe, dilo') < usar.indexOf('.respaldos'), 'primero mira si ceo.md existe');
   assert.ok(usar.indexOf('.respaldos') < usar.indexOf('pwd -W'), 'el respaldo va primero');
 });
