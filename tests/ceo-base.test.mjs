@@ -86,3 +86,21 @@ test('programar: plugin.json y sus 2 skills, sin nombres privados ni Joseph', ()
   }
   assert.ok(readdirSync(join(raiz, 'plugins/programar/skills')).length === 2);
 });
+
+test('regla 4: Opus solo plata, clientes y revisión final', () => {
+  assert.match(leer('plugins/ceo-base/reglas/reglas-ceo.md'), /^4\. \*\*Delegar\.\*\*.*Sonnet para lo normal.*Opus solo para plata.*revisión final/m);
+});
+
+test('reglas 21 y 22', () => {
+  const r = leer('plugins/ceo-base/reglas/reglas-ceo.md');
+  assert.match(r, /^21\. \*\*Nivel técnico\.\*\*.*accesos, códigos y decisiones.*pregúntalo una vez/m);
+  assert.match(r, /^22\. .*ceo-base:auditor/m);
+});
+
+test('glosario: palabras clave con ejemplo, sin emojis', () => {
+  const g = leer('plugins/ceo-base/skills/forma-de-trabajar/glosario.md');
+  for (const x of ['Sesión', 'Agente', 'Skill', 'MCP', 'API', 'GitHub', 'Terminal', 'Límite de uso']) assert.ok(g.includes(`**${x}**:`), x);
+  assert.doesNotMatch(g, /\p{Extended_Pictographic}/u);
+  const n = g.split('\n').filter((l) => /^\*\*[^*]+\*\*: /.test(l)).length;
+  assert.ok(n >= 12 && n <= 16, `entradas: ${n}`);
+});
