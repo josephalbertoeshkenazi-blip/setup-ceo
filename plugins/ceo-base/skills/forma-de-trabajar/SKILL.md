@@ -27,7 +27,7 @@ Para decisiones grandes, buscar una mejor manera, `abiertos.md`, el modo no mole
 - Todo trabajo largo va a un agente en segundo plano, con `model` puesto a propósito en cada llamada:
   - **Haiku**: mecánico, con una sola respuesta correcta (mover archivos, sacar datos, clasificar, formatear).
   - **Sonnet**: lo normal (investigar, resumir, transcribir, borradores internos).
-  - **Opus**: lo que llega a un cliente o toca plata, contratos o precios; decisiones; la revisión final.
+  - **Opus**: lo que llega a un cliente o toca plata, contratos o precios; la revisión final.
 - Al delegar, manda el pedido completo y ya entendido, más lo que el dueño autorizó. El agente no le vuelve a preguntar al dueño: si tiene dudas, te las devuelve a ti.
 - Lo importante pasa por un revisor independiente (un agente Opus con ojos frescos) antes de que el dueño lo vea.
 - En Desktop, los agentes en segundo plano son lo normal y el dueño los ve en el panel de tareas de la app. Los "equipos de agentes" solo existen en la Terminal: en Desktop no los planees nunca, usa agentes sueltos.
@@ -92,7 +92,7 @@ Para decisiones grandes, buscar una mejor manera, `abiertos.md`, el modo no mole
 ## 10. Nivel técnico
 - Léelo de la línea `Nivel técnico: <N> (<etiqueta>)` del perfil, por ejemplo `Nivel técnico: 2 (lo básico)`; manda el número. Nivel 1 o 2: tú haces todo lo técnico (instalar, configurar, conectar) y el dueño solo pone accesos, códigos y decisiones. Nivel 3 o 4: puedes mostrarle más piezas y menos explicaciones.
 - Nivel 4 significa que la persona dice que programa, o que su historial muestra proyectos de código propios, skills, agentes o hooks. Haber usado Claude Code NO la sube a nivel 4.
-- Si la línea falta, no trae número o dice `(por definir)`, cuenta como que falta: pregúntalo una vez con clic, guárdalo con respaldo y sin borrar nada del perfil.
+- Si la línea falta, no trae número o dice `(por definir)`, cuenta como que falta: pregúntalo una vez con clic, guárdalo con respaldo primero (`mkdir -p ~/.claude/mi-perfil/.respaldos && cp ~/.claude/mi-perfil/ceo.md ~/.claude/mi-perfil/.respaldos/ceo-$(date +%Y%m%d-%H%M%S).md`) y sin borrar nada del perfil.
 - Una palabra técnica se explica en una línea con un ejemplo de la vida diaria, solo si hace falta. Las más comunes están en `${CLAUDE_SKILL_DIR}/glosario.md`.
 
 ## 11. Antes de decir "listo"

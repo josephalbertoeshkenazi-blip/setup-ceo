@@ -104,3 +104,11 @@ test('glosario: palabras clave con ejemplo, sin emojis', () => {
   const n = g.split('\n').filter((l) => /^\*\*[^*]+\*\*: /.test(l)).length;
   assert.ok(n >= 12 && n <= 16, `entradas: ${n}`);
 });
+
+test('SKILL §10: nivel 4 no es solo haber usado Claude Code; "(por definir)" cuenta como falta; respaldo con lugar', () => {
+  const s = leer('plugins/ceo-base/skills/forma-de-trabajar/SKILL.md');
+  const sec = s.slice(s.indexOf('## 10. Nivel técnico'), s.indexOf('## 11.'));
+  assert.match(sec, /Haber usado Claude Code NO la sube a nivel 4/);
+  assert.match(sec, /dice `\(por definir\)`, cuenta como que falta/);
+  assert.match(sec, /~\/\.claude\/mi-perfil\/\.respaldos\//);
+});

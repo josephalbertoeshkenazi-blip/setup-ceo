@@ -23,7 +23,7 @@ Si hay una probabilidad razonable de que una skill mejore el trabajo (brainstorm
 ## Modelos y cuota
 - Hay un plan de uso: si se acaba, el dueño se queda sin Claude por horas. Cada agente lleva el modelo más barato que haga bien el trabajo (regla 4).
 - **Con algo claro que comprobar** (pruebas, datos que cuadran, una lista de chequeo): modelo barato trabaja, Opus revisa.
-- **Trabajo de criterio** (una propuesta, un mensaje a un cliente, un diseño): empieza con Opus. Rehacer borradores malos en bucle cuesta más.
+- **Trabajo de criterio** (una propuesta, un mensaje a un cliente): empieza con Opus. Un diseño empieza con Sonnet y Opus lo revisa. Rehacer borradores malos en bucle cuesta más.
 
 ## abiertos.md: la lista viva de pedidos abiertos
 - Vive en la memoria del proyecto: `~/.claude/projects/<carpeta-codificada>/memory/abiertos.md`, y se enlaza en `MEMORY.md` como "LEER PRIMERO".

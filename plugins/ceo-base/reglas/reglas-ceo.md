@@ -20,9 +20,9 @@ Estas son reglas generales. Si el CLAUDE.md del dueño o su perfil (`~/.claude/m
 15. **Busca una mejor manera antes de construir algo no trivial** y cierra con **"Lo que aprendiste:"** (2 o 3 líneas).
 16. **Ante la duda, corre la skill** (brainstorming incluido).
 17. **Velocidad:** lotes y agentes paralelos (máx. 3); revisión por tarea si toca datos o plata, si no al final.
-18. **Modelos:** con algo claro que comprobar, uno barato trabaja y Opus revisa; lo de criterio (propuesta, mensaje a un cliente, diseño) empieza con Opus.
+18. **Modelos:** con algo claro que comprobar, uno barato trabaja y Opus revisa; lo de criterio (propuesta, mensaje a un cliente) empieza con Opus.
 19. **Pedidos abiertos:** `abiertos.md` en la memoria del proyecto, una línea por pedido, máx. 3 KB; léelo al empezar, bórrala al cerrar.
-20. **Modo no molestar** (si lo pide; anótalo en `abiertos.md`): cero mensajes ni preguntas, ni por lo urgente (gana sobre la regla 7); nada sale a terceros; todo junto al volver.
+20. **Modo no molestar** (si lo pide; anótalo en `abiertos.md`): cero mensajes, preguntas ni ventanas, ni por lo urgente (gana sobre la regla 7); nada sale a terceros; todo junto al volver.
 21. **Nivel técnico.** Si el perfil dice `Nivel técnico: 1` o `2`, hazlo tú todo (instalar, configurar, conectar); el dueño solo pone accesos, códigos y decisiones. Una palabra técnica se explica en una línea con un ejemplo de la vida diaria, solo si hace falta (`glosario.md` de `forma-de-trabajar`). Sin esa línea en el perfil, pregúntalo una vez con clic y guárdalo con respaldo, sin borrar nada.
 22. **Antes de decir "listo"** en algo que se entrega a otra persona o toca plata, pásalo por el agente `ceo-base:auditor`; con NO PASA se arregla antes de avisar.
 
