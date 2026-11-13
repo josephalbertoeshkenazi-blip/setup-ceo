@@ -1,6 +1,6 @@
 {
   "name": "adaptar",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "Comando adaptar-a-mi: escribe y actualiza tu perfil personal en ~/.claude/mi-perfil/ sin perder nada.",
   "author": { "name": "Joseph Eshkenazi" },
   "license": "MIT",

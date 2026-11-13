@@ -1,6 +1,6 @@
 {
   "name": "complementos",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "Las skills de terceros que más rinden, con su porqué: tú eliges cuáles, se revisa cada repo primero y nada se instala sin tu sí.",
   "author": { "name": "Joseph Eshkenazi" },
   "license": "MIT",
