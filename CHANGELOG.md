@@ -15,7 +15,7 @@ Agentes que cambiaron: ninguno
 - Para actualizarte, dile a tu CEO "actualízate". Tu carpeta `mi-perfil` no se borra: solo se le agregan líneas, y antes se guarda una copia.
 - Nivel técnico: la entrevista (`/adaptar:adaptar-a-mi`) ahora pregunta qué tanto sabes de tecnología. Si respondes 1 o 2, Claude hace él todo lo técnico, y cada palabra difícil te la explica con un ejemplo de la vida diaria. Si ya tenías el setup, te lo pregunta una sola vez después de actualizar (regla 21).
 - Modelos que cuidan tu límite de uso: Haiku para lo mecánico, Sonnet para lo normal, y Opus solo para plata, contratos, precios, clientes y la revisión final (regla 4).
-- Nuevo revisor `ceo-base:auditor`: antes de decirte "listo" en algo que se entrega a otra persona o que toca plata, otro agente lo comprueba con pruebas reales. No puede editar lo que revisa (regla 22).
+- Nuevo revisor `ceo-base:auditor`: antes de decirte "listo" en algo que se entrega a otra persona o que toca plata, otro agente lo comprueba con pruebas reales. Tiene prohibido editar lo que revisa (regla 22).
 - "Esta carpeta es mi CEO": dilo en la carpeta que quieres como tu CEO y queda marcada desde la próxima sesión, con copia de tu perfil antes.
 - Si en tu computadora falta Python, la sesión te lo dice en una línea. Antes se apagaban en silencio la guardia de delegar y la memoria.
 - En Windows, la sesión principal se reconoce aunque la ruta cambie de mayúsculas o de barras.

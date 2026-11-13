@@ -96,6 +96,9 @@ def sesion_principal(d):
     if not ruta or es_no(ruta):
         return False
     ruta = ruta_comparable(ruta)
+    # Marcar la carpeta de usuario o la raíz del disco haría "principal" a todas las sesiones de debajo.
+    if ruta == ruta_comparable(casa()) or os.path.dirname(ruta) == ruta:
+        return False
     cwd = ruta_comparable(carpeta_proyecto(d))
     sep = "\\" if os.name == "nt" else "/"
     return cwd == ruta or cwd.startswith(ruta.rstrip(sep) + sep)

@@ -120,6 +120,7 @@ test('usar-la-app: pasos de sesión nueva en Windows y Mac', () => {
   assert.ok(usar.includes('Tu CEO abre y lleva tus proyectos. Puedes entrar si quieres, pero no hace falta.'));
   assert.ok(usar.includes('empieza el proyecto X'));
   assert.ok(!descUsar.includes('empieza el proyecto X'));
+  assert.ok(!descUsar.includes('proyecto nuevo'), 'empezar un proyecto es del CEO, no un tutorial');
   assert.ok(usar.split('\n').length <= 90);
 });
 
@@ -128,4 +129,5 @@ test('usar-la-app: marcar mi CEO con respaldo', () => {
     assert.ok(usar.includes(t), t);
   assert.ok(usar.indexOf('no existe, dilo') < usar.indexOf('.respaldos'), 'primero mira si ceo.md existe');
   assert.ok(usar.indexOf('.respaldos') < usar.indexOf('pwd -W'), 'el respaldo va primero');
+  assert.match(usar, /`\$HOME`[^\n]*raíz de un disco[^\n]*no escribas la línea/, 'carpeta de usuario o raíz: no se marca');
 });

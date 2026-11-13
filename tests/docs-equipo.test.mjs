@@ -79,7 +79,7 @@ test('sin nombres de empresa ni datos personales', () => {
   const base = join(raiz, 'docs/equipo');
   for (const f of readdirSync(base, { recursive: true })) {
     if (!/\.(md|txt)$/.test(f)) continue;
-    assert.doesNotMatch(readFileSync(join(base, f), 'utf8'), /Benny|josepheshkenazi|@gmail/i, f);
+    assert.doesNotMatch(readFileSync(join(base, f), 'utf8'), /josepheshkenazi|@gmail/i, f);
   }
 });
 

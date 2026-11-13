@@ -1,6 +1,6 @@
 ---
 name: usar-la-app
-description: Enseña lo básico de la app de escritorio de Claude (pestaña Code): qué es una sesión, cómo entrar a un proyecto si quieres verlo y cómo hablarle al CEO. Úsala cuando el dueño diga "enséñame a usar la app", "¿cómo uso esto?", "cómo abro otra sesión", "proyecto nuevo", "cómo le hablo", "qué hace el CEO" o "esta carpeta es mi CEO".
+description: Enseña lo básico de la app de escritorio de Claude (pestaña Code): qué es una sesión, cómo entrar a un proyecto si quieres verlo y cómo hablarle al CEO. Úsala cuando el dueño diga "enséñame a usar la app", "¿cómo uso esto?", "cómo abro otra sesión", "cómo le hablo", "qué hace el CEO" o "esta carpeta es mi CEO".
 ---
 # Usar la app de escritorio
 
@@ -28,7 +28,7 @@ Lo del trabajo y lo personal se lo hablas a tu CEO, en la sesión de la carpeta 
 1. Mira si existe `~/.claude/mi-perfil/ceo.md`. Si no existe, dilo y ofrece crear el perfil con `/adaptar:adaptar-a-mi`; no inventes uno ni sigas.
 2. Respaldo primero, sin preguntar: `mkdir -p ~/.claude/mi-perfil/.respaldos && cp ~/.claude/mi-perfil/ceo.md ~/.claude/mi-perfil/.respaldos/ceo-$(date +%Y%m%d-%H%M%S).md`
    Si no se pudo hacer el respaldo, para y no toques `ceo.md`. Si estos comandos no corren (no hay Git Bash), para también y mándala a la hoja de instalación: setup-ceo necesita Git for Windows.
-3. Saca la ruta de esta carpeta con `pwd -W 2>/dev/null || pwd` (Windows con Git Bash da la ruta de Windows; Mac, la normal). Muéstrasela y pregunta "¿es esta carpeta?" antes de escribir nada.
+3. Saca la ruta de esta carpeta con `pwd -W 2>/dev/null || pwd` (Windows con Git Bash da la ruta de Windows; Mac, la normal). Muéstrasela y pregunta "¿es esta carpeta?" antes de escribir nada. Si es `$HOME` (por ejemplo `C:\Users\<nombre>`) o la raíz de un disco, no sigas y no escribas la línea: dile en una línea que abra Claude en una carpeta propia (por ejemplo "Mi CEO").
 4. Busca en `ceo.md` la línea `Sesión principal: <ruta>` (también cuenta `Sesion principal` o `Main session`: es la misma línea). Si no existe, agrégala. Si existe con la misma ruta, no cambies nada. Si existe con otra ruta, muestra las dos y pregunta cuál gana; nunca la pises en silencio. Al escribir, déjala como `Sesión principal: <ruta>`, una sola línea, y no borres nada más del archivo.
 5. Si agregaste o cambiaste la línea, dile: "Listo, esta carpeta es tu CEO. Queda activo desde la próxima sesión: cierra esta y abre una nueva en la misma carpeta." Si ya estaba marcada, dile "ya estaba marcada" y nada más.
 

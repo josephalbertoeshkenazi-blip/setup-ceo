@@ -224,6 +224,14 @@ test('carpeta hija de la Sesión principal también cuenta, carpeta hermana no',
   assert.equal(guardiaCon(f, rutaF, join(f.home, 'Otro'), 'q'), null);
 });
 
+test('Sesión principal en la carpeta de usuario o en la raíz del disco no enciende nada', () => {
+  const e = entorno();
+  assert.equal(guardiaCon(e, e.home, join(e.home, 'Proyectos', 'X')), null);
+  assert.equal(guardiaCon(e, e.home, e.home, 'h2'), null);
+  const raiz = process.platform === 'win32' ? 'C:\\' : '/';
+  assert.equal(guardiaCon(e, raiz, join(e.home, 'Mi CEO'), 'r'), null);
+});
+
 test('captura-correcciones: guarda una corrección con el secreto tapado; un mensaje normal no; se apaga por perfil', () => {
   const e = entorno();
   const cola = join(e.home, '.claude/ceo-estado/cola-correcciones.jsonl');
