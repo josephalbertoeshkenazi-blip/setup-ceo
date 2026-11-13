@@ -8,6 +8,8 @@ Para quien ya tiene setup-ceo instalado.
 
 La primera vez después de actualizar, tu CEO te pregunta una sola vez cuánto sabes de tecnología (regla 21). Contesta con lo que te quede más cómodo.
 
+Para aprender a usar la app, escribe: enséñame a usar la app
+
 Para que una carpeta sea tu CEO, dile: "esta carpeta es mi CEO".
 
 Tu `mi-perfil` no se toca nunca: lo que ya le contaste sigue ahí.

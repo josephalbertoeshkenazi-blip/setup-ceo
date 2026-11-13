@@ -17,6 +17,12 @@ function filasDeErrores(t) {
   return bloque.slice(2);
 }
 
+// Texto dentro de bloques ``` ``` (se imprime en una sola línea, sin partirse).
+function bloques(t) {
+  return [...t.matchAll(/```[^\n]*\n([\s\S]*?)```/g)].map((m) => m[1]);
+}
+const enBloque = (t, s) => bloques(t).some((b) => b.includes(s));
+
 test('hoja Windows: Git, Python, CLI, carpeta Mi CEO, prueba positiva, errores', () => {
   const t = leer('docs/equipo/instalar-windows.md');
   for (const s of [
@@ -72,4 +78,44 @@ test('sin nombres de empresa ni datos personales', () => {
 test('CI de Windows: buscar-claude.sh debe encontrar el instalador oficial', () => {
   const y = leer('.github/workflows/pruebas.yml');
   assert.ok(y.includes('plugins/actualizaciones/scripts/buscar-claude.sh'));
+});
+
+test('Windows: cada comando va en su bloque, con PowerShell explicado y sin preguntas de winget', () => {
+  const t = leer('docs/equipo/instalar-windows.md');
+  for (const s of [
+    'winget install -e --id Git.Git --accept-source-agreements --accept-package-agreements',
+    'winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements',
+    'irm https://claude.ai/install.ps1 | iex',
+    'josephalbertoeshkenazi-blip/setup-ceo',
+  ]) assert.ok(enBloque(t, s), `no está en un bloque: ${s}`);
+  assert.ok(t.includes('Windows PowerShell'));
+  assert.match(t, /escribe Y/);
+  assert.match(t, /sin buscar archivos/);
+  assert.match(t, /clic derecho en el ícono de Claude junto al reloj/);
+  assert.match(t, /App Installer/);
+  assert.match(t, /Tu CEO dice que falta Python/);
+  assert.doesNotMatch(t, /pide al dueño|WSL: sin plugins/);
+});
+
+test('Mac: cada comando va en su bloque, con licencia, .dmg y Gatekeeper al día', () => {
+  const t = leer('docs/equipo/instalar-mac.md');
+  for (const s of ['xcode-select --install', 'curl -fsSL https://claude.ai/install.sh | bash', 'josephalbertoeshkenazi-blip/setup-ceo'])
+    assert.ok(enBloque(t, s), `no está en un bloque: ${s}`);
+  assert.match(t, /Aceptar/);
+  assert.match(t, /arrastra Claude a Aplicaciones/);
+  assert.match(t, /Privacidad y seguridad/);
+  assert.match(t, /sin buscar archivos/);
+  assert.match(t, /Tu CEO dice que falta Python/);
+  assert.doesNotMatch(t, /pide al dueño/);
+});
+
+test('las tres hojas explican "enséñame a usar la app"', () => {
+  for (const f of ['instalar-windows', 'instalar-mac', 'actualizar'])
+    assert.ok(leer(`docs/equipo/${f}.md`).includes('enséñame a usar la app'), f);
+});
+
+test('CI: el respaldo de Windows se prueba sin el PATH del instalador', () => {
+  const y = leer('.github/workflows/pruebas.yml');
+  assert.ok(y.includes('PATH=/usr/bin:/bin bash plugins/actualizaciones/scripts/buscar-claude.sh'));
+  assert.ok(y.includes('*/.local/bin/claude.exe'));
 });

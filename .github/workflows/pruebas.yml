@@ -66,13 +66,12 @@ jobs:
         if: github.event_name == 'push'
         run: claude --version
 
-      # Prueba que el instalador del paso 3 de la hoja de Windows deja un claude que buscar-claude.sh encuentra.
+      # Sin el PATH del instalador, buscar-claude.sh tiene que llegar a su respaldo de Windows (~/.local/bin/claude.exe).
       - name: buscar-claude.sh encuentra el instalador oficial (Windows)
         if: github.event_name == 'push' && runner.os == 'Windows'
         run: |
-          c=$(bash plugins/actualizaciones/scripts/buscar-claude.sh || true)
-          [ -n "$c" ] || { echo "buscar-claude.sh no imprimió nada"; exit 1; }
-          echo "encontró: $c"
+          c=$(PATH=/usr/bin:/bin bash plugins/actualizaciones/scripts/buscar-claude.sh || true)
+          case "$c" in */.local/bin/claude.exe) echo "encontró: $c" ;; *) echo "no encontró el claude del instalador: '$c'"; exit 1 ;; esac
 
       # Lo publicado en main con la fuente oficial (sin rama) y el gancho de este commit: el auto-update queda prendido.
       - name: Fuente oficial con Claude Code real
