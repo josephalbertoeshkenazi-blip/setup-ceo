@@ -7,7 +7,7 @@ import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 
-import { raiz, python, BASH, baseWindows } from './ayuda.mjs';
+import { raiz, python, aPosix, BASH, baseWindows } from './ayuda.mjs';
 
 const py = python();
 const test = (n, f) => (py || !/correr\(|py\.sh/.test(f.toString())) ? t(n, f) : t(n, { skip: 'sin Python' }, f);
@@ -155,6 +155,52 @@ test('guardia-delegar: apagada por defecto; encendida avisa cada 3, la memoria y
   correr('guardia-delegar.py', { hook_event_name: 'UserPromptSubmit', session_id: 'g', cwd, prompt: 'hola' }, e);
   assert.equal(post(e, {}), null);
   assert.equal(post(e, { tool_name: 'Agent' }), null);
+});
+
+const guardiaCon = (e, lineaPerfil, cwdHook, sid = 'p') => {
+  perfil(e.home, `Sesión principal: ${lineaPerfil}\n`);
+  let o = null;
+  for (let i = 0; i < 3; i++) o = ctx(correr('guardia-delegar.py', { hook_event_name: 'PostToolUse', session_id: sid, cwd: cwdHook, tool_name: 'Bash' }, e));
+  return o;
+};
+
+test('ruta_comparable: formas de Windows', () => {
+  const llamar = (ruta, nt) => spawnSync(py.cmd, [...py.args, '-I', '-c',
+    'import sys, json; sys.path.insert(0, sys.argv[1]); import comun; print(json.dumps(comun.ruta_comparable(sys.argv[2], nt=sys.argv[3] == "1")))', S, ruta, nt ? '1' : '0'],
+  { encoding: 'utf8' });
+  const nt = ['/c/Users/José/Mi CEO', 'C:\\Users\\josé\\mi ceo', 'C:/Users/José/Mi CEO/', '"C:\\Users\\JOSÉ\\Mi CEO"'].map((r) => {
+    const x = llamar(r, true);
+    assert.equal(x.status, 0, x.stderr);
+    return JSON.parse(x.stdout);
+  });
+  assert.equal(new Set(nt).size, 1, nt.join(' | '));
+  const posix = llamar('/Users/a/B/', false);
+  assert.equal(JSON.parse(posix.stdout), '/Users/a/B');
+  assert.notEqual(JSON.parse(llamar('/Users/a/b', false).stdout), JSON.parse(posix.stdout));
+});
+
+test('Sesión principal con espacios y tilde activa la guardia', () => {
+  const e = entorno();
+  const ruta = join(e.home, 'Mis Cosas', 'Mi CEO José');
+  assert.match(guardiaCon(e, ruta, ruta).additionalContext, /Guardia:/);
+});
+
+test('Sesión principal en Windows: /c/..., mayúsculas y barras', { skip: process.platform !== 'win32' }, () => {
+  for (const forma of [(h) => aPosix(h), (h) => h.toUpperCase()]) {
+    const e = entorno();
+    const ruta = join(e.home, 'Mis Cosas', 'Mi CEO José');
+    assert.match(guardiaCon(e, forma(ruta), ruta).additionalContext, /Guardia:/);
+  }
+});
+
+test('carpeta hija de la Sesión principal también cuenta, carpeta hermana no', () => {
+  const e = entorno();
+  const ruta = join(e.home, 'Mi CEO');
+  assert.match(guardiaCon(e, ruta, join(ruta, 'sub', 'carpeta')).additionalContext, /Guardia:/);
+  const f = entorno();
+  const rutaF = join(f.home, 'Mi CEO');
+  assert.equal(guardiaCon(f, rutaF, `${rutaF}-otro`), null);
+  assert.equal(guardiaCon(f, rutaF, join(f.home, 'Otro'), 'q'), null);
 });
 
 test('captura-correcciones: guarda una corrección con el secreto tapado; un mensaje normal no; se apaga por perfil', () => {
