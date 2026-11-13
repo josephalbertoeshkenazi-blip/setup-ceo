@@ -7,10 +7,13 @@ import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 
-import { raiz, python } from './ayuda.mjs';
+import { raiz, python, aPosix, BASH, baseWindows } from './ayuda.mjs';
 
 const py = python();
-const test = (n, f) => (py || !/correr\(|py\.sh/.test(f.toString())) ? t(n, f) : t(n, { skip: 'sin Python' }, f);
+const test = (n, o, f) => {
+  if (f === undefined) [o, f] = [{}, o];
+  return (py || !/correr\(|py\.sh/.test(f.toString())) ? t(n, o, f) : t(n, { ...o, skip: o.skip || 'sin Python' }, f);
+};
 const S = join(raiz, 'plugins/ceo-base/scripts');
 const leer = (r) => readFileSync(join(raiz, r), 'utf8');
 
@@ -157,6 +160,58 @@ test('guardia-delegar: apagada por defecto; encendida avisa cada 3, la memoria y
   assert.equal(post(e, { tool_name: 'Agent' }), null);
 });
 
+const guardiaCon = (e, lineaPerfil, cwdHook, sid = 'p') => {
+  perfil(e.home, `Sesión principal: ${lineaPerfil}\n`);
+  let o = null;
+  for (let i = 0; i < 3; i++) o = ctx(correr('guardia-delegar.py', { hook_event_name: 'PostToolUse', session_id: sid, cwd: cwdHook, tool_name: 'Bash' }, e));
+  return o;
+};
+
+test('ruta_comparable: formas de Windows', () => {
+  const llamar = (ruta, nt) => spawnSync(py.cmd, [...py.args, '-I', '-c',
+    'import sys, json; sys.path.insert(0, sys.argv[1]); import comun; print(json.dumps(comun.ruta_comparable(sys.argv[2], nt=sys.argv[3] == "1")))', S, ruta, nt ? '1' : '0'],
+  { encoding: 'utf8' });
+  const nt = ['/c/Users/José/Mi CEO', 'C:\\Users\\josé\\mi ceo', 'C:/Users/José/Mi CEO/', '"C:\\Users\\JOSÉ\\Mi CEO"'].map((r) => {
+    const x = llamar(r, true);
+    assert.equal(x.status, 0, x.stderr);
+    return JSON.parse(x.stdout);
+  });
+  assert.equal(new Set(nt).size, 1, nt.join(' | '));
+  const posix = llamar('/Users/a/B/', false);
+  assert.equal(JSON.parse(posix.stdout), '/Users/a/B');
+  assert.notEqual(JSON.parse(llamar('/Users/a/b', false).stdout), JSON.parse(posix.stdout));
+});
+
+test('Sesión principal con espacios y tilde activa la guardia', () => {
+  const e = entorno();
+  const ruta = join(e.home, 'Mis Cosas', 'Mi CEO José');
+  assert.match(guardiaCon(e, ruta, ruta).additionalContext, /Guardia:/);
+});
+
+test('Sesión principal en Windows: /c/..., mayúsculas y barras', { skip: process.platform !== 'win32' ? 'solo Windows' : false }, () => {
+  for (const forma of [(h) => aPosix(h), (h) => h.toUpperCase()]) {
+    const e = entorno();
+    const ruta = join(e.home, 'Mis Cosas', 'Mi CEO José');
+    assert.match(guardiaCon(e, forma(ruta), ruta).additionalContext, /Guardia:/);
+  }
+});
+
+test('Sesión principal: cwd en NFD y línea del perfil en NFC cuentan como la misma carpeta', () => {
+  const e = entorno();
+  const ruta = join(e.home, 'Mi CEO José');
+  assert.match(guardiaCon(e, ruta.normalize('NFC'), ruta.normalize('NFD')).additionalContext, /Guardia:/);
+});
+
+test('carpeta hija de la Sesión principal también cuenta, carpeta hermana no', () => {
+  const e = entorno();
+  const ruta = join(e.home, 'Mi CEO');
+  assert.match(guardiaCon(e, ruta, join(ruta, 'sub', 'carpeta')).additionalContext, /Guardia:/);
+  const f = entorno();
+  const rutaF = join(f.home, 'Mi CEO');
+  assert.equal(guardiaCon(f, rutaF, `${rutaF}-otro`), null);
+  assert.equal(guardiaCon(f, rutaF, join(f.home, 'Otro'), 'q'), null);
+});
+
 test('captura-correcciones: guarda una corrección con el secreto tapado; un mensaje normal no; se apaga por perfil', () => {
   const e = entorno();
   const cola = join(e.home, '.claude/ceo-estado/cola-correcciones.jsonl');
@@ -275,4 +330,48 @@ test('lo que imprime cada hook de arranque cabe bajo 10 000 caracteres, con perf
     const r = spawnSync('bash', [join(S, 'inyectar-reglas.sh'), modo], { env: e.env, encoding: 'utf8' });
     assert.ok([...r.stdout].length < 10000 - (modo === 'perfil' ? 0 : 500), `${modo}: ${[...r.stdout].length}`);
   }
+});
+
+const AVISO = join(S, 'aviso-python.sh');
+const PYSH = join(S, 'py.sh');
+const bash = (script, args, extra = {}) => spawnSync(BASH, [script, ...args], { env: { ...baseWindows, ...entorno(extra).env }, encoding: 'utf8' });
+
+t('sin Python: aviso-python avisa una vez y sale 0', () => {
+  const r = bash(AVISO, [], { CEO_PY_FORZAR: 'ninguno' });
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(r.stdout.split('Aviso del setup: falta Python').length - 1, 1);
+  assert.match(r.stdout, /cerrar la app del todo/);
+});
+
+t('con Python: no hay aviso', { skip: py ? false : 'sin Python' }, () => {
+  const r = bash(AVISO, []);
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(r.stdout, '');
+});
+
+t('py.sh --hay: 1 si no hay Python, 0 si hay, y nunca imprime', () => {
+  const sin = bash(PYSH, ['--hay'], { CEO_PY_FORZAR: 'ninguno' });
+  assert.equal(sin.status, 1);
+  assert.equal(sin.stdout + sin.stderr, '');
+  if (py) {
+    const con = bash(PYSH, ['--hay']);
+    assert.equal(con.status, 0);
+    assert.equal(con.stdout + con.stderr, '');
+  }
+});
+
+t('hooks.json registra aviso-python en SessionStart', () => {
+  const h = JSON.parse(leer('plugins/ceo-base/hooks/hooks.json')).hooks;
+  const ok = h.SessionStart.some((x) => !x.matcher && x.hooks.some((k) => k.command.endsWith('aviso-python.sh"')));
+  assert.ok(ok);
+});
+
+t('aviso-python: una sonda rota no ensucia stderr y el aviso sale por stdout', () => {
+  // py.sh en Mac usa rutas fijas, así que el falso es el "bash" que aviso-python llama para la sonda: imprime en stderr y falla, como un Python roto.
+  const rota = mkdtempSync(join(tmpdir(), 'rota-'));
+  writeFileSync(join(rota, 'bash'), '#!/bin/sh\necho "Traceback: python roto" >&2\nexit 1\n', { mode: 0o755 });
+  const r = bash(AVISO, [], { PATH: `${rota}${process.platform === 'win32' ? ';' : ':'}${process.env.PATH}` });
+  assert.equal(r.status, 0);
+  assert.match(r.stdout, /Aviso del setup: falta Python/);
+  assert.equal(r.stderr, '');
 });

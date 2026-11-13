@@ -4,7 +4,9 @@ Todo es local: nada de esto sale de la computadora del dueño.
 Para pruebas: CEO_ESTADO (carpeta de estado) y CEO_MEMORIA (carpeta de memoria) mandan sobre lo normal.
 """
 import json
+import ntpath
 import os
+import posixpath
 import re
 import sys
 import unicodedata
@@ -73,6 +75,18 @@ def es_no(valor):
     return bool(re.match(r"\s*(no|off|false|apag\w*|desactiv\w*)\b", valor or "", re.I))
 
 
+def ruta_comparable(ruta, nt=os.name == "nt"):
+    """Forma única para comparar carpetas. En Windows acepta /c/Users/... (Git Bash), C:\\... y C:/..., y no distingue
+    mayúsculas ni barras; en Mac y Linux solo normaliza y distingue mayúsculas."""
+    ruta = unicodedata.normalize("NFC", os.path.expanduser((ruta or "").strip().strip("`\"' ")))
+    if not nt:
+        return posixpath.normpath(ruta)
+    m = re.match(r"^/([A-Za-z])(/|$)", ruta)
+    if m:
+        ruta = m.group(1).upper() + ":" + (ruta[2:] or "\\")
+    return ntpath.normcase(ntpath.normpath(ruta))
+
+
 def sesion_principal(d):
     """True si esta sesión corre en la carpeta marcada en el perfil como 'Sesión principal: <ruta>'.
     Sin esa línea (o con CEO_PRINCIPAL=1 en pruebas) la guardia y el modo liviano no hacen nada."""
@@ -81,9 +95,10 @@ def sesion_principal(d):
     ruta = linea_perfil("Sesión principal") or linea_perfil("Sesion principal") or linea_perfil("Main session")
     if not ruta or es_no(ruta):
         return False
-    ruta = os.path.normpath(os.path.expanduser(ruta.strip("`\"' ")))
-    cwd = os.path.normpath(carpeta_proyecto(d))
-    return cwd == ruta or cwd.startswith(ruta.rstrip(os.sep) + os.sep)
+    ruta = ruta_comparable(ruta)
+    cwd = ruta_comparable(carpeta_proyecto(d))
+    sep = "\\" if os.name == "nt" else "/"
+    return cwd == ruta or cwd.startswith(ruta.rstrip(sep) + sep)
 
 
 def sid_seguro(sid):

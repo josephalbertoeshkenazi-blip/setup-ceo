@@ -86,3 +86,52 @@ test('programar: plugin.json y sus 2 skills, sin nombres privados ni Joseph', ()
   }
   assert.ok(readdirSync(join(raiz, 'plugins/programar/skills')).length === 2);
 });
+
+test('regla 4: Opus solo plata, clientes y revisión final', () => {
+  assert.match(leer('plugins/ceo-base/reglas/reglas-ceo.md'), /^4\. \*\*Delegar\.\*\*.*Sonnet para lo normal.*Opus solo para plata.*revisión final/m);
+});
+
+test('reglas 21 y 22', () => {
+  const r = leer('plugins/ceo-base/reglas/reglas-ceo.md');
+  assert.match(r, /^21\. \*\*Nivel técnico\.\*\*.*accesos, códigos y decisiones.*pregúntalo una vez/m);
+  assert.match(r, /^22\. .*ceo-base:auditor/m);
+});
+
+test('glosario: palabras clave con ejemplo, sin emojis', () => {
+  const g = leer('plugins/ceo-base/skills/forma-de-trabajar/glosario.md');
+  for (const x of ['Sesión', 'Agente', 'Skill', 'MCP', 'API', 'GitHub', 'Terminal', 'Límite de uso']) assert.ok(g.includes(`**${x}**:`), x);
+  assert.doesNotMatch(g, /\p{Extended_Pictographic}/u);
+  const n = g.split('\n').filter((l) => /^\*\*[^*]+\*\*: /.test(l)).length;
+  assert.ok(n >= 12 && n <= 16, `entradas: ${n}`);
+});
+
+test('SKILL §10: nivel 4 no es solo haber usado Claude Code; "(por definir)" cuenta como falta; respaldo con lugar', () => {
+  const s = leer('plugins/ceo-base/skills/forma-de-trabajar/SKILL.md');
+  const sec = s.slice(s.indexOf('## 10. Nivel técnico'), s.indexOf('## 11.'));
+  assert.match(sec, /Haber usado Claude Code NO la sube a nivel 4/);
+  assert.match(sec, /dice `\(por definir\)`, cuenta como que falta/);
+  assert.match(sec, /~\/\.claude\/mi-perfil\/\.respaldos\//);
+});
+
+test('auditor: existe, modelo sonnet, no edita, sin rutas de nadie', () => {
+  const a = leer('plugins/ceo-base/agents/auditor.md');
+  const m = a.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  assert.ok(m, 'frontmatter');
+  assert.match(m[1], /^name: auditor$/m);
+  assert.match(m[1], /^model: sonnet$/m);
+  const cuerpo = m[2];
+  assert.match(m[1], /^description:.*model: opus/m, 'la descripción pide Opus para plata, clientes y contratos');
+  assert.match(m[1], /^description:.*sin tu opinión/m);
+  assert.match(m[1], /^disallowedTools:.*\bEdit\b.*\bWrite\b.*\bNotebookEdit\b/m);
+  assert.doesNotMatch(m[1], /^tools:/m);
+  for (const v of ['PASA', 'NO PASA', 'NO APLICA']) assert.match(cuerpo, new RegExp(`^- \\*\\*${v}\\*\\*:`, 'm'), v);
+  assert.match(cuerpo, /primera línea/);
+  assert.match(cuerpo, /nunca edita/i);
+  assert.match(cuerpo, /sk-\[tapado\]/);
+  assert.match(cuerpo, /no manda, cobra, publica ni cambia nada/);
+  assert.match(cuerpo, /no se puede comprobar[^\n]*NO PASA/);
+  assert.match(cuerpo, /model: opus/);
+  assert.ok(cuerpo.split('\n').length <= 60, 'máximo 60 líneas');
+  assert.doesNotMatch(a, /\/Users\/|josepheshkenazi|veredictos/);
+  assert.doesNotMatch(a, /\p{Extended_Pictographic}/u);
+});
