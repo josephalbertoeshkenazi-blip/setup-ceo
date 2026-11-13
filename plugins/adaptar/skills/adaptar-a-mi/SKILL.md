@@ -200,6 +200,6 @@ En pocas líneas, sin preguntas:
 - Seguridad: "Cuando quieras, escribe `/seguridad:revisar-mi-seguridad`: son 5 minutos, solo mira y no cambia nada sin tu sí. Si quieres la hacemos ya, dime 'dale'." (Si `seguridad` no está instalado, va en su paquete.)
 - Dónde vive su perfil: `~/.claude/mi-perfil/`. Lo puede abrir y corregir cuando quiera, y volver a correr `/adaptar:adaptar-a-mi` actualiza sin borrar nada.
 - Los agentes leen su perfil desde su próxima llamada; el de `ceo` se carga en la próxima sesión.
-- Si su `Nivel técnico` es 1, 2 o 3, agrega como afirmación: "Cuando quieras aprender a abrir una sesión por proyecto, dime 'enséñame a usar la app' (son 2 minutos)." Esa frase abre `ceo-base:usar-la-app`.
+- Si su `Nivel técnico` es 1, 2 o 3, agrega como afirmación: "Tus proyectos los abre y lleva tu CEO; si algún día quieres entrar a ver uno, dime 'enséñame a usar la app' (son 2 minutos)." Esa frase abre `ceo-base:usar-la-app`.
 - Si es 1 o 2, agrega también la regla de oro en una línea: "Yo hago lo técnico; tú solo me das accesos, códigos y decisiones."
 - Antes de despedirte, actualiza `Tips ya dados` en `ceo.md` con todos los tips de esta sesión.

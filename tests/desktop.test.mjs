@@ -27,10 +27,11 @@ test('sección 9: abrir sesiones en Desktop con la herramienta de sesiones', () 
   assert.match(d, /si tienes una herramienta para abrir sesiones/i);
 });
 
-test('sección 9: sin esa herramienta queda el "abre una sesión nueva" y la Terminal', () => {
-  assert.match(s9, /abre una sesión nueva en la carpeta X y pega esto/);
-  assert.ok(s9.includes('tasks/encargo-'));
-  assert.ok(s9.includes('ListAgents'));
+test('sección 9: proyecto nuevo lo crea y lo corre el CEO', () => {
+  for (const t of ['Proyectos/', 'CLAUDE.md', 'notas.md', 'abiertos.md', 'segundo plano', 'ListAgents', 'tasks/encargo-', 'Nunca le pidas al dueño que abra una sesión para que el proyecto avance.'])
+    assert.ok(s9.includes(t), t);
+  const i = s9.indexOf('abre una sesión nueva en la carpeta X y pega esto');
+  if (i >= 0) assert.ok(i > s9.indexOf('Si el dueño quiere entrar'));
 });
 
 test('sección 9: osascript solo bajo la etiqueta Mac, y Windows sin osascript', () => {
@@ -91,8 +92,11 @@ test('docs de Desktop (es y en): mismos puntos clave en los dos idiomas', () => 
   }
 });
 
-test('regla 13 de reglas-ceo: abre la sesión tú si tienes la herramienta', () => {
-  assert.match(leer('plugins/ceo-base/reglas/reglas-ceo.md'), /13\. \*\*Una sesión por proyecto\.\*\*[^\n]*ábrela tú si tienes la herramienta para abrir sesiones/);
+test('regla 13 de reglas-ceo: los proyectos los lleva el CEO', () => {
+  const r = leer('plugins/ceo-base/reglas/reglas-ceo.md');
+  assert.match(r, /13\. \*\*Tus proyectos los llevas tú\.\*\*/);
+  assert.match(r, /delega a agentes en segundo plano/);
+  assert.match(r, /puede entrar al proyecto si quiere, pero no hace falta/);
 });
 
 test('adaptar: el saludo del arranque no dice "esta Mac"', () => {
@@ -110,6 +114,9 @@ test('usar-la-app: pasos de sesión nueva en Windows y Mac', () => {
   assert.ok(descUsar.includes('sesión'));
   assert.ok(descUsar.includes('esta carpeta es mi CEO'));
   assert.ok(descUsar.includes('enséñame a usar la app'));
+  assert.ok(usar.includes('Tu CEO abre y lleva tus proyectos. Puedes entrar si quieres, pero no hace falta.'));
+  assert.ok(usar.includes('empieza el proyecto X'));
+  assert.ok(!descUsar.includes('empieza el proyecto X'));
   assert.ok(usar.split('\n').length <= 90);
 });
 
