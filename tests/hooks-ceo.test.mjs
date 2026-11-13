@@ -10,7 +10,10 @@ import { spawnSync } from 'node:child_process';
 import { raiz, python, aPosix, BASH, baseWindows } from './ayuda.mjs';
 
 const py = python();
-const test = (n, f) => (py || !/correr\(|py\.sh/.test(f.toString())) ? t(n, f) : t(n, { skip: 'sin Python' }, f);
+const test = (n, o, f) => {
+  if (f === undefined) [o, f] = [{}, o];
+  return (py || !/correr\(|py\.sh/.test(f.toString())) ? t(n, o, f) : t(n, { ...o, skip: o.skip || 'sin Python' }, f);
+};
 const S = join(raiz, 'plugins/ceo-base/scripts');
 const leer = (r) => readFileSync(join(raiz, r), 'utf8');
 
@@ -185,12 +188,18 @@ test('Sesión principal con espacios y tilde activa la guardia', () => {
   assert.match(guardiaCon(e, ruta, ruta).additionalContext, /Guardia:/);
 });
 
-test('Sesión principal en Windows: /c/..., mayúsculas y barras', { skip: process.platform !== 'win32' }, () => {
+test('Sesión principal en Windows: /c/..., mayúsculas y barras', { skip: process.platform !== 'win32' ? 'solo Windows' : false }, () => {
   for (const forma of [(h) => aPosix(h), (h) => h.toUpperCase()]) {
     const e = entorno();
     const ruta = join(e.home, 'Mis Cosas', 'Mi CEO José');
     assert.match(guardiaCon(e, forma(ruta), ruta).additionalContext, /Guardia:/);
   }
+});
+
+test('Sesión principal: cwd en NFD y línea del perfil en NFC cuentan como la misma carpeta', () => {
+  const e = entorno();
+  const ruta = join(e.home, 'Mi CEO José');
+  assert.match(guardiaCon(e, ruta.normalize('NFC'), ruta.normalize('NFD')).additionalContext, /Guardia:/);
 });
 
 test('carpeta hija de la Sesión principal también cuenta, carpeta hermana no', () => {

@@ -78,7 +78,7 @@ def es_no(valor):
 def ruta_comparable(ruta, nt=os.name == "nt"):
     """Forma única para comparar carpetas. En Windows acepta /c/Users/... (Git Bash), C:\\... y C:/..., y no distingue
     mayúsculas ni barras; en Mac y Linux solo normaliza y distingue mayúsculas."""
-    ruta = os.path.expanduser((ruta or "").strip().strip("`\"' "))
+    ruta = unicodedata.normalize("NFC", os.path.expanduser((ruta or "").strip().strip("`\"' ")))
     if not nt:
         return posixpath.normpath(ruta)
     m = re.match(r"^/([A-Za-z])(/|$)", ruta)
