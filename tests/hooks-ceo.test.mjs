@@ -189,10 +189,16 @@ test('Sesión principal con espacios y tilde activa la guardia', () => {
 });
 
 test('Sesión principal en Windows: /c/..., mayúsculas y barras', { skip: process.platform !== 'win32' ? 'solo Windows' : false }, () => {
-  for (const forma of [(h) => aPosix(h), (h) => h.toUpperCase()]) {
+  const comparable = (r) => spawnSync(py.cmd, [...py.args, '-I', '-c',
+    'import sys; sys.path.insert(0, sys.argv[1]); import comun; print(ascii(comun.ruta_comparable(sys.argv[2])))', S, r],
+  { encoding: 'utf8' }).stdout.trim();
+  for (const [nombre, forma] of [['/c/...', (h) => aPosix(h)], ['MAYÚSCULAS', (h) => h.toUpperCase()]]) {
     const e = entorno();
     const ruta = join(e.home, 'Mis Cosas', 'Mi CEO José');
-    assert.match(guardiaCon(e, forma(ruta), ruta).additionalContext, /Guardia:/);
+    const linea = forma(ruta);
+    const o = guardiaCon(e, linea, ruta);
+    assert.ok(o, `${nombre}: perfil ${JSON.stringify(linea)} → ${comparable(linea)}; cwd ${JSON.stringify(ruta)} → ${comparable(ruta)}`);
+    assert.match(o.additionalContext, /Guardia:/);
   }
 });
 
