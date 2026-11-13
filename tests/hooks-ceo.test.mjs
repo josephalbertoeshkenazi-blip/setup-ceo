@@ -7,7 +7,7 @@ import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 
-import { raiz, python } from './ayuda.mjs';
+import { raiz, python, BASH, baseWindows } from './ayuda.mjs';
 
 const py = python();
 const test = (n, f) => (py || !/correr\(|py\.sh/.test(f.toString())) ? t(n, f) : t(n, { skip: 'sin Python' }, f);
@@ -279,7 +279,7 @@ test('lo que imprime cada hook de arranque cabe bajo 10 000 caracteres, con perf
 
 const AVISO = join(S, 'aviso-python.sh');
 const PYSH = join(S, 'py.sh');
-const bash = (script, args, extra = {}) => spawnSync('bash', [script, ...args], { env: entorno(extra).env, encoding: 'utf8' });
+const bash = (script, args, extra = {}) => spawnSync(BASH, [script, ...args], { env: { ...baseWindows, ...entorno(extra).env }, encoding: 'utf8' });
 
 t('sin Python: aviso-python avisa una vez y sale 0', () => {
   const r = bash(AVISO, [], { CEO_PY_FORZAR: 'ninguno' });
@@ -309,4 +309,14 @@ t('hooks.json registra aviso-python en SessionStart', () => {
   const h = JSON.parse(leer('plugins/ceo-base/hooks/hooks.json')).hooks;
   const ok = h.SessionStart.some((x) => !x.matcher && x.hooks.some((k) => k.command.endsWith('aviso-python.sh"')));
   assert.ok(ok);
+});
+
+t('aviso-python: una sonda rota no ensucia stderr y el aviso sale por stdout', () => {
+  // py.sh en Mac usa rutas fijas, así que el falso es el "bash" que aviso-python llama para la sonda: imprime en stderr y falla, como un Python roto.
+  const rota = mkdtempSync(join(tmpdir(), 'rota-'));
+  writeFileSync(join(rota, 'bash'), '#!/bin/sh\necho "Traceback: python roto" >&2\nexit 1\n', { mode: 0o755 });
+  const r = bash(AVISO, [], { PATH: `${rota}${process.platform === 'win32' ? ';' : ':'}${process.env.PATH}` });
+  assert.equal(r.status, 0);
+  assert.match(r.stdout, /Aviso del setup: falta Python/);
+  assert.equal(r.stderr, '');
 });
