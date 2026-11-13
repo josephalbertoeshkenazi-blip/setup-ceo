@@ -100,3 +100,21 @@ test('adaptar: el saludo del arranque no dice "esta Mac"', () => {
   assert.match(md, /Veo que ya hay cosas de Claude en esta computadora/);
   assert.doesNotMatch(md, /esta Mac/);
 });
+
+const usar = leer('plugins/ceo-base/skills/usar-la-app/SKILL.md');
+const descUsar = usar.match(/^description: (.*)$/m)?.[1] ?? '';
+
+test('usar-la-app: pasos de sesión nueva en Windows y Mac', () => {
+  for (const t of ['Ctrl+N', 'Cmd+N', 'Local', 'Open folder', 'Mi CEO', 'un paso'])
+    assert.ok(usar.includes(t), t);
+  assert.ok(descUsar.includes('sesión'));
+  assert.ok(descUsar.includes('esta carpeta es mi CEO'));
+  assert.ok(descUsar.includes('enséñame a usar la app'));
+  assert.ok(usar.split('\n').length <= 90);
+});
+
+test('usar-la-app: marcar mi CEO con respaldo', () => {
+  for (const t of ['.respaldos', 'Sesión principal:', 'pwd -W', 'cuál gana', 'próxima sesión'])
+    assert.ok(usar.includes(t), t);
+  assert.ok(usar.indexOf('.respaldos') < usar.indexOf('pwd -W'), 'el respaldo va primero');
+});
