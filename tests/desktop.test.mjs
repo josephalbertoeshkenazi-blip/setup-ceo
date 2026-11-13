@@ -24,7 +24,10 @@ test('sección 9: abrir sesiones en Desktop con la herramienta de sesiones', () 
     assert.ok(d.includes(t), t);
   assert.match(d, /no revises la sesión a cada rato; espera la nota/);
   assert.match(d, /si el nombre es otro/);
-  assert.match(d, /si tienes una herramienta para abrir sesiones/i);
+  assert.match(d, /si tienes una herramienta para abrir sesiones/i);  for (const t of ['ToolSearch', 'select:mcp__ccd_session__start_session', 'Trust workspace', 'Archive'])
+    assert.ok(d.includes(t), `ronda 2 en la app: ${t}`);
+  assert.match(d, /misma carpeta[^\n]*sin/, 'misma carpeta: sin pregunta nueva de confianza');
+  assert.match(d, /debajo de tu sesión/, 'la sesión nueva sale debajo de la del CEO');
 });
 
 test('sección 9: proyecto nuevo lo crea y lo corre el CEO', () => {
