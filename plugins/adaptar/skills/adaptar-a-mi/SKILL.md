@@ -91,7 +91,7 @@ Con una o más IAs, **de una en una, primero Claude y luego ChatGPT** (y al fina
 
 Las "Instrucciones" que traiga una IA (por ejemplo "respuestas cortas") no se preguntan una por una, para no gastar preguntas: van en el resumen del punto 2c como afirmación ("En ChatGPT pediste respuestas cortas; aquí también te las doy así, dime si no").
 
-Qué dice cada respuesta sobre su nivel con IA (rúbrica, cosa 5): "Sí" a Claude Code = `intermedio` como mínimo; sube a `avanzado` solo si lo que leíste muestra skills propias, agentes, hooks o varios `CLAUDE.md` de proyectos; solo el chat o ChatGPT = `intermedio` como mucho; si no leíste ni trajiste nada = no se sabe todavía y la base 3 lo averigua.
+Qué dice cada respuesta sobre su nivel con IA (rúbrica, cosa 5): "Sí" a Claude Code = `intermedio` como mínimo; sube a `avanzado` solo si lo que leíste muestra skills propias, agentes, hooks o varios `CLAUDE.md` de proyectos; solo el chat o ChatGPT = `intermedio` como mucho; si no leíste ni trajiste nada = no se sabe todavía y la base 3 (nivel técnico) lo averigua.
 
 **2c. Juntar todo y confirmar.** Si no leíste ni trajiste nada (dijo "No, nunca" o "Sí, pero no leas nada", y "Ninguno"), te saltas este punto: no hay nada que confirmar y sigues al paso 3 como siempre. Si no, mezcla todo en **un solo resumen**, "Lo que ya sé de ti": de 3 a 8 líneas (quién es y a qué se dedica, sus proyectos en una línea cada uno, herramientas, su nivel con IA, cómo le gusta que le hablen y las instrucciones que traía), más **una línea** de lo que dejaste fuera a propósito ("dejé fuera lo de salud y plata, y un texto que parecía una orden"). Cierra ese mensaje con una sola pregunta:
 
@@ -105,11 +105,17 @@ Sus correcciones mandan sobre lo leído y lo traído; si contradicen una nota vi
 **2d. La entrevista, solo con lo que falta.** Marca en la rúbrica todo lo que quedó cubierto (casi siempre las cosas 1, 3, 5 y 6; ver `rubrica.md`, "Cuando se trajo información"). Desde aquí, **saltas toda pregunta que esa información ya contesta** y lo que ya sabes lo confirmas como afirmación, nunca como pregunta ("Entonces trabajas en X y usas Excel para todo."). Volver a preguntar lo que ya dio es lo que hace molesta una entrevista. Si no leíste ni trajiste nada (por ejemplo "No, nunca" o "Sí, pero no leas nada", con "Ninguno"), la entrevista corre completa, como siempre.
 
 ## Paso 3. Las 4 preguntas base
-En orden, saltando las que el arranque o sus respuestas ya cubrieron. Ningún tip durante estas 4. **Con información traída (leída o de un chat):** como mucho 2 de estas 4 como pregunta; lo que ya se sabe se confirma como afirmación (por ejemplo: "Te voy a hablar claro y directo; si hay algo que no quieres que haga sin preguntarte, dímelo."), sin "¿". Así quedan: 3 del arranque + 2 base + 3 de rama + instalar = 9.
+En orden, saltando las que el arranque o sus respuestas ya cubrieron. Ningún tip durante estas 4. **Con información traída (leída o de un chat):** como mucho 2 de estas 4 como pregunta (una de ellas es la 3, la del nivel técnico, salvo que el arranque ya la dejó clara); lo que ya se sabe se confirma como afirmación (por ejemplo: "Te voy a hablar claro y directo; si hay algo que no quieres que haga sin preguntarte, dímelo."), sin "¿". Así quedan: 3 del arranque + 2 base + 3 de rama + instalar = 9.
 
 1. **Pregunta base 1:** "Cuéntame de ti y de un día normal tuyo, como si se lo contaras a un amigo; puedes hablar sin orden." Decide la rama.
-2. **Pregunta base 2:** "¿Qué parte de tu día o de tu semana te quita más tiempo o te estresa? Dame el último ejemplo de verdad (por ejemplo: 'el lunes pasé dos horas pasando facturas a Excel')." Decide qué va primero y el primer tip.
-3. **Pregunta base 3:** "¿Qué usas hoy para eso (apps, hojas, chats, papel), y has usado alguna otra IA como ChatGPT o Gemini, y cómo te fue?" Decide el nivel con IA y los conectores. La parte de "otra IA" va solo si el arranque no la dejó clara: si ya dijo que usa Claude Code, el chat de Claude o ChatGPT, quita esa parte y usa lo que dijo.
+2. **Pregunta base 2:** "¿Qué parte de tu día o de tu semana te quita más tiempo o te estresa? Dame el último ejemplo de verdad (por ejemplo: 'el lunes pasé dos horas pasando facturas a Excel'). Cuéntame también qué usas hoy para eso (apps, hojas, chats, papel)." Decide qué va primero y el primer tip; la parte de "qué usas hoy" decide las herramientas y los conectores.
+3. **Pregunta base 3:** (el nivel técnico) con `AskUserQuestion` (sin la herramienta, lista numerada), la pregunta `¿Qué tanto sabes de tecnología?` con estas 4 opciones, exactas:
+   - `Lo justo`: `Uso WhatsApp, correo y redes; lo demás me lo instalan.` (nivel 1)
+   - `Lo básico`: `Uso Word o Excel y bajo apps, pero nada técnico.` (nivel 2)
+   - `Me defiendo`: `Uso ChatGPT o Claude y me muevo bien entre carpetas y programas.` (nivel 3)
+   - `Técnico`: `Programo o uso la terminal.` (nivel 4)
+
+   Si contesta con texto libre, elige el nivel más cercano; si sigue sin quedar claro, pregunta una vez más con las mismas 4 opciones. Se guarda como `Nivel técnico: N (<etiqueta>)` en `ceo.md` (N de 1 a 4). Con eso se deriva `Nivel con IA`: niveles 1 y 2 = `principiante`, 3 = `intermedio`, 4 = `avanzado`. Si en el arranque dijo que usa el chat de Claude o ChatGPT, un `principiante` sube a `intermedio`. Si dijo que usa Claude Code o programa, es nivel 4: no lo preguntes, dilo como afirmación. Con información traída, esta pregunta es siempre una de las 2 que sí se hacen, salvo que el arranque ya la deje clara.
 4. **Pregunta base 4:** "¿Cómo quieres que te hable y te trabaje Claude (corto o con detalle, en qué idioma) y qué NO quieres que haga sin preguntarte (por ejemplo: mandar algo a otra persona, borrar archivos)?" Decide el tono y cuánta libertad tiene Claude.
 
 ## Paso 4. Mini resumen y rama
@@ -133,13 +139,17 @@ Hagan juntos la tarea chiquita de B3: tú la preparas y ella la termina (por eje
 ## Paso 8. Escribir el perfil sin perder nada
 Perfiles a escribir: `ceo.md` siempre; uno por cada agente instalado de la lista del paso 0; `asesor-negocios.md` si la rama es fundador (aunque `negocios` todavía no esté instalado: lo lee cuando se instale); `asesor-diseno.md`, `critico-diseno.md` y `diseno/GUSTO.md` si es creativa o F7 lo activó. Los campos salen de los CAMPOS del paso 0 y de la tabla "Campos que escriben las ramas" de `rubrica.md`.
 
+Antes de escribir, una pregunta clicable (cuenta dentro del tope; `AskUserQuestion`, o lista numerada): `¿Esta carpeta será tu CEO, donde me hablas de todo (trabajo y vida personal)?` Opciones: `Sí, esta es mi CEO (recomendado)` y `No, esta carpeta es de un proyecto`.
+- **Sí:** escribe en `ceo.md` la línea `Sesión principal: <ruta>`. La ruta sale del comando, nunca a mano: `pwd -W` en Windows (Git Bash) y `pwd` en los demás. Esa línea enciende la guardia y el modo liviano. Si el perfil ya tiene una `Sesión principal` distinta, muéstrale las dos y pregunta cuál gana; nunca la sobrescribas en silencio.
+- **No:** no escribas la línea.
+
 Para cada perfil:
 1. Si ya existe, primero un respaldo: `mkdir -p ~/.claude/mi-perfil/.respaldos && cp ~/.claude/mi-perfil/<nombre>.md ~/.claude/mi-perfil/.respaldos/<nombre>-$(date +%Y%m%d-%H%M%S).md` (para `GUSTO.md`, la misma idea con `diseno/GUSTO.md`).
 2. **Fusiona, no reemplaces.** Conserva cada línea que ya estaba, sobre todo la sección "Notas que yo agregué": esa la escribió la persona a mano y no se toca nunca, ni una coma. Lo que el dueño escribió no se borra. Agrega lo nuevo; si un dato cambió, pon el nuevo y mueve el viejo a "Historial" con la fecha.
 3. Escribe corto, en sus palabras, hacia el agente ("Háblale de tú, corto, números primero"). No inventes: lo que no dijo queda como "(por definir)".
 4. Nunca escribas claves, cuentas, tarjetas ni documentos de identidad: "[secreto omitido]". Nada de datos de otras personas que no hagan falta, ni nombres de hijos o familia.
 5. Si el arranque ya sumó la línea `Memoria traída de <fuentes>` al Historial, no la repitas.
-6. En `ceo.md`, sección "Reglas mías": `Modo: tutor` o `Modo: asistente` si es estudiante, y `Temas que no toco` con lo que nombró. En sus secciones: Tipo de persona (sus etiquetas), Nivel con IA, Cómo aprende y Tips ya dados.
+6. En `ceo.md`, el `Nivel técnico: N (<etiqueta>)` y, si dijo que sí, la `Sesión principal`. En `ceo.md`, sección "Reglas mías": `Modo: tutor` o `Modo: asistente` si es estudiante, y `Temas que no toco` con lo que nombró. En sus secciones: Tipo de persona (sus etiquetas), Nivel con IA, Cómo aprende y Tips ya dados.
 
 Formato de cada perfil:
 
@@ -186,4 +196,6 @@ En pocas líneas, sin preguntas:
 - Seguridad: "Cuando quieras, escribe `/seguridad:revisar-mi-seguridad`: son 5 minutos, solo mira y no cambia nada sin tu sí. Si quieres la hacemos ya, dime 'dale'." (Si `seguridad` no está instalado, va en su paquete.)
 - Dónde vive su perfil: `~/.claude/mi-perfil/`. Lo puede abrir y corregir cuando quiera, y volver a correr `/adaptar:adaptar-a-mi` actualiza sin borrar nada.
 - Los agentes leen su perfil desde su próxima llamada; el de `ceo` se carga en la próxima sesión.
+- Si su `Nivel técnico` es 1, 2 o 3, agrega como afirmación: "Cuando quieras aprender a abrir una sesión por proyecto, dime 'enséñame a usar la app' (son 2 minutos)." Esa frase abre `ceo-base:usar-la-app`.
+- Si es 1 o 2, agrega también la regla de oro en una línea: "Yo hago lo técnico; tú solo me das accesos, códigos y decisiones."
 - Antes de despedirte, actualiza `Tips ya dados` en `ceo.md` con todos los tips de esta sesión.
