@@ -59,7 +59,7 @@ test('el README enlaza a las hojas del equipo', () => {
 });
 
 test('PDFs existen y son de 1 página', () => {
-  for (const n of ['instalar-windows', 'instalar-mac']) {
+  for (const n of ['instalar-windows', 'instalar-mac', 'tu-ceo-en-10-minutos']) {
     const p = join(raiz, 'docs/equipo/pdf', `${n}.pdf`);
     assert.ok(existsSync(p), `falta ${n}.pdf`);
     const paginas = (readFileSync(p, 'latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
@@ -118,4 +118,40 @@ test('CI: el respaldo de Windows se prueba sin el PATH del instalador', () => {
   const y = leer('.github/workflows/pruebas.yml');
   assert.ok(y.includes('PATH=/usr/bin:/bin bash plugins/actualizaciones/scripts/buscar-claude.sh'));
   assert.ok(y.includes('*/.local/bin/claude.exe'));
+});
+
+test('JSON de admin: válido y cada plugin existe en el marketplace', () => {
+  const t = leer('docs/equipo/admin-team.md');
+  const bl = [...t.matchAll(/```json\n([\s\S]*?)```/g)];
+  assert.equal(bl.length, 1, 'debe haber exactamente un bloque json');
+  const j = JSON.parse(bl[0][1]);
+  const mp = JSON.parse(leer('.claude-plugin/marketplace.json'));
+  const nombres = Object.keys(j.extraKnownMarketplaces);
+  assert.deepEqual(nombres, [mp.name]);
+  assert.equal(j.extraKnownMarketplaces[mp.name].source.repo, 'josephalbertoeshkenazi-blip/setup-ceo');
+  const claves = Object.keys(j.enabledPlugins);
+  assert.ok(claves.length >= 4);
+  const existentes = mp.plugins.map((p) => p.name);
+  for (const k of claves) {
+    const [plugin, mkt] = k.split('@');
+    assert.equal(mkt, mp.name, `marketplace distinto en ${k}`);
+    assert.ok(existentes.includes(plugin), `${plugin} no está en el marketplace`);
+    assert.equal(j.enabledPlugins[k], true);
+  }
+  assert.ok(t.includes('https://claude.ai/admin-settings/claude-code'));
+  assert.ok(t.includes('managed-settings.json'));
+});
+
+test('admin dice qué no se probó y cómo seguir', () => {
+  const t = leer('docs/equipo/admin-team.md');
+  assert.match(t, /no probamos a mano/i);
+  assert.ok(t.includes('Add plugins') || t.includes('paso 6'));
+  assert.ok(t.includes('usage credits'));
+});
+
+test('clase de 10 minutos: 6 bloques y 5 frases', () => {
+  const t = leer('docs/equipo/tu-ceo-en-10-minutos.md');
+  assert.ok((t.match(/^## /gm) || []).length >= 6);
+  for (const s of ['actualízate', '¿qué tienes pendiente?', 'no molestar', 'acuérdate de esto', 'enséñame a usar la app', 'envíalo', 'Ctrl+N', 'Cmd+N'])
+    assert.ok(t.includes(s), `falta: ${s}`);
 });
