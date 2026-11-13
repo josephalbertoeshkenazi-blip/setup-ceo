@@ -402,7 +402,7 @@ describe('SKILL.md', () => {
     assert.match(arranque, /confirmas como afirmación, nunca como pregunta/);
     assert.match(arranque, /Si no leíste ni trajiste nada \(por ejemplo "No, nunca" o "Sí, pero no leas nada", con "Ninguno"\), la entrevista corre completa/);
     assert.match(md, /Con información traída \(leída o de un chat\):\*\* como mucho 2 de estas 4/);
-    assert.match(md, /La parte de "otra IA" va solo si el arranque no la dejó clara/);
+    assert.match(md, /Si en el arranque dijo que usa el chat de Claude o ChatGPT, un `principiante` sube a `intermedio`/);
   });
 
   test('la pregunta base 1b ya no existe, ni la oferta suelta', () => {
@@ -438,7 +438,8 @@ describe('SKILL.md', () => {
   test('revisión del arranque: aviso antes del clic, intermedio como mínimo, puntos 2c/2d, "no" sin tirar todo, formato Arranque clave=valor', () => {
     const arranque = md.slice(pos('## Paso 2. El arranque'), pos('## Paso 3.'));
     assert.ok(arranque.indexOf('Solo leo, no lo subo') < arranque.indexOf('**"Sí, y puedes leer'), 'el aviso va en la opción, antes del clic');
-    assert.match(arranque, /`intermedio` como mínimo; sube a `avanzado` solo si/);
+    assert.match(arranque, /`Nivel técnico` sale solo de la pregunta base 3/);
+    assert.match(arranque, /el arranque solo puede subirlo/);
     assert.match(arranque, /\*\*2c\. Juntar todo/);
     assert.match(arranque, /\*\*2d\. La entrevista/);
     assert.match(arranque, /ignora "Ninguno"/);
@@ -450,7 +451,8 @@ describe('SKILL.md', () => {
     const r = leer('rubrica.md');
     assert.match(r, /Arranque: claude-code=.*; chats=.*; resumen=/);
     assert.match(r, /`Arranque: terminado`/);
-    assert.match(r, /`intermedio` como mínimo/);
+    assert.match(r, /`Nivel técnico` sigue preguntándose/);
+    assert.doesNotMatch(r, /Usa Claude Code, skills o agentes = avanzado|Nunca usó IA/);
   });
 
   test('los archivos de apoyo existen', () => {
@@ -536,5 +538,110 @@ describe('cierre: pausa, tips, paquete recortado y ejemplos generales', () => {
   test('(10) el SKILL no trae ejemplos copiados de las pruebas', () => {
     assert.doesNotMatch(sk(), /tus cajas/);
     assert.doesNotMatch(sk(), /corto y con números primero/);
+  });
+});
+
+describe('B1: nivel técnico y carpeta CEO', () => {
+  const md = leer('SKILL.md');
+  const paso = (n) => md.split(new RegExp(`^## Paso ${n}\\.`, 'm'))[1].split('\n## ')[0];
+
+  test('pregunta de nivel técnico: 4 opciones exactas', () => {
+    assert.ok(md.includes('¿Qué tanto sabes de tecnología?'));
+    for (const t of [
+      '`Lo justo`: `Uso WhatsApp, correo y redes; lo demás me lo instalan.`',
+      '`Me defiendo`: `Uso ChatGPT o Claude y me muevo bien entre carpetas y programas.`',
+      '`Lo básico`: `Uso Word o Excel y bajo apps, pero nada técnico.`',
+      '`Técnico`: `Programo o uso la terminal.`',
+    ]) assert.ok(md.includes(t), t);
+    assert.match(md, /Nivel técnico: N \(<etiqueta>\)/);
+  });
+
+  test('paso 8 marca Sesión principal y no pisa una existente', () => {
+    const p8 = paso(8);
+    assert.ok(p8.includes('Sesión principal:'));
+    assert.ok(p8.includes('cuál gana'));
+    assert.ok(p8.includes('trabajo y vida personal'));
+    assert.ok(p8.includes('Sí, esta es mi CEO (recomendado)'));
+    assert.ok(p8.includes('No, esta carpeta es de un proyecto'));
+  });
+
+  test('cierre ofrece usar-la-app y la regla de oro en niveles 1-2', () => {
+    const p10 = md.split('## Paso 10')[1];
+    assert.ok(p10.includes('enséñame a usar la app'));
+    assert.ok(p10.includes('accesos, códigos y decisiones'));
+    assert.ok(!p10.includes('¿'), 'el cierre sigue sin preguntas');
+  });
+
+  test('conectores salen de la pregunta base 2', () => {
+    const q2 = md.split('\n').find((l) => l.includes('**Pregunta base 2:**'));
+    assert.match(q2, /qué usas hoy/i);
+    assert.match(q2, /conectores/);
+    const q3 = md.split('\n').find((l) => l.includes('**Pregunta base 3:**'));
+    assert.doesNotMatch(q3, /conectores/);
+  });
+
+  test('Sesión principal con pwd -W', () => {
+    assert.ok(md.includes('pwd -W'));
+  });
+
+  test('rúbrica y perfil-campos tienen Nivel técnico', () => {
+    assert.ok(leer('rubrica.md').includes('Nivel técnico'));
+    const pc = readFileSync(join(raiz, 'plugins/ceo-base/perfil-campos.md'), 'utf8');
+    assert.ok(pc.includes('Nivel técnico'));
+    const l = pc.split('\n').find((x) => x.includes('Sesión principal'));
+    assert.doesNotMatch(l, /\(no se pregunta\)/);
+  });
+
+  test('tope de preguntas sigue en ~12', () => {
+    const regla = md.split('\n').find((l) => l.startsWith('- **Tope de preguntas:**'));
+    assert.match(regla, /unas 12 en toda la entrevista/);
+    assert.match(regla, /quedan unas 9/);
+  });
+
+  test('fix 1: haber usado Claude Code no fija el nivel ni salta la base 3', () => {
+    assert.ok(md.includes('Solo con haber usado Claude Code no basta: igual pregúntalo.'));
+    assert.doesNotMatch(md, /dijo que usa Claude Code o programa, es nivel 4/);
+    assert.match(md, /Nivel 4 sin preguntar solo si dice que programa/);
+  });
+
+  test('fix 2: una sola regla del nivel, sin criterios viejos', () => {
+    assert.equal((md.match(/sale solo de la pregunta base 3/g) || []).length, 1);
+    assert.doesNotMatch(md, /`intermedio` como mínimo/);
+    const r = leer('rubrica.md');
+    assert.doesNotMatch(r, /Nunca usó IA|`intermedio` como mínimo/);
+    assert.match(r, /cubre `Nivel con IA`, pero `Nivel técnico` sigue preguntándose/);
+  });
+
+  test('fix 3: carpeta personal o raíz de disco no ofrece "Sí"', () => {
+    const p8 = paso(8);
+    assert.match(p8, /\$HOME/);
+    assert.match(p8, /C:\\Users\\<nombre>/);
+    assert.match(p8, /raíz de un disco/);
+    assert.match(p8, /no ofrezcas "Sí"/);
+    assert.match(p8, /Mi CEO/);
+  });
+
+  test('fix 4: la cuenta del tope suma de verdad', () => {
+    const regla = md.split('\n').find((l) => l.startsWith('- **Tope de preguntas:**'));
+    const suma = (t) => t.split('+').map((x) => Number((x.match(/\d+/) || [1])[0])).reduce((a, b) => a + b, 0);
+    for (const l of [regla, md.split('\n').find((l) => l.includes('Así quedan:'))]) {
+      const m = l.match(/\(([^()]*\+[^()]*carpeta CEO[^()]*)\)/);
+      assert.ok(m, l.slice(0, 60));
+      const [cuenta, tot] = m[1].split('=');
+      assert.equal(suma(cuenta.replace(/instalar/, '1').replace(/carpeta CEO/, '1')), Number(tot.match(/\d+/)[0]), m[1]);
+    }
+    assert.match(regla, /carpeta CEO del paso 8 reemplaza una pregunta de rama/);
+    assert.match(md, /3 del arranque \+ 2 base \+ 2 de rama \+ carpeta CEO \+ instalar = 9/);
+  });
+
+  test('fix 5: Nivel técnico y Sesión principal son líneas literales en el formato', () => {
+    const bloque = md.split('Formato de cada perfil:')[1].split('```markdown')[1].split('```')[0];
+    assert.match(bloque, /^Nivel técnico: <N> \(<etiqueta>\)$/m);
+    assert.match(bloque, /^Sesión principal: <ruta>$/m);
+    assert.match(md, /una sola línea, la lee un script/);
+  });
+
+  test('fix minor: un solo comando de ruta, sin ramas por sistema', () => {
+    assert.ok(md.includes('pwd -W 2>/dev/null || pwd'));
   });
 });

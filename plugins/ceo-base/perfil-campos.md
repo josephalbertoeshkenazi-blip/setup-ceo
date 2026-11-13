@@ -10,6 +10,7 @@ Lo que `/adaptar:adaptar-a-mi` necesita saber del dueño para la forma de trabaj
 - **Qué puede salir directo** y qué siempre espera "envíalo", si difiere de la regla base.
 - **Herramientas que usa**: correo, calendario, chat, carpetas donde vive su trabajo.
 - **Tipo de persona**: las etiquetas que la describen (empleado, estudiante, fundador, creativo, personal, principiante, programa, ideas); de ahí salen las preguntas y las piezas que se le ofrecen.
+- **Nivel técnico**: `Nivel técnico: N (<etiqueta>)`, N de 1 a 4 (1 Lo justo, 2 Lo básico, 3 Me defiendo, 4 Técnico). Se pregunta en `/adaptar:adaptar-a-mi`; decide cuánto se explica y cuánta ayuda técnica se da.
 - **Nivel con IA**: principiante, intermedio o avanzado; decide cuánto se le explica y cuántas piezas se le muestran.
 - **Temas que no toco**: lo que el dueño no quiere que Claude lea, mencione o toque (una persona, una carpeta, un asunto).
 - **Cómo aprende**: si prefiere ejemplos, pasos cortos, ver hacer o leer; Claude le explica a su manera.
@@ -21,6 +22,6 @@ Lo que `/adaptar:adaptar-a-mi` necesita saber del dueño para la forma de trabaj
 - **Fechas importantes**: exámenes, entregas o fechas límite que vienen; sirven para recordatorios.
 - **Quién más lo ve**: si alguien más usa esta computadora o ve lo que Claude prepara; lo de "Temas que no toco" nunca va en algo compartido.
 - **Ideas y proyectos aparte**: una línea corta por idea o proyecto aparte que mencionó, sin detalles que quiera guardar en secreto.
-- **Sesión principal** (no se pregunta): solo si el dueño quiere una sesión que delegue y se mantenga liviana, se guarda `Sesión principal: <ruta de la carpeta>`. Sin esa línea, la guardia de delegación no actúa.
+- **Sesión principal**: `Sesión principal: <ruta de la carpeta>`. Se pregunta en el paso 8 de `/adaptar:adaptar-a-mi` ("¿Esta carpeta será tu CEO?") y solo se guarda con su sí. Enciende la guardia de delegación y el modo liviano; sin esa línea no actúan.
 - **Guardar mis mensajes** (no se pregunta): `Guardar mis mensajes: sí` enciende un registro local de lo que el dueño escribe, para encontrar "te lo mandé". Apagado por defecto.
 - **Capturar correcciones** (no se pregunta): `Capturar correcciones: no` apaga la cola de correcciones. Encendido por defecto.

@@ -7,9 +7,9 @@ Cada una con cuándo la das por sabida y dónde queda en el perfil.
 
 1. **Quién es y cómo es su día.** Sé = puedes decir en una línea a qué se dedica y cómo se le va el día. Sale en la pregunta base 1. Queda en `Tipo de persona` y `Sus áreas`.
 2. **Qué le quita tiempo o le duele.** Sé = tienes un ejemplo real y reciente, no un deseo ("el lunes pasé 2 horas pasando facturas a Excel"). Sale en la base 2 y en la historia de su rama. Queda en `Lo que me quita tiempo`.
-3. **Qué herramientas usa.** Sé = sabes dónde vive su trabajo (correo, hojas, chats, papel, apps). Sale en la base 3. Queda en `Herramientas que usa`.
-4. **Qué espera de la IA.** Sé = sabes qué le gustaría que cambiara, en sus palabras. Sale en la base 3, E6 o B1. Queda en `Lo que me quita tiempo` (qué haría con el tiempo que gane).
-5. **Su nivel con la IA.** Sé = puedes ponerlo en `principiante`, `intermedio` o `avanzado`. Nunca usó IA o "no sé por dónde empezar" = principiante. La usa seguido para cosas sueltas = intermedio. Usa Claude Code, skills o agentes = avanzado. Queda en `Nivel con IA`.
+3. **Qué herramientas usa.** Sé = sabes dónde vive su trabajo (correo, hojas, chats, papel, apps). Sale en la base 2 (la parte de "qué usas hoy"). Queda en `Herramientas que usa`.
+4. **Qué espera de la IA.** Sé = sabes qué le gustaría que cambiara, en sus palabras. Sale en E6 o B1. Queda en `Lo que me quita tiempo` (qué haría con el tiempo que gane).
+5. **Su nivel con la IA.** Sé = puedes ponerlo en `principiante`, `intermedio` o `avanzado`. Sale de `Nivel técnico` (1 y 2 = principiante, 3 = intermedio, 4 = avanzado; la pregunta base 3 lo pregunta).  El arranque solo puede subirlo (usa el chat de Claude o ChatGPT = al menos `intermedio`); haber usado Claude Code no lo fija. Queda en `Nivel técnico` y `Nivel con IA`.
 6. **Cómo quiere que le hablen.** Sé = idioma, largo (corto o con detalle) y tono. Sale en la base 4. Queda en `Idioma y tono` y `Cómo aprende`.
 7. **Sus límites y su privacidad.** Sé = qué temas no se tocan y qué no hace Claude sin preguntar. Sale en la base 4, E5, E7, P5 o C6. Queda en `Temas que no toco`, `Lo que nunca delego` y `Qué puede salir directo`.
 8. **Qué le da miedo.** Sé = sabes qué error le dolería más (plata, un cliente, su nota, su privacidad). Sale en la base 4, F6 o B2. Queda en `Lo que nunca delego` y `Cómo aprende`.
@@ -17,7 +17,7 @@ Cada una con cuándo la das por sabida y dónde queda en el perfil.
 Una cosa puede quedar como "paso" si la persona no quiso contestar. "Paso" cuenta como sabido: no se vuelve a preguntar.
 
 ## Cuando se trajo información (el arranque)
-El arranque (paso 2 de `SKILL.md`) trae información de dos lugares: lo que se leyó con su permiso (lo que su Claude ya sabe de ella) y lo que contestó cada chat (Claude, ChatGPT u otra IA). Con lo que ella aprobó en "Lo que ya sé de ti", marca como sabido lo que ese resumen cubrió: casi siempre las cosas 1 (quién es), 3 (herramientas) y 6 (cómo quiere que le hablen), y a veces la 5 (nivel con IA: usa Claude Code = `intermedio` como mínimo, y `avanzado` solo si lo leído muestra skills propias, agentes, hooks o varios `CLAUDE.md` de proyectos; solo el chat o ChatGPT = `intermedio` como mucho). **No vuelvas a preguntar esas: salta la pregunta y confírmalo como afirmación.** Las 2, 7 y 8 casi nunca salen de ahí y se siguen preguntando. Si no leíste ni trajiste nada (por ejemplo "No, nunca" o "Sí, pero no leas nada", con "Ninguno"), no se marca nada y la entrevista corre completa (tope de unas 12).
+El arranque (paso 2 de `SKILL.md`) trae información de dos lugares: lo que se leyó con su permiso (lo que su Claude ya sabe de ella) y lo que contestó cada chat (Claude, ChatGPT u otra IA). Con lo que ella aprobó en "Lo que ya sé de ti", marca como sabido lo que ese resumen cubrió: casi siempre las cosas 1 (quién es), 3 (herramientas) y 6 (cómo quiere que le hablen), y a veces la 5 (la 5 cubre `Nivel con IA`, pero `Nivel técnico` sigue preguntándose en la base 3, salvo el caso de nivel 4 explicado en `SKILL.md`). **No vuelvas a preguntar esas: salta la pregunta y confírmalo como afirmación.** Las 2, 7 y 8 casi nunca salen de ahí y se siguen preguntando. Si no leíste ni trajiste nada (por ejemplo "No, nunca" o "Sí, pero no leas nada", con "Ninguno"), no se marca nada y la entrevista corre completa (tope de unas 12).
 
 ## Cómo se usan las ramas
 - Después de las 4 preguntas base dices en voz alta la rama que te suena ("Me suena que eres sobre todo estudiante, y empezando con IA; si no es así, dímelo."), como afirmación y junto con la siguiente pregunta. La persona puede corregirla.
@@ -35,10 +35,12 @@ Todos van en `~/.claude/mi-perfil/ceo.md` salvo que se diga otro archivo. Si un 
 | Campo | Lo escriben |
 |---|---|
 | Tipo de persona | pregunta base 1 + la rama confirmada (`empleado`, `estudiante`, `fundador`, `creativo`, `personal`, con `principiante` si aplica) |
-| Nivel con IA | pregunta base 3, B1 |
+| Nivel técnico | pregunta base 3 (`Nivel técnico: N (<etiqueta>)`, N de 1 a 4) |
+| Nivel con IA | derivado del nivel técnico (1-2 principiante, 3 intermedio, 4 avanzado), B1 |
+| Sesión principal | paso 8 (`Sesión principal: <ruta>`, solo con su sí) |
 | Sus áreas | E1, S1, F1, F2, F4, C1, P1 |
 | Lo que me quita tiempo | pregunta base 2, E2, E6, S2, F2, C4, P2, P3 |
-| Herramientas que usa | pregunta base 3, E4, S5, C5, P4 |
+| Herramientas que usa | pregunta base 2, E4, S5, C5, P4 |
 | Idioma y tono | pregunta base 4, E3, S7, C7 |
 | Qué puede salir directo | pregunta base 4, E7, F6 |
 | Lo que nunca delego | E7, F6, C6 |
@@ -80,6 +82,7 @@ Actualizado: 2026-10-23
 Pendiente: S3
 Rama: estudiante + principiante
 Etiquetas: estudiante, principiante, ideas
+Nivel técnico: 2
 Nivel con IA: principiante
 Historial: no hay | leído | no leído (dijo que no)
 Arranque: claude-code=leído; chats=Claude hecho, ChatGPT falta; resumen=sin confirmar
@@ -90,7 +93,7 @@ Migrar: no | esperando el export de ChatGPT | hecho
 2. Qué le quita tiempo: sé
 3. Herramientas: sé
 4. Qué espera de la IA: falta
-5. Nivel con IA: sé
+5. Nivel con IA y técnico: sé
 6. Cómo hablarle: sé
 7. Límites y privacidad: paso
 8. Qué le da miedo: falta
