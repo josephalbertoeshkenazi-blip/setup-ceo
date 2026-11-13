@@ -112,3 +112,18 @@ test('SKILL §10: nivel 4 no es solo haber usado Claude Code; "(por definir)" cu
   assert.match(sec, /dice `\(por definir\)`, cuenta como que falta/);
   assert.match(sec, /~\/\.claude\/mi-perfil\/\.respaldos\//);
 });
+
+test('auditor: existe, modelo sonnet, no edita, sin rutas de nadie', () => {
+  const a = leer('plugins/ceo-base/agents/auditor.md');
+  const m = a.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  assert.ok(m, 'frontmatter');
+  assert.match(m[1], /^name: auditor$/m);
+  assert.match(m[1], /^model: sonnet$/m);
+  const cuerpo = m[2];
+  for (const v of ['PASA', 'NO PASA', 'NO APLICA']) assert.ok(cuerpo.includes(v), v);
+  assert.match(cuerpo, /nunca edita/i);
+  assert.match(cuerpo, /model: opus/);
+  assert.ok(cuerpo.split('\n').length <= 60, 'máximo 60 líneas');
+  assert.doesNotMatch(a, /\/Users\/|josepheshkenazi|veredictos/);
+  assert.doesNotMatch(a, /\p{Extended_Pictographic}/u);
+});
