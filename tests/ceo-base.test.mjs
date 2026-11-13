@@ -120,8 +120,16 @@ test('auditor: existe, modelo sonnet, no edita, sin rutas de nadie', () => {
   assert.match(m[1], /^name: auditor$/m);
   assert.match(m[1], /^model: sonnet$/m);
   const cuerpo = m[2];
-  for (const v of ['PASA', 'NO PASA', 'NO APLICA']) assert.ok(cuerpo.includes(v), v);
+  assert.match(m[1], /^description:.*model: opus/m, 'la descripción pide Opus para plata, clientes y contratos');
+  assert.match(m[1], /^description:.*sin tu opinión/m);
+  assert.match(m[1], /^disallowedTools:.*\bEdit\b.*\bWrite\b.*\bNotebookEdit\b/m);
+  assert.doesNotMatch(m[1], /^tools:/m);
+  for (const v of ['PASA', 'NO PASA', 'NO APLICA']) assert.match(cuerpo, new RegExp(`^- \\*\\*${v}\\*\\*:`, 'm'), v);
+  assert.match(cuerpo, /primera línea/);
   assert.match(cuerpo, /nunca edita/i);
+  assert.match(cuerpo, /sk-\[tapado\]/);
+  assert.match(cuerpo, /no manda, cobra, publica ni cambia nada/);
+  assert.match(cuerpo, /no se puede comprobar[^\n]*NO PASA/);
   assert.match(cuerpo, /model: opus/);
   assert.ok(cuerpo.split('\n').length <= 60, 'máximo 60 líneas');
   assert.doesNotMatch(a, /\/Users\/|josepheshkenazi|veredictos/);
