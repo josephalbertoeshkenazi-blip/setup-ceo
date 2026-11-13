@@ -5,9 +5,8 @@ Esto lo hace una sola persona: el **Owner** (dueño) del plan Team. Son 5 minuto
 ## Pasos
 
 1. Entra a claude.ai con la cuenta de Owner.
-2. Abre **Admin settings**, luego **Claude Code**. Dirección directa: `https://claude.ai/admin-settings/claude-code`
-3. Busca **managed settings** (ajustes administrados).
-4. Pega este texto tal cual:
+2. Abre **Organization settings > Claude Code > Managed settings**. Dirección directa: `https://claude.ai/admin-settings/claude-code`
+3. Pega este texto tal cual:
 
 ```json
 {
@@ -26,7 +25,7 @@ Esto lo hace una sola persona: el **Owner** (dueño) del plan Team. Son 5 minuto
 }
 ```
 
-5. Guarda. Se aplica en la próxima sesión de cada persona.
+4. Guarda. Se aplica en la próxima sesión de cada persona.
 
 ## Qué hace
 
@@ -42,4 +41,4 @@ Los asientos estándar tienen un límite de uso más bajo. Para el día de capac
 
 ## Importante
 
-No crees un archivo `managed-settings.json` en las computadoras. Apaga WSL y se ignora cuando hay un ajuste en la consola.
+No crees un archivo `managed-settings.json` en las computadoras. Si ya hay un ajuste en la consola, ese manda y el archivo local se ignora.

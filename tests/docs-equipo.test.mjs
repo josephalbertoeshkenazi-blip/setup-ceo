@@ -128,6 +128,8 @@ test('JSON de admin: válido y cada plugin existe en el marketplace', () => {
   const mp = JSON.parse(leer('.claude-plugin/marketplace.json'));
   const nombres = Object.keys(j.extraKnownMarketplaces);
   assert.deepEqual(nombres, [mp.name]);
+  assert.equal(j.extraKnownMarketplaces[mp.name].source.source, 'github');
+  assert.equal(j.extraKnownMarketplaces[mp.name].autoUpdate, true);
   assert.equal(j.extraKnownMarketplaces[mp.name].source.repo, 'josephalbertoeshkenazi-blip/setup-ceo');
   const claves = Object.keys(j.enabledPlugins);
   assert.ok(claves.length >= 4);
