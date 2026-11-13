@@ -33,6 +33,8 @@ Lo que necesitas antes:
 
 Más detalle, y qué se puede y qué no en las pestañas Chat y Cowork: [docs/claude-desktop.md](docs/claude-desktop.md).
 
+Hojas cortas para el equipo, una página cada una: [instalar en Windows](docs/equipo/instalar-windows.md), [instalar en Mac](docs/equipo/instalar-mac.md) y [actualizar](docs/equipo/actualizar.md).
+
 ### Con la Terminal
 
 En Mac: abre la Terminal con Cmd + Espacio, escribe "Terminal" y Enter. En Windows hay una sección propia, [Con Windows](#con-windows), más abajo.
