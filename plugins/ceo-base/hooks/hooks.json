@@ -20,6 +20,15 @@
         ]
       },
       {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/aviso-python.sh\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
         "matcher": "compact|clear",
         "hooks": [
           {

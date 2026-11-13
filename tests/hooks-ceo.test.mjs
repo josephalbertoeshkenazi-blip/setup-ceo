@@ -276,3 +276,37 @@ test('lo que imprime cada hook de arranque cabe bajo 10 000 caracteres, con perf
     assert.ok([...r.stdout].length < 10000 - (modo === 'perfil' ? 0 : 500), `${modo}: ${[...r.stdout].length}`);
   }
 });
+
+const AVISO = join(S, 'aviso-python.sh');
+const PYSH = join(S, 'py.sh');
+const bash = (script, args, extra = {}) => spawnSync('bash', [script, ...args], { env: entorno(extra).env, encoding: 'utf8' });
+
+t('sin Python: aviso-python avisa una vez y sale 0', () => {
+  const r = bash(AVISO, [], { CEO_PY_FORZAR: 'ninguno' });
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(r.stdout.split('Aviso del setup: falta Python').length - 1, 1);
+  assert.match(r.stdout, /cerrar la app del todo/);
+});
+
+t('con Python: no hay aviso', { skip: py ? false : 'sin Python' }, () => {
+  const r = bash(AVISO, []);
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(r.stdout, '');
+});
+
+t('py.sh --hay: 1 si no hay Python, 0 si hay, y nunca imprime', () => {
+  const sin = bash(PYSH, ['--hay'], { CEO_PY_FORZAR: 'ninguno' });
+  assert.equal(sin.status, 1);
+  assert.equal(sin.stdout + sin.stderr, '');
+  if (py) {
+    const con = bash(PYSH, ['--hay']);
+    assert.equal(con.status, 0);
+    assert.equal(con.stdout + con.stderr, '');
+  }
+});
+
+t('hooks.json registra aviso-python en SessionStart', () => {
+  const h = JSON.parse(leer('plugins/ceo-base/hooks/hooks.json')).hooks;
+  const ok = h.SessionStart.some((x) => !x.matcher && x.hooks.some((k) => k.command.endsWith('aviso-python.sh"')));
+  assert.ok(ok);
+});
