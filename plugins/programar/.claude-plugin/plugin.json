@@ -1,6 +1,6 @@
 {
   "name": "programar",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Para quien programa: bug-hunt (caza de bugs en todo el código, con verificación) y rules-migrate (parte un CLAUDE.md largo en reglas por carpeta).",
   "author": { "name": "Joseph Eshkenazi" },
   "license": "MIT",

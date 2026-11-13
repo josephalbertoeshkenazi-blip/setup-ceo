@@ -1,6 +1,6 @@
 {
   "name": "actualizaciones",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Comando novedades: explica qué cambió en el setup; el setup se actualiza solo.",
   "author": { "name": "Joseph Eshkenazi" },
   "license": "MIT",

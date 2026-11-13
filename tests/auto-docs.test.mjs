@@ -57,12 +57,13 @@ test('enlaces a problemas en docs/claude-desktop con texto igual al destino', ()
   assert.ok(!leer('docs/claude-desktop.en.md').includes('[docs/problemas.en.md](problemas.en.md)'));
 });
 
-test('versiones 2.3.0', () => {
+test('cada plugin.json tiene la versión de arriba del CHANGELOG, de 2.3.0 en adelante', () => {
   const primera = leer('CHANGELOG.md').match(/^## ([0-9]+\.[0-9]+\.[0-9]+)/m)[1];
-  assert.equal(primera, '2.3.0');
+  const [ma, mi] = primera.split('.').map(Number);
+  assert.ok(ma > 2 || (ma === 2 && mi >= 3), primera);
   for (const d of readdirSync(join(raiz, 'plugins'))) {
     const pj = JSON.parse(leer(`plugins/${d}/.claude-plugin/plugin.json`));
-    assert.equal(pj.version, '2.3.0', d);
+    assert.equal(pj.version, primera, d);
   }
 });
 

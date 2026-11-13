@@ -1,6 +1,6 @@
 {
   "name": "diseno",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Equipo de diseño: asesor-diseno (dirige), dev-creativo (construye) y critico-diseno (revisa), con su PLAYBOOK y el estilo panel-dueño.",
   "author": { "name": "Joseph Eshkenazi" },
   "license": "MIT",

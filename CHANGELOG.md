@@ -9,6 +9,11 @@ Agentes que cambiaron: <agentes, o "ninguno">
 - Qué cambió, en palabras simples.
 ```
 
+## 2.3.1 (2026-11-12)
+Cambió: ningún plugin (solo las pruebas internas del autor)
+Agentes que cambiaron: ninguno
+- Para ti no cambia nada: los plugins hacen exactamente lo mismo que en la 2.3.0. Esta versión solo arregla una prueba interna del autor que fallaba en GitHub.
+
 ## 2.3.0 (2026-11-09)
 Cambió: actualizaciones, ceo-base, más documentación y revisiones
 Agentes que cambiaron: ninguno
