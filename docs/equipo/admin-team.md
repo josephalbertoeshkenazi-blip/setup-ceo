@@ -1,6 +1,6 @@
 # Para el administrador del plan Team
 
-Esto lo hace una sola persona: el **Owner** (dueño) del plan Team. Son 5 minutos y se hace una vez.
+Esto lo hace una sola persona: el **Owner** (dueño) del plan Team. Son 5 minutos y se hace una vez. Los nombres de los menús salen en inglés; los escribimos tal cual los verás.
 
 ## Pasos
 
@@ -29,7 +29,7 @@ Esto lo hace una sola persona: el **Owner** (dueño) del plan Team. Son 5 minuto
 
 ## Qué hace
 
-Cada computadora recibe los 4 plugins sin instalar nada a mano, y se actualizan solos. Es como instalar una app en todo el equipo con un solo clic.
+Cada computadora recibe los 4 plugins sin instalar nada a mano, y se actualizan solos. Así nadie tiene que instalar nada a mano.
 
 ## Lo que no probamos a mano
 
@@ -37,7 +37,7 @@ La documentación oficial (code.claude.com/docs/en/desktop y /server-managed-set
 
 ## Límites
 
-Los asientos estándar tienen un límite de uso más bajo. Para el día de capacitación, activa los usage credits (créditos de uso) con un tope bajo, para que nadie se quede sin Claude a media clase.
+Las cuentas estándar tienen un límite de uso más bajo. Para el día de capacitación, activa los usage credits (créditos de uso) con un tope bajo, para que nadie se quede sin Claude a media clase.
 
 ## Importante
 

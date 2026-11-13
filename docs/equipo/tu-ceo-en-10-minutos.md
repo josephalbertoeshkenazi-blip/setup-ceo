@@ -9,13 +9,13 @@ Es tu asistente principal. Uno solo, para tu trabajo y tu vida personal. Es solo
 Escríbele como a una persona, con tus palabras. Puedes interrumpirlo cuando quieras: si va por mal camino, dile «para».
 
 ## 3. Él delega
-Para tareas largas llama a ayudantes que trabajan por detrás. Cuando terminan, te lo cuenta cuando le preguntes («¿qué tienes pendiente?»). Solo te interrumpe si es urgente.
+Para tareas largas llama a ayudantes que trabajan por detrás. Cuando terminan, te avisa si le preguntas («¿qué tienes pendiente?»). Solo te interrumpe si es urgente.
 
 ## 4. Tus proyectos
-Tu CEO abre y lleva tus proyectos. Puedes entrar si quieres, pero no hace falta. Dile «empieza el proyecto X» y él lo arma, reparte el trabajo y te cuenta. Si quieres verlo tú, pídele: «enséñame a usar la app».
+Tu CEO abre y lleva tus proyectos. Puedes entrar si quieres, pero no hace falta. Dile «empieza el proyecto X» y él lo arma, reparte el trabajo y te cuenta. Si no sabes cómo entrar a verlo, pídele: «enséñame a usar la app».
 
 ## 5. Lo que nunca
-Nunca escribas contraseñas en el chat. Y él no envía nada importante a otras personas sin tu «envíalo».
+Nunca escribas contraseñas en la sesión. Y él no envía nada importante a otras personas sin tu «envíalo».
 
 ## 6. Cinco frases útiles
 - «actualízate»: baja la última versión de tu CEO.

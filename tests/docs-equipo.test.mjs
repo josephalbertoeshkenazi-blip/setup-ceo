@@ -23,13 +23,21 @@ function bloques(t) {
 }
 const enBloque = (t, s) => bloques(t).some((b) => b.includes(s));
 
+// Plugins: por las pantallas de la app; la frase del chat va en negrita, nunca en un bloque de comandos.
+function pluginsPorPantalla(t) {
+  for (const s of ['Add marketplace', 'Add from a repository', 'josephalbertoeshkenazi-blip/setup-ceo', 'Sync', 'ceo-base', 'adaptar', 'actualizaciones', 'seguridad'])
+    assert.ok(t.includes(s), `falta: ${s}`);
+  assert.ok(!enBloque(t, 'Instala setup-ceo'), 'la frase del chat no va en un bloque de comandos');
+  assert.match(t, /\*\*Instala setup-ceo: corre claude plugin marketplace add josephalbertoeshkenazi-blip\/setup-ceo y después instala ceo-base, adaptar, actualizaciones y seguridad de ese marketplace\.\*\*/);
+}
+
 test('hoja Windows: Git, Python, CLI, carpeta Mi CEO, prueba positiva, errores', () => {
   const t = leer('docs/equipo/instalar-windows.md');
   for (const s of [
     'winget install -e --id Git.Git',
     'winget install -e --id Python.Python.3.12',
     'irm https://claude.ai/install.ps1 | iex',
-    'Add plugins',
+    'Add marketplace',
     'Mi CEO',
     'Ctrl+N',
     'regla 20',
@@ -51,7 +59,7 @@ test('actualizar: una sola frase, mi-perfil intacto', () => {
   const t = leer('docs/equipo/actualizar.md');
   assert.ok(t.includes('actualízate'));
   assert.ok(t.includes('marketplace update setup-ceo'));
-  assert.ok(t.includes('mi-perfil'));
+  assert.ok(t.includes('lo que ya le contaste'));
 });
 
 test('el README enlaza a las hojas del equipo', () => {
@@ -86,8 +94,8 @@ test('Windows: cada comando va en su bloque, con PowerShell explicado y sin preg
     'winget install -e --id Git.Git --accept-source-agreements --accept-package-agreements',
     'winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements',
     'irm https://claude.ai/install.ps1 | iex',
-    'josephalbertoeshkenazi-blip/setup-ceo',
   ]) assert.ok(enBloque(t, s), `no está en un bloque: ${s}`);
+  pluginsPorPantalla(t);
   assert.ok(t.includes('Windows PowerShell'));
   assert.match(t, /escribe Y/);
   assert.match(t, /sin buscar archivos/);
@@ -99,8 +107,9 @@ test('Windows: cada comando va en su bloque, con PowerShell explicado y sin preg
 
 test('Mac: cada comando va en su bloque, con licencia, .dmg y Gatekeeper al día', () => {
   const t = leer('docs/equipo/instalar-mac.md');
-  for (const s of ['xcode-select --install', 'curl -fsSL https://claude.ai/install.sh | bash', 'josephalbertoeshkenazi-blip/setup-ceo'])
+  for (const s of ['xcode-select --install', 'curl -fsSL https://claude.ai/install.sh | bash'])
     assert.ok(enBloque(t, s), `no está en un bloque: ${s}`);
+  pluginsPorPantalla(t);
   assert.match(t, /Aceptar/);
   assert.match(t, /arrastra Claude a Aplicaciones/);
   assert.match(t, /Privacidad y seguridad/);
