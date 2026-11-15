@@ -9,9 +9,9 @@ Si existe `~/.claude/mi-perfil/ceo.md`, léelo primero; manda sobre estas instru
 
 Pedido: $ARGUMENTS
 
-1. **Confirma que hay un sí.** Si el dueño no aprobó crear esta cabeza en esta conversación, propónla en una línea ("Propongo una cabeza de <área> que lleve <qué>. ¿La creo?") y espera.
-2. **Entiende el área** con lo que ya sabes (perfil, memoria, archivos). Si falta algo que cambia el agente, pregunta como máximo 2 cosas: qué lleva exactamente y qué NO puede hacer nunca (por ejemplo, "nunca mueve plata").
-3. **Elige el modelo**: `sonnet` si el trabajo es rutinario; `opus` si toca plata, clientes o decisiones.
+1. **Confirma que hay un sí.** Si el dueño no aprobó crear esta cabeza en esta conversación, propónla en una línea ("Propongo una cabeza de <área> que lleve <qué>. ¿La creo?") y espera. **Nunca una cabeza por proyecto:** un proyecto es una sesión con su carpeta, su `CLAUDE.md` y su `notas.md`; la cabeza es para un área que se repite.
+2. **Entiende el área** con lo que ya sabes (perfil, memoria, archivos). Si falta algo que cambia el agente, pregunta como máximo 2 cosas: qué lleva exactamente y qué NO puede hacer nunca (por ejemplo, "nunca mueve plata"). Si el pedido viene de `/adaptar:adaptar-a-mi` (la entrevista), no preguntes: usa lo que dijo y deja "(por definir)" lo que falte.
+3. **Elige el modelo**: Si el pedido trae `modelo: sonnet`, usa ese. Si no, `sonnet` si el trabajo es rutinario; `opus` si toca plata, clientes o decisiones.
 4. **Escribe** `~/.claude/agents/gerente-<area>.md` (nombre en minúsculas, con guiones) usando la plantilla de abajo. Si el archivo ya existe, no lo pises: muéstrale al dueño qué cambiarías y espera su sí.
 5. **Cuéntale** en dos líneas qué hace la cabeza y cómo se usa ("cuando me hables de <área>, se lo paso a ella"). Se carga en la próxima sesión.
 

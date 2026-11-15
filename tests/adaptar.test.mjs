@@ -566,10 +566,10 @@ describe('B1: nivel técnico y carpeta CEO', () => {
   });
 
   test('cierre ofrece usar-la-app y la regla de oro en niveles 1-2', () => {
-    const p10 = md.split('## Paso 10')[1];
-    assert.ok(p10.includes('enséñame a usar la app'));
-    assert.ok(p10.includes('accesos, códigos y decisiones'));
-    assert.ok(!p10.includes('¿'), 'el cierre sigue sin preguntas');
+    const p11 = md.split('## Paso 11. Cierre')[1];
+    assert.ok(p11.includes('enséñame a usar la app'));
+    assert.ok(p11.includes('accesos, códigos y decisiones'));
+    assert.ok(!p11.includes('¿'), 'el cierre sigue sin preguntas');
   });
 
   test('conectores salen de la pregunta base 2', () => {
@@ -643,5 +643,75 @@ describe('B1: nivel técnico y carpeta CEO', () => {
 
   test('fix minor: un solo comando de ruta, sin ramas por sistema', () => {
     assert.ok(md.includes('pwd -W 2>/dev/null || pwd'));
+  });
+});
+
+describe('2.4.1: al final se proponen cabezas y nada se crea sin el sí', () => {
+  const md = leer('SKILL.md');
+  const p10 = () => md.split(/^## Paso 10\. /m)[1].split('\n## ')[0];
+
+  test('el paso de cabezas va después de instalar y es la última pregunta de la entrevista', () => {
+    const i9 = md.search(/^## Paso 9\. /m), i10 = md.search(/^## Paso 10\. Tus cabezas/m), i11 = md.search(/^## Paso 11\. Cierre/m);
+    assert.ok(i9 > 0 && i10 > i9 && i11 > i10, 'orden 9 instalar, 10 cabezas, 11 cierre');
+    assert.ok(!md.slice(i11).includes('¿'), 'después de la propuesta no hay más preguntas');
+  });
+
+  test('propone de 1 a 3 cabezas sacadas de F2 y de las áreas que se repiten, una línea cada una', () => {
+    const t = p10();
+    assert.match(t, /de 1 a 3 cabezas/);
+    assert.match(t, /F2/);
+    assert.match(t, /Sus áreas/);
+    assert.match(t, /una línea/i);
+    assert.match(t, /qué llevaría/);
+  });
+
+  test('pregunta con AskUserQuestion multiSelect e incluye "Ninguna por ahora"', () => {
+    const t = p10();
+    assert.match(t, /AskUserQuestion/);
+    assert.match(t, /multiSelect/);
+    assert.ok(t.includes('`Ninguna por ahora`'));
+  });
+
+  test('solo se crean las aprobadas, con nueva-cabeza, sonnet y memory: user', () => {
+    const t = p10();
+    assert.match(t, /solo las que marcó/i);
+    assert.ok(t.includes('/ceo-base:nueva-cabeza'));
+    assert.match(t, /model: sonnet/);
+    assert.match(t, /memory: user/);
+    assert.match(t, /sin su sí no se crea nada/i);
+  });
+
+  test('si dice ninguna, no se crea nada y queda para después', () => {
+    const t = p10();
+    assert.match(t, /Si elige `Ninguna por ahora`[^\n]*no crees nada/);
+    assert.match(t, /si veo que algo se repite, te la propongo/i);
+  });
+
+  test('ninguna cabeza por proyecto: los proyectos son sesión + CLAUDE.md + notas.md', () => {
+    const t = p10();
+    assert.match(t, /Nunca una cabeza por proyecto/);
+    assert.ok(t.includes('CLAUDE.md') && t.includes('notas.md'));
+  });
+
+  test('no se propone cuando solo se ajustan algunos agentes (actualización) ni si ya existe', () => {
+    const t = p10();
+    assert.match(t, /Si el pedido nombra solo algunos agentes[^\n]*salta este paso/);
+    assert.match(t, /~\/\.claude\/agents\/gerente-/);
+  });
+
+  test('nueva-cabeza respeta el modelo que le pasan y no repregunta lo que la entrevista ya dio', () => {
+    const nc = readFileSync(join(raiz, 'plugins/ceo-base/skills/nueva-cabeza/SKILL.md'), 'utf8');
+    assert.match(nc, /Si el pedido trae `modelo: sonnet`/);
+    assert.match(nc, /Nunca una cabeza por proyecto/);
+    assert.match(nc, /viene de `\/adaptar:adaptar-a-mi`[^\n]*no preguntes/);
+  });
+
+  test('la actualización no corre la entrevista ni crea cabezas sola', () => {
+    const aviso = readFileSync(join(raiz, 'plugins/actualizaciones/scripts/revisar-novedades.sh'), 'utf8');
+    const nov = readFileSync(join(raiz, 'plugins/actualizaciones/skills/novedades/SKILL.md'), 'utf8');
+    for (const t of [aviso, nov]) {
+      assert.doesNotMatch(t, /nueva-cabeza/);
+      assert.match(t, /ofr[eé]cele[^\n]*\/adaptar:adaptar-a-mi/);
+    }
   });
 });

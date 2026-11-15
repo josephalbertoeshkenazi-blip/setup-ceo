@@ -9,6 +9,13 @@ Agentes que cambiaron: <agentes, o "ninguno">
 - Qué cambió, en palabras simples.
 ```
 
+## 2.4.1 (2026-11-15)
+Cambió: adaptar, ceo-base
+Agentes que cambiaron: ninguno
+- Al final de la entrevista (`/adaptar:adaptar-a-mi`), tu CEO te propone de 1 a 3 cabezas según lo que contaste: ayudantes con memoria propia para lo que se repite cada semana (por ejemplo cobros o clientes). Marcas las que quieres y solo esas se crean. Si eliges "Ninguna por ahora", no se crea nada y te la propone después si ve que algo se repite.
+- Los proyectos no llevan cabeza: cada uno sigue siendo su propia sesión con su carpeta.
+- Si ya tenías el setup, actualizar no repite la entrevista ni crea cabezas por su cuenta.
+
 ## 2.4.0 (2026-11-15)
 Cambió: ceo-base, adaptar, más documentación y pruebas
 Agentes que cambiaron: ninguno

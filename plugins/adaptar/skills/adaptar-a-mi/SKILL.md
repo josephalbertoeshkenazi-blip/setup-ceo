@@ -195,7 +195,18 @@ rm -f ~/.claude/mi-perfil/.entrevista.md
    - Si dice que no, no insistas: "Listo, no instalé nada."
 6. Si instalaste algo, di el paso de `/reload-plugins` (tip 12: es un paso, no cuenta como tip). Al cierre va UN solo tip: el 8 si instalaste algo; si no, el 4. El otro espera a la próxima sesión. No digas que una pieza de terceros quedó instalada si no lo viste.
 
-## Paso 10. Cierre
+## Paso 10. Tus cabezas
+Una cabeza es un ayudante con memoria propia que lleva un área que se repite (por ejemplo cobros, clientes o estudios), para que la persona no tenga que acordarse de todo.
+
+Si el pedido nombra solo algunos agentes (por ejemplo, después de una actualización), salta este paso. Antes de proponer, mira cuáles ya existen con `ls ~/.claude/agents/gerente-*.md 2>/dev/null`; esas no se vuelven a proponer.
+
+1. Saca de 1 a 3 cabezas de lo que dijo: sobre todo de F2 (lo que hace y no debería hacer el dueño), de `Lo que me quita tiempo` y de las áreas que se repiten en `Sus áreas`. Si nada se repite, no propongas ninguna y sigue al cierre.
+2. **Nunca una cabeza por proyecto.** Un proyecto (la tienda online, la tesis) es una sesión con su carpeta, su `CLAUDE.md` y su `notas.md`; la cabeza es para un área que vuelve cada semana.
+3. Muéstralas en una sola pregunta clicable con `AskUserQuestion` y `multiSelect: true` (sin la herramienta, lista numerada y acepta varios números): `¿Cuáles de estas cabezas quieres que cree?` Cada opción es una cabeza en una línea, con qué llevaría ("Cabeza de cobros: te recuerda quién debe y prepara los mensajes, nunca mueve plata"), y al final la opción `Ninguna por ahora`. Esta pregunta no cuenta para el tope, igual que P5.
+4. Crea solo las que marcó, una por una, con `/ceo-base:nueva-cabeza`, pasándole el área, qué lleva, lo que nunca hace, `modelo: sonnet` y que el sí ya lo dio aquí. Cada una queda con `model: sonnet` y `memory: user`. Sin su sí no se crea nada.
+5. Si elige `Ninguna por ahora` o dice que no, no crees nada y díselo como afirmación: "Listo, ninguna por ahora; si veo que algo se repite, te la propongo."
+
+## Paso 11. Cierre
 En pocas líneas, sin preguntas:
 - Seguridad: "Cuando quieras, escribe `/seguridad:revisar-mi-seguridad`: son 5 minutos, solo mira y no cambia nada sin tu sí. Si quieres la hacemos ya, dime 'dale'." (Si `seguridad` no está instalado, va en su paquete.)
 - Dónde vive su perfil: `~/.claude/mi-perfil/`. Lo puede abrir y corregir cuando quiera, y volver a correr `/adaptar:adaptar-a-mi` actualiza sin borrar nada.
